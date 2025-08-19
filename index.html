@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Crypto Secrets with Pickle — Mini App</title>
-  <!-- Telegram Web Apps SDK (для авто-темизации в миниаппе) -->
+  <!-- Telegram Web Apps SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root{
@@ -12,14 +12,14 @@
       --card:#12161c;
       --text:#e7eaf7;
       --muted:#9fb0c3;
-      --brand:#B1FF8C;           /* фирменный зелёный */
+      --brand:#B1FF8C;           /* фирменный зелёный — фиксированный */
       --accent-2:#69b7ff;
       --line:#222a36;
       --shadow:0 8px 30px rgba(0,0,0,.25);
       --radius:16px;
-      --btn-h:44px;              /* ЕДИНАЯ ВЫСОТА КНОПОК */
-      --btn-fs:15px;             /* ЕДИНЫЙ РАЗМЕР ШРИФТА */
-      --btn-pad:0 18px;          /* ЕДИНЫЕ ОТСТУПЫ */
+      --btn-h:44px;              /* единая высота кнопок */
+      --btn-fs:15px;             /* единый размер шрифта */
+      --btn-pad:0 18px;          /* единые отступы */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -56,12 +56,18 @@
       padding:18px; background:
         linear-gradient(180deg, rgba(177,255,140,.10), transparent 60%),
         radial-gradient(60% 80% at 80% 0%, rgba(105,183,255,.15), transparent 60%);
-      border-radius:24px; box-shadow:var(--shadow); border:1px solid var(--line);
+      border-radius:24px; box-shadow:var(--shadow);
+      /* убрали рамку контейнера hero */
+      border:none;
     }
     .h-title{font-size:36px; line-height:1.15; margin:8px 0 10px; font-weight:800; letter-spacing:.2px}
     .h-title em{font-style:normal; color:var(--brand); text-shadow:0 0 18px rgba(177,255,140,.35)}
     .h-sub{color:var(--muted); margin-bottom:14px}
-    .hero img{width:100%; border-radius:18px; border:1px solid var(--line)}
+    .hero img{
+      width:100%; border-radius:18px;
+      /* убрали рамку у картинки */
+      border:none;
+    }
     .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
       background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
     .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
@@ -139,7 +145,6 @@
         <h1 class="h-title">Crypto Secrets with <em>PICKLE</em></h1>
         <p class="h-sub">A short, fun crash course for absolute beginners. Learn crypto without the jargon, play a tiny quiz after each topic, and unlock the next lesson.</p>
         <div class="hero-cta">
-          <!-- Одинаковые кнопки по стилю и размерам -->
           <a class="btn solid" id="cta-start" href="lesson1.html">🚀 Start for free</a>
           <button class="btn ghost" id="cta-continue">▶️ Continue</button>
         </div>
@@ -213,18 +218,20 @@
   </div>
 
   <script>
-    // Telegram theming (необязательно, но приятно)
+    // Telegram theming — НЕ переопределяем фирменный зелёный
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.expand(); tg.ready();
       const tp = tg.themeParams || {};
       const root = document.documentElement;
-      const set = (k, v, def) => root.style.setProperty(k, v || getComputedStyle(root).getPropertyValue(def));
-      set('--bg', tp.bg_color, '--bg');
-      set('--text', tp.text_color, '--text');
-      set('--card', tp.secondary_bg_color, '--card');
-      set('--brand', tp.button_color, '--brand');
-      set('--line', tp.section_separator_color, '--line');
+      const set = (cssVar, value) => { if (value) root.style.setProperty(cssVar, value); };
+      // Можно мягко подстроить фон/тексты/карточки под тему Telegram,
+      // но не трогаем --brand, чтобы кнопки не становились синими
+      set('--bg', tp.bg_color);
+      set('--text', tp.text_color);
+      set('--card', tp.secondary_bg_color);
+      set('--line', tp.section_separator_color);
+      // НЕ делаем: set('--brand', tp.button_color);
     }
 
     // Header "Course breakdown" → scroll to section
