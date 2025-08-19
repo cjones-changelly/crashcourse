@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Crypto Secrets with Pickle — Mini App</title>
-  <!-- Telegram Web Apps SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root{
@@ -12,7 +11,7 @@
       --card:#12161c;
       --text:#e7eaf7;
       --muted:#9fb0c3;
-      --brand:#B1FF8C;           /* фирменный зелёный — фиксированный */
+      --brand:#B1FF8C;           /* фирменный зелёный */
       --accent-2:#69b7ff;
       --line:#222a36;
       --shadow:0 8px 30px rgba(0,0,0,.25);
@@ -34,7 +33,15 @@
 
     /* ---------- Header ---------- */
     .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
-    .brand-logo img{height:44px; width:auto; object-fit:contain}
+    .brand-logo img{
+      height:44px;               /* фиксируем высоту */
+      width:auto;                /* ширина по содержимому (квадрат 44×44) */
+      object-fit:contain;
+      display:block;
+    }
+    @media (max-width:480px){
+      .brand-logo img{ height:36px; }
+    }
 
     .actions{display:flex; gap:10px; flex-wrap:wrap}
     .btn{
@@ -57,16 +64,14 @@
         linear-gradient(180deg, rgba(177,255,140,.10), transparent 60%),
         radial-gradient(60% 80% at 80% 0%, rgba(105,183,255,.15), transparent 60%);
       border-radius:24px; box-shadow:var(--shadow);
-      /* убрали рамку контейнера hero */
-      border:none;
+      border:none; /* без рамки */
     }
     .h-title{font-size:36px; line-height:1.15; margin:8px 0 10px; font-weight:800; letter-spacing:.2px}
     .h-title em{font-style:normal; color:var(--brand); text-shadow:0 0 18px rgba(177,255,140,.35)}
     .h-sub{color:var(--muted); margin-bottom:14px}
     .hero img{
-      width:100%; border-radius:18px;
-      /* убрали рамку у картинки */
-      border:none;
+      width:100%; border-radius:18px; border:none; /* без рамки у изображения */
+      display:block;
     }
     .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
       background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
@@ -218,20 +223,18 @@
   </div>
 
   <script>
-    // Telegram theming — НЕ переопределяем фирменный зелёный
+    // Telegram theming — не трогаем зелёный бренда
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.expand(); tg.ready();
       const tp = tg.themeParams || {};
       const root = document.documentElement;
       const set = (cssVar, value) => { if (value) root.style.setProperty(cssVar, value); };
-      // Можно мягко подстроить фон/тексты/карточки под тему Telegram,
-      // но не трогаем --brand, чтобы кнопки не становились синими
       set('--bg', tp.bg_color);
       set('--text', tp.text_color);
       set('--card', tp.secondary_bg_color);
       set('--line', tp.section_separator_color);
-      // НЕ делаем: set('--brand', tp.button_color);
+      // не делаем set('--brand', tp.button_color);
     }
 
     // Header "Course breakdown" → scroll to section
@@ -239,7 +242,7 @@
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
     };
 
-    // Continue → к последнему уроку (если есть прогресс)
+    // Continue → к последнему уроку
     document.getElementById('cta-continue').onclick = () => {
       const last = localStorage.getItem('pickle_progress') || 'l1';
       const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
@@ -266,7 +269,7 @@
       }
     };
 
-    // Lessons list: кликабельные карточки с →, сохраняем прогресс
+    // Lessons list
     const lessons = [
       { id:'l1', title:'Why you’re still early (and what to do about it)', mins:5, img:'assets/lesson-1.png', url:'lesson1.html' },
       { id:'l2', title:'How to spot a gem before it 10×’s', mins:5, img:'assets/lesson-2.png', url:'lesson2.html' },
