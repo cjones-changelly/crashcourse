@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lesson 1 — Why you’re still early</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{
+      --bg:#0b0e11; --card:#12161c; --text:#e7eef7; --muted:#9fb0c3;
+      --accent:#7cf271; --blue:#69b7ff; --line:#222a36; --radius:16px;
+      --shadow:0 8px 30px rgba(0,0,0,.25)
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      scroll-behavior:smooth;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:860px; margin:0 auto; padding:18px 16px 80px}
+
+    /* Topbar */
+    .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+    .brand{display:flex; align-items:center; gap:10px}
+    .brand img{width:174px; height:44px; object-fit:contain}
+    .actions{display:flex; gap:8px}
+    .btn{
+      appearance:none; border:0; cursor:pointer; padding:10px 14px; border-radius:999px;
+      font-weight:600; background:#1a2230; color:var(--text); box-shadow:inset 0 0 0 1px var(--line);
+      transition:.18s ease
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.ghost{background:transparent; box-shadow:inset 0 0 0 1px var(--line)}
+    .btn.accent{background:var(--accent); color:#0a0f14; box-shadow:none}
+    .btn.block{width:100%}
+
+    /* Hero / lesson head */
+    .hero{
+      background:
+        radial-gradient(60% 80% at 85% 0%, rgba(105,183,255,.18), transparent 60%),
+        linear-gradient(180deg, rgba(124,242,113,.10), transparent 65%);
+      border:1px solid var(--line); border-radius:24px; padding:18px; box-shadow:var(--shadow);
+    }
+    .eyebrow{font-weight:700; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+    .title{font-size:30px; line-height:1.15; margin:6px 0 10px; font-weight:800}
+    .subtitle{color:var(--muted); margin:0 0 12px}
+    .media{
+      border:1px solid var(--line); border-radius:18px; overflow:hidden; margin-top:10px;
+      background:#0f141c; position:relative;
+    }
+    .media img{display:block; width:100%; height:auto}
+    .play{
+      position:absolute; inset:auto auto 12px 12px; display:flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:12px; background:rgba(0,0,0,.55); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.12); font-weight:700
+    }
+
+    /* Content blocks */
+    .section{margin-top:18px}
+    .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:16px; box-shadow:var(--shadow)}
+    .card h3{margin:0 0 8px; font-size:18px}
+    .muted{color:var(--muted)}
+    .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .list{display:grid; gap:8px; margin:8px 0 0; padding:0; list-style:none}
+    .li{
+      display:grid; grid-template-columns:22px 1fr; gap:10px; align-items:start;
+      padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:#0d131c;
+    }
+    .li img{width:22px; height:22px}
+    .pill{display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(124,242,113,.15); color:var(--accent); font-weight:700; border:1px dashed rgba(124,242,113,.45)}
+
+    /* Quiz CTA */
+    .cta-ribbon{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background:linear-gradient(90deg, rgba(124,242,113,.18), rgba(105,183,255,.18));
+      border:1px solid var(--line); border-radius:16px; padding:12px 14px; margin-top:18px
+    }
+
+    /* Quiz */
+    .quiz{margin-top:18px}
+    .q-block{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px}
+    .q-title{margin:0 0 10px; font-weight:800; font-size:18px}
+    .opt{display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line); border-radius:12px; cursor:pointer; transition:.16s}
+    .opt + .opt{margin-top:8px}
+    .opt input{appearance:none; width:18px; height:18px; border-radius:50%; border:2px solid #56627a; display:inline-block}
+    .opt.selected{border-color:#3a465d; background:#0d131c}
+    .opt.correct{border-color:#2ec27e; background:rgba(46,194,126,.08)}
+    .opt.wrong{border-color:#e05d5d; background:rgba(224,93,93,.08)}
+    .q-actions{display:flex; gap:10px; margin-top:12px}
+    .tip{margin-top:8px; color:var(--muted); display:none}
+    .tip.show{display:block}
+
+    /* Footer next */
+    .footer-cta{margin-top:18px; display:flex; gap:10px; justify-content:space-between; align-items:center}
+    .link{color:var(--blue); text-decoration:underline}
+    @media (max-width:860px){
+      .grid-2{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="brand">
+        <a href="index.html" class="btn ghost">← Back</a>
+        <img src="assets/logo-changelly.png" alt="Changelly">
+      </div>
+      <div class="actions">
+        <a class="btn ghost" href="#quiz">Start quiz</a>
+      </div>
+    </div>
+
+    <!-- Lesson hero -->
+    <section class="hero">
+      <div class="eyebrow">Lesson 1</div>
+      <h1 class="title">Why you’re still early — and what to do about it</h1>
+      <p class="subtitle">The simple mental model for getting into crypto without fear of “being late”.</p>
+
+      <div class="media">
+        <!-- video thumbnail from your Figma export -->
+        <img src="assets/lesson1-video-thumb.png" alt="Lesson 1 video">
+        <button class="play" id="playBtn">▶︎ Play</button>
+      </div>
+    </section>
+
+    <!-- Key idea + early signs -->
+    <div class="section grid-2">
+      <div class="card">
+        <h3>Key idea</h3>
+        <p class="muted">Crypto moves in clear cycles. You don’t need to time the exact bottom — you need a plan that keeps you safe while you learn and gradually build exposure.</p>
+        <div style="margin-top:10px">
+          <span class="pill">5‑min read</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>You’re still early if you see…</h3>
+        <ul class="list">
+          <li class="li"><img src="assets/icon-check.png" alt="">
+            <div>Headlines either doom or euphoria — both mean most people aren’t investing rationally yet.</div></li>
+          <li class="li"><img src="assets/icon-check.png" alt="">
+            <div>Friends ask basic questions like “which wallet?” — adoption is not saturated.</div></li>
+          <li class="li"><img src="assets/icon-check.png" alt="">
+            <div>On‑ramps and tools keep getting simpler — the next wave of users hasn’t arrived.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tips from Pickle -->
+    <div class="section card">
+      <h3>3 moves from Pickle</h3>
+      <ul class="list">
+        <li class="li"><img src="assets/icon-flag.png" alt=""><div>Set a tiny recurring buy (e.g., weekly). It trains discipline and ignores noise.</div></li>
+        <li class="li"><img src="assets/icon-flag.png" alt=""><div>Open a self‑custody wallet and back up the seed safely. Practice small transfers.</div></li>
+        <li class="li"><img src="assets/icon-flag.png" alt=""><div>Write a one‑page plan: what you buy, why, and when you stop.</div></li>
+      </ul>
+    </div>
+
+    <!-- Quiz CTA -->
+    <div class="cta-ribbon">
+      <div><strong>Ready?</strong> Lock the lesson with a 30‑sec quiz.</div>
+      <a class="btn accent" href="#quiz">Start quiz</a>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz" class="quiz">
+      <div class="q-block">
+        <div class="eyebrow">Quick check</div>
+        <h3 class="q-title">Which statement best explains why you can still be “early”?</h3>
+
+        <label class="opt"><input type="radio" name="q1" value="a">
+          <span>Because prices only go up in the long run.</span></label>
+
+        <label class="opt"><input type="radio" name="q1" value="b">
+          <span>Because adoption comes in waves and tools keep lowering the entry barrier.</span></label>
+
+        <label class="opt"><input type="radio" name="q1" value="c">
+          <span>Because timing the exact bottom is easy with enough news.</span></label>
+
+        <div class="q-actions">
+          <button id="submitQ1" class="btn accent">Check answer</button>
+          <button id="nextBtn" class="btn" style="display:none">Continue</button>
+        </div>
+        <div id="tipQ1" class="tip">Adoption is cyclical and tooling improves — you don’t need perfection, you need a plan.</div>
+      </div>
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="footer-cta">
+      <a href="index.html" class="link">← Back to course map</a>
+      <a href="lesson2.html" class="btn ghost">Go to Lesson 2 →</a>
+    </div>
+  </div>
+
+  <script>
+    // Telegram theming
+    const tg = window.Telegram?.WebApp;
+    if (tg) { tg.expand(); tg.ready(); }
+
+    // Fake play (you can replace with real video URL or player later)
+    document.getElementById('playBtn').onclick = () => {
+      if (tg) tg.HapticFeedback.impactOccurred('medium');
+      alert('Video player placeholder. We will embed the real video here.');
+    };
+
+    // Quiz logic
+    const submit = document.getElementById('submitQ1');
+    const next = document.getElementById('nextBtn');
+    const tip = document.getElementById('tipQ1');
+
+    submit.addEventListener('click', ()=>{
+      const opts = [...document.querySelectorAll('input[name="q1"]')];
+      const picked = opts.find(o=>o.checked);
+      if (!picked){ alert('Pick an option'); return; }
+
+      // reset states
+      document.querySelectorAll('.opt').forEach(el=>el.classList.remove('selected','correct','wrong'));
+
+      // mark selection
+      picked.closest('.opt').classList.add('selected');
+
+      // correct = "b"
+      if (picked.value === 'b'){
+        picked.closest('.opt').classList.add('correct');
+        tip.classList.add('show');
+        if (tg) tg.HapticFeedback.notificationOccurred('success');
+        // Save progress
+        localStorage.setItem('pickle_l1_passed','1');
+        next.style.display='inline-block';
+        submit.style.display='none';
+      } else {
+        picked.closest('.opt').classList.add('wrong');
+        tip.classList.add('show');
+        if (tg) tg.HapticFeedback.notificationOccurred('error');
+      }
+    });
+
+    next.addEventListener('click', ()=>{
+      // go to next lesson (placeholder)
+      location.href = 'lesson2.html';
+    });
+  </script>
+</body>
+</html>
