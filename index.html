@@ -17,13 +17,13 @@
       margin:0; background:var(--bg); color:var(--text);
       font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      scroll-behavior:smooth;
     }
     .wrap{max-width:980px;margin:0 auto;padding:18px 16px 80px}
 
     /* Header */
     .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
     .brand-logo img{width:174px;height:44px;object-fit:contain}
-
     .actions{display:flex;gap:8px}
     .btn{appearance:none;border:0;cursor:pointer;padding:10px 14px;border-radius:999px;font-weight:600;
       background:#1a2230;color:var(--text);box-shadow:inset 0 0 0 1px var(--line);transition:.18s ease}
@@ -53,9 +53,23 @@
     /* Lessons */
     .section-title{font-size:24px;font-weight:800;margin:22px 4px 12px}
     .lessons{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-    .lesson{background:#10161f;border:1px solid var(--line);border-radius:16px;padding:10px}
+    .lesson{
+      background:linear-gradient(180deg,#12161c,#0f141c);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:10px;
+      box-shadow:0 6px 18px rgba(0,0,0,.25);
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+      cursor:pointer;
+      outline: none;
+    }
+    .lesson:focus-visible{box-shadow:0 0 0 3px rgba(124,242,113,.35)}
+    .lesson:hover{transform:translateY(-3px); box-shadow:0 12px 26px rgba(0,0,0,.35); border-color:#2e3646}
+    .lesson:active{transform:translateY(-1px) scale(.995)}
     .lesson .thumb{height:84px;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:8px}
-    .lesson .thumb img{width:100%;height:100%;object-fit:cover}
+    .lesson .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .lesson h5{margin:0 0 4px;font-size:14px}
+    .lesson .meta{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12px}
 
     /* Instructor + CTA */
     .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
@@ -155,6 +169,21 @@
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.expand(); tg.ready(); }
 
+    // header button → scroll to Course Breakdown
+    document.getElementById('btn-breakdown').onclick = () => {
+      document.getElementById('breakdown').scrollIntoView({ behavior:'smooth', block:'start' });
+    };
+
+    // demo actions
+    const goStart = () => location.hash = '#lesson=l1';
+    document.getElementById('btn-start').onclick = goStart;
+    document.getElementById('cta-start').onclick = goStart;
+    document.getElementById('cta-continue').onclick = () => {
+      const last = localStorage.getItem('pickle_progress') || 'l1';
+      location.hash = '#lesson=' + last;
+    };
+
+    // lessons data
     const lessons = [
       { id:'l1', title:'Why you’re still early (and what to do about it)', mins:5, img:'assets/lesson-1.png' },
       { id:'l2', title:'How to spot a gem before it 10×’s', mins:5, img:'assets/lesson-2.png' },
@@ -162,15 +191,36 @@
       { id:'l4', title:'Buy, hold, or run? Reading the market without the jargon', mins:5, img:'assets/lesson-4.png' },
       { id:'l5', title:'$100 into crypto: your first portfolio, no BS', mins:5, img:'assets/lesson-5.png' },
     ];
-    const $list=document.querySelector('#lessons');
+
+    // render lessons (cards clickable, no arrows)
+    const $list = document.getElementById('lessons');
     lessons.forEach(l=>{
-      const div=document.createElement('div');
-      div.className='lesson';
-      div.innerHTML=`
+      const card = document.createElement('div');
+      card.className = 'lesson';
+      card.setAttribute('role','button');
+      card.setAttribute('tabindex','0');
+      card.dataset.id = l.id;
+      card.innerHTML = `
         <div class="thumb"><img src="${l.img}" alt="${l.title}"></div>
         <h5>${l.title}</h5>
-        <div class="meta"><span>${l.mins} min</span><button class="dl" data-id="${l.id}">↓</button></div>`;
-      $list.appendChild(div);
+        <div class="meta"><span>${l.mins} min</span><span>Tap to open</span></div>`;
+      $list.appendChild(card);
+    });
+
+    // click/keyboard open
+    const openLesson = (id) => {
+      localStorage.setItem('pickle_progress', id);
+      location.hash = '#lesson=' + id;
+    };
+    $list.addEventListener('click', (e) => {
+      const card = e.target.closest('.lesson');
+      if (card) openLesson(card.dataset.id);
+    });
+    $list.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('lesson')) {
+        e.preventDefault();
+        openLesson(e.target.dataset.id);
+      }
     });
   </script>
 </body>
