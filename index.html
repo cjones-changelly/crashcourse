@@ -4,20 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Crypto Secrets with Pickle — Mini App</title>
-  <!-- Telegram Web Apps SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root{
-      --bg:#0b0e11;
-      --card:#12161c;
-      --text:#e7eef7;
-      --muted:#9fb0c3;
-      --accent:#7cf271;
-      --accent-2:#69b7ff;
-      --line:#222a36;
-      --danger:#ff7676;
-      --radius:16px;
-      --shadow:0 8px 30px rgba(0,0,0,.25);
+      --bg:#0b0e11; --card:#12161c; --text:#e7eef7; --muted:#9fb0c3;
+      --accent:#7cf271; --accent-2:#69b7ff; --line:#222a36; --radius:16px;
+      --shadow:0 8px 30px rgba(0,0,0,.25)
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -26,84 +18,54 @@
       font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
     }
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:980px; margin:0 auto; padding:18px 16px 80px}
+    .wrap{max-width:980px;margin:0 auto;padding:18px 16px 80px}
 
-    /* Header */
-    .topbar{display:flex; align-items:center; gap:12px; justify-content:space-between; margin-bottom:8px}
-    .brand{display:flex; align-items:center; gap:10px}
-    .brand-logo{
-      width:28px; height:28px; border-radius:8px;
-      background:linear-gradient(145deg,#c8ffbd,#6aff8b);
-      display:grid; place-items:center; color:#0a0; font-weight:700;
-    }
-    .actions{display:flex; gap:8px}
-    .btn{
-      appearance:none; border:0; cursor:pointer; white-space:nowrap;
-      padding:10px 14px; border-radius:999px; font-weight:600;
-      background:#1a2230; color:var(--text); box-shadow:inset 0 0 0 1px var(--line);
-      transition:.18s ease;
-    }
+    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-logo img{width:28px;height:28px}
+    .actions{display:flex;gap:8px}
+    .btn{appearance:none;border:0;cursor:pointer;padding:10px 14px;border-radius:999px;font-weight:600;
+      background:#1a2230;color:var(--text);box-shadow:inset 0 0 0 1px var(--line);transition:.18s ease}
     .btn:hover{transform:translateY(-1px)}
-    .btn.accent{background:var(--accent); color:#0a0f14; box-shadow:none}
-    .btn.ghost{background:transparent; box-shadow:inset 0 0 0 1px var(--line)}
-    .btn.block{width:100%; text-align:center}
+    .btn.accent{background:var(--accent);color:#0a0f14}
+    .btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+    .btn.block{width:100%}
 
-    /* Hero */
-    .hero{
-      display:grid; grid-template-columns:1.15fr .85fr; gap:18px; align-items:center;
-      padding:18px; background:linear-gradient(180deg, rgba(124,242,113,.08), transparent 60%),
-                         radial-gradient(60% 80% at 80% 0%, rgba(105,183,255,.15), transparent 60%);
-      border-radius:24px; box-shadow:var(--shadow);
-      border:1px solid var(--line);
-    }
-    .h-title{font-size:36px; line-height:1.15; margin:8px 0 10px; font-weight:800; letter-spacing:.2px}
-    .h-title em{font-style:normal; color:var(--accent); text-shadow:0 0 18px rgba(124,242,113,.35)}
-    .h-sub{color:var(--muted); margin-bottom:14px}
-    .hero img{width:100%; border-radius:18px; border:1px solid var(--line)}
-    .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
-      background:rgba(124,242,113,.15); color:var(--accent); border:1px dashed rgba(124,242,113,.45); margin-bottom:10px}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:center;padding:18px;
+      background:linear-gradient(180deg,rgba(124,242,113,.08),transparent 60%),
+                 radial-gradient(60% 80% at 80% 0%,rgba(105,183,255,.15),transparent 60%);
+      border-radius:24px;box-shadow:var(--shadow);border:1px solid var(--line)}
+    .h-title{font-size:36px;line-height:1.15;margin:8px 0 10px;font-weight:800}
+    .h-title em{color:var(--accent);font-style:normal}
+    .h-sub{color:var(--muted);margin-bottom:14px}
+    .hero-media{width:100%;border-radius:18px;border:1px solid var(--line);display:block}
+    .pill{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700;
+      background:rgba(124,242,113,.15);color:var(--accent);border:1px dashed rgba(124,242,113,.45);margin-bottom:10px}
 
-    /* Features */
-    .features{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 8px}
-    .card{
-      background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow)
-    }
-    .card h4{margin:6px 0 6px; font-size:16px}
-    .card p{margin:0; color:var(--muted); font-size:14px}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 8px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+    .card h4{margin:6px 0;font-size:16px}
+    .card p{margin:0;color:var(--muted);font-size:14px}
 
-    /* Lessons */
-    .section-title{font-size:24px; font-weight:800; margin:22px 4px 12px}
-    .lessons{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
-    .lesson{background:#10161f; border:1px solid var(--line); border-radius:16px; padding:10px; position:relative}
-    .lesson .thumb{height:84px; border-radius:12px; background:linear-gradient(145deg,#2a3342,#1a2230); margin-bottom:8px}
-    .lesson h5{margin:0 0 4px; font-size:14px}
-    .lesson .meta{display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:12px}
-    .dl{width:22px; height:22px; border-radius:6px; display:grid; place-items:center; background:rgba(124,242,113,.15); color:var(--accent)}
+    .section-title{font-size:24px;font-weight:800;margin:22px 4px 12px}
+    .lessons{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    .lesson{background:#10161f;border:1px solid var(--line);border-radius:16px;padding:10px}
+    .lesson .thumb{height:84px;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:8px}
+    .lesson .thumb img{width:100%;height:100%;object-fit:cover}
 
-    /* Instructor & CTA */
-    .two{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
-    .cta{
-      background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(124,242,113,.18));
-      border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:var(--shadow)
-    }
-    .input{
-      width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line);
-      background:#0d131c; color:var(--text); outline:none
-    }
-    .input::placeholder{color:#708099}
-    .stack{display:grid; gap:10px}
-    .muted{color:var(--muted); font-size:14px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+    .cta{background:linear-gradient(135deg,rgba(105,183,255,.28),rgba(124,242,113,.18));
+      border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+    .input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);
+      background:#0d131c;color:var(--text)}
+    .stack{display:grid;gap:10px}
+    .muted{color:var(--muted);font-size:14px}
 
-    /* FAQ */
     .faq{margin-top:18px}
-    details{
-      background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px
-    }
-    summary{cursor:pointer; font-weight:700}
-    details p{margin:8px 0 0; color:var(--muted)}
+    details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+    summary{cursor:pointer;font-weight:700}
+    details p{margin:8px 0 0;color:var(--muted)}
 
-    /* Responsive */
     @media (max-width:960px){
       .hero{grid-template-columns:1fr}
       .lessons{grid-template-columns:repeat(2,1fr)}
@@ -117,7 +79,9 @@
     <!-- Header -->
     <div class="topbar">
       <div class="brand">
-        <div class="brand-logo">C</div>
+        <div class="brand-logo">
+          <img src="assets/logo-changelly.png" alt="Changelly">
+        </div>
         <strong>Changelly · Pickle Course</strong>
       </div>
       <div class="actions">
@@ -132,54 +96,43 @@
         <span class="pill">5 lessons · 5 minutes each</span>
         <h1 class="h-title">Crypto Secrets with <em>PICKLE</em></h1>
         <p class="h-sub">A short, fun crash course for absolute beginners. Learn crypto without the jargon, play a tiny quiz after each topic, and unlock the next lesson.</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
           <button class="btn accent" id="cta-start">🚀 Start for free</button>
           <button class="btn" id="cta-continue">▶️ Continue</button>
         </div>
         <p class="muted" style="margin-top:8px">Finish the course to unlock a $100 bonus raffle (brand rules apply).</p>
       </div>
       <div>
-        <img alt="Pickle hero" src="https://picsum.photos/seed/pickle/760/460" />
+        <img class="hero-media" src="assets/hero-pickle.png" alt="Pickle hero">
       </div>
     </section>
 
     <!-- Features -->
     <div class="features">
-      <div class="card">
-        <h4>Understand crypto in 25 minutes</h4>
-        <p>From zero to confident on basics and next steps.</p>
-      </div>
-      <div class="card">
-        <h4>Learn by playing</h4>
-        <p>Short quizzes and unlocks keep you motivated.</p>
-      </div>
-      <div class="card">
-        <h4>Real tools, not hype</h4>
-        <p>We show safe tools and how to avoid scams.</p>
-      </div>
+      <div class="card"><h4>Understand crypto in 25 minutes</h4><p>From zero to confident on basics and next steps.</p></div>
+      <div class="card"><h4>Learn by playing</h4><p>Short quizzes and unlocks keep you motivated.</p></div>
+      <div class="card"><h4>Real tools, not hype</h4><p>We show safe tools and how to avoid scams.</p></div>
     </div>
 
     <!-- Lessons -->
     <h3 class="section-title" id="breakdown">Course Breakdown</h3>
-    <div class="lessons" id="lessons">
-      <!-- Lesson cards injected by JS -->
-    </div>
+    <div class="lessons" id="lessons"></div>
 
     <!-- Instructor + CTA -->
     <div class="two">
       <div class="card">
-        <h3 style="margin:0 0 8px">Meet your instructor — Pickle</h3>
+        <h3>Meet your instructor — Pickle</h3>
         <p class="muted">He’s green. He’s sour. He’s into safety. He’s guided tons of beginners through their first crypto steps without pain or jargon.</p>
-        <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:10px">
-          <img src="https://picsum.photos/seed/pickle-face/400/260" alt="Pickle" style="width:100%; border-radius:12px; border:1px solid var(--line)">
-          <img src="https://picsum.photos/seed/coins/400/260" alt="Coins" style="width:100%; border-radius:12px; border:1px solid var(--line)">
+        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <img src="assets/instructor-pickle.png" alt="Instructor Pickle" style="width:100%;border-radius:12px;border:1px solid var(--line)">
+          <img src="assets/instructor-coins.png" alt="Coins" style="width:100%;border-radius:12px;border:1px solid var(--line)">
         </div>
       </div>
       <div class="cta">
-        <h3 style="margin:0 0 8px">Sync your progress</h3>
-        <p class="muted" style="margin-top:0">In a Telegram Mini App you’re already signed in via Telegram. Optionally leave your email to get reminders.</p>
+        <h3>Sync your progress</h3>
+        <p class="muted">In a Telegram Mini App you’re already signed in via Telegram. Optionally leave your email to get reminders.</p>
         <div class="stack">
-          <input id="email" class="input" placeholder="Your email (optional)" inputmode="email" />
+          <input id="email" class="input" placeholder="Your email (optional)">
           <button class="btn accent block" id="btn-email">Save & start</button>
           <button class="btn block" id="btn-login">Sign in with Telegram</button>
         </div>
@@ -189,112 +142,33 @@
     <!-- FAQ -->
     <div class="faq">
       <h3 class="section-title">Any Questions?</h3>
-      <details>
-        <summary>Is this beginner‑friendly?</summary>
-        <p>Totally. You only need Telegram. Each lesson is 3–5 minutes plus a tiny quiz.</p>
-      </details>
-      <details>
-        <summary>Do I need to invest money during the course?</summary>
-        <p>No. It’s educational. We show safe tools and steps, but you don’t have to buy anything.</p>
-      </details>
-      <details>
-        <summary>How long does it take to finish?</summary>
-        <p>About 25 minutes including quizzes.</p>
-      </details>
-      <details>
-        <summary>Why a talking pickle?</summary>
-        <p>Because crypto doesn’t have to be boring 🤷‍♂️</p>
-      </details>
+      <details><summary>Is this beginner-friendly?</summary><p>Totally. You only need Telegram. Each lesson is 3–5 minutes plus a tiny quiz.</p></details>
+      <details><summary>Do I need to invest money during the course?</summary><p>No. It’s educational. We show safe tools and steps, but you don’t have to buy anything.</p></details>
+      <details><summary>How long does it take to finish?</summary><p>About 25 minutes including quizzes.</p></details>
+      <details><summary>Why a talking pickle?</summary><p>Because crypto doesn’t have to be boring 🤷‍♂️</p></details>
     </div>
   </div>
 
   <script>
-    // ---- Telegram theming & init ----
     const tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.expand();
-      tg.ready();
-      const tp = tg.themeParams || {};
-      const set = (v, def) => v ? v : def;
-      const root = document.documentElement;
-      root.style.setProperty('--bg', set(tp.bg_color, getComputedStyle(root).getPropertyValue('--bg')));
-      root.style.setProperty('--text', set(tp.text_color, getComputedStyle(root).getPropertyValue('--text')));
-      root.style.setProperty('--card', set(tp.secondary_bg_color, getComputedStyle(root).getPropertyValue('--card')));
-      root.style.setProperty('--accent', set(tp.button_color, getComputedStyle(root).getPropertyValue('--accent')));
-      root.style.setProperty('--line', set(tp.section_separator_color, getComputedStyle(root).getPropertyValue('--line')));
-    }
+    if (tg) { tg.expand(); tg.ready(); }
 
-    // ---- Lessons ----
     const lessons = [
-      { id:'l1', title:'Why you’re still early (and what to do about it)', mins:5 },
-      { id:'l2', title:'How to spot a gem before it 10×’s', mins:5 },
-      { id:'l3', title:'The wallet mistakes that could cost you everything', mins:5 },
-      { id:'l4', title:'Buy, hold, or run? Reading the market without the jargon', mins:5 },
-      { id:'l5', title:'$100 into crypto: your first portfolio, no BS', mins:5 },
+      { id:'l1', title:'Why you’re still early (and what to do about it)', mins:5, img:'assets/lesson-1.png' },
+      { id:'l2', title:'How to spot a gem before it 10×’s', mins:5, img:'assets/lesson-2.png' },
+      { id:'l3', title:'The wallet mistakes that could cost you everything', mins:5, img:'assets/lesson-3.png' },
+      { id:'l4', title:'Buy, hold, or run? Reading the market without the jargon', mins:5, img:'assets/lesson-4.png' },
+      { id:'l5', title:'$100 into crypto: your first portfolio, no BS', mins:5, img:'assets/lesson-5.png' },
     ];
-    const $list = document.querySelector('#lessons');
+    const $list=document.querySelector('#lessons');
     lessons.forEach(l=>{
-      const div = document.createElement('div');
-      div.className = 'lesson';
-      div.innerHTML = `
-        <div class="thumb"></div>
+      const div=document.createElement('div');
+      div.className='lesson';
+      div.innerHTML=`
+        <div class="thumb"><img src="${l.img}" alt="${l.title}"></div>
         <h5>${l.title}</h5>
-        <div class="meta">
-          <span>${l.mins} min</span>
-          <button class="dl" data-id="${l.id}" aria-label="Open lesson">↓</button>
-        </div>`;
+        <div class="meta"><span>${l.mins} min</span><button class="dl" data-id="${l.id}">↓</button></div>`;
       $list.appendChild(div);
-    });
-
-    // ---- Navigation actions ----
-    const goStart = () => {
-      location.hash = '#lesson=l1';
-      if (tg){
-        tg.MainButton.setText('Go to Lesson 1');
-        tg.MainButton.show();
-        tg.MainButton.onClick(()=> location.hash = '#lesson=l1');
-      } else {
-        alert('Open Lesson 1 (demo).');
-      }
-    };
-
-    document.getElementById('btn-start').onclick = goStart;
-    document.getElementById('cta-start').onclick = goStart;
-
-    document.getElementById('cta-continue').onclick = () => {
-      const last = localStorage.getItem('pickle_progress') || 'l1';
-      location.hash = '#lesson=' + last;
-      if (!tg) alert('Continue: ' + last);
-    };
-
-    document.getElementById('btn-breakdown').onclick = () =>
-      document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
-
-    document.getElementById('btn-email').onclick = () => {
-      const v = document.getElementById('email').value.trim();
-      if (!v) return goStart();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { alert('Looks like an invalid email'); return; }
-      localStorage.setItem('pickle_email', v);
-      if (tg) tg.HapticFeedback.notificationOccurred('success');
-      goStart();
-    };
-
-    document.getElementById('btn-login').onclick = () => {
-      if (tg) {
-        const name = tg.initDataUnsafe?.user?.first_name || 'friend';
-        tg.showAlert(`Hi, ${name}! Your progress will be synced.`);
-      } else {
-        alert('In a browser we simulate sign‑in. Inside Telegram your account is used automatically.');
-      }
-    };
-
-    document.addEventListener('click', (e)=>{
-      const btn = e.target.closest('.dl');
-      if (!btn) return;
-      const id = btn.dataset.id;
-      localStorage.setItem('pickle_progress', id);
-      location.hash = '#lesson=' + id;
-      if (!tg) alert('Opening: ' + id);
     });
   </script>
 </body>
