@@ -6,10 +6,10 @@
   <title>Lesson 1 — Why you’re still early</title>
   <style>
     :root{
-      --bg:#ffffff;
-      --ink:#0b0e11;
+      --bg:#0f1115;
+      --ink:#e7eaf0;
       --accent:#9BFF7B;
-      --card:#0b0e11;
+      --card:#171a21;
     }
     *{box-sizing:border-box}
     body{
@@ -19,39 +19,32 @@
     .wrap{max-width:1040px;margin:0 auto;padding:20px 18px 60px;position:relative}
     .logo{width:174px;height:44px;object-fit:contain}
 
-    .eyebrow{text-align:center;color:#7a8696;font-weight:600;margin-top:8px}
-    .title{text-align:center;margin:8px auto 18px;max-width:780px;
-      font-family:Georgia,serif;font-style:italic;font-size:32px;font-weight:600}
+    .eyebrow{text-align:center;color:#9aa3b2;font-weight:600;margin-top:8px}
+    .title{text-align:center;margin:8px auto 18px;max-width:700px;
+      font-family:Georgia,serif;font-style:italic;
+      font-size:26px;line-height:1.3;font-weight:600}
 
     .scene{position:relative; padding:28px 0 40px}
-
-    .coin{position:absolute; width:70px; height:auto; filter:drop-shadow(0 8px 16px rgba(0,0,0,.18))}
-    .coin.eth{left:5%; top:30%}
-    .coin.btc{left:10%; bottom:20%}
-    .pickle{
-      position:absolute; right:5%; bottom:15%;
-      width:180px; height:auto;
-      filter:drop-shadow(0 12px 22px rgba(0,0,0,.18));
-    }
 
     .video{
       position:relative; margin:0 auto; width:min(760px, 92vw); aspect-ratio:16/9;
       background:var(--card); border-radius:22px; overflow:hidden;
-      box-shadow:0 12px 28px rgba(0,0,0,.35);
+      box-shadow:0 12px 28px rgba(0,0,0,.4);
     }
     .video img.bg{width:100%;height:100%;object-fit:cover;opacity:.95}
     .video .play{position:absolute; inset:0; display:grid; place-items:center}
-    .tri{width:0;height:0;border-left:28px solid var(--accent);
-      border-top:18px solid transparent;border-bottom:18px solid transparent}
+    .tri{width:0;height:0;border-left:38px solid var(--accent);
+      border-top:24px solid transparent;border-bottom:24px solid transparent}
     .video .caption{
-      position:absolute; right:16px; bottom:12px; color:#fff; opacity:.9;
+      position:absolute; right:16px; bottom:12px; color:#fff; opacity:.85;
       font-family:Georgia,serif;font-style:italic;font-size:18px;
     }
 
-    .cta{margin:28px auto 0; width:max-content}
+    .cta{margin:40px auto 0; width:max-content}
     .btn{
-      padding:12px 20px; border:0; border-radius:999px;
-      background:var(--accent); font-weight:700; cursor:pointer;
+      padding:18px 36px; border:0; border-radius:999px;
+      background:var(--accent); font-weight:700; font-size:18px;
+      cursor:pointer;
     }
   </style>
 </head>
@@ -66,16 +59,11 @@
 
     <!-- Scene -->
     <div class="scene">
-      <img class="coin eth" src="assets/l1-coin-eth.png" alt="">
-      <img class="coin btc" src="assets/l1-coin-btc.png" alt="">
-
       <div class="video">
         <img class="bg" src="assets/l1-grid.png" alt="">
         <div class="play"><div class="tri"></div></div>
         <div class="caption">Lesson 1</div>
       </div>
-
-      <img class="pickle" src="assets/l1-pickle.png" alt="">
     </div>
 
     <!-- CTA -->
