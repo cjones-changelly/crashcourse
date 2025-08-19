@@ -20,9 +20,10 @@
     }
     .wrap{max-width:980px;margin:0 auto;padding:18px 16px 80px}
 
+    /* Header */
     .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .brand{display:flex;align-items:center;gap:10px}
-    .brand-logo img{width:28px;height:28px}
+    .brand-logo img{width:174px;height:44px;object-fit:contain}
+
     .actions{display:flex;gap:8px}
     .btn{appearance:none;border:0;cursor:pointer;padding:10px 14px;border-radius:999px;font-weight:600;
       background:#1a2230;color:var(--text);box-shadow:inset 0 0 0 1px var(--line);transition:.18s ease}
@@ -31,6 +32,7 @@
     .btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
     .btn.block{width:100%}
 
+    /* Hero */
     .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:center;padding:18px;
       background:linear-gradient(180deg,rgba(124,242,113,.08),transparent 60%),
                  radial-gradient(60% 80% at 80% 0%,rgba(105,183,255,.15),transparent 60%);
@@ -42,17 +44,20 @@
     .pill{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700;
       background:rgba(124,242,113,.15);color:var(--accent);border:1px dashed rgba(124,242,113,.45);margin-bottom:10px}
 
+    /* Features */
     .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 8px}
     .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
     .card h4{margin:6px 0;font-size:16px}
     .card p{margin:0;color:var(--muted);font-size:14px}
 
+    /* Lessons */
     .section-title{font-size:24px;font-weight:800;margin:22px 4px 12px}
     .lessons{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
     .lesson{background:#10161f;border:1px solid var(--line);border-radius:16px;padding:10px}
     .lesson .thumb{height:84px;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:8px}
     .lesson .thumb img{width:100%;height:100%;object-fit:cover}
 
+    /* Instructor + CTA */
     .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
     .cta{background:linear-gradient(135deg,rgba(105,183,255,.28),rgba(124,242,113,.18));
       border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
@@ -61,6 +66,7 @@
     .stack{display:grid;gap:10px}
     .muted{color:var(--muted);font-size:14px}
 
+    /* FAQ */
     .faq{margin-top:18px}
     details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px}
     summary{cursor:pointer;font-weight:700}
@@ -78,11 +84,8 @@
   <div class="wrap">
     <!-- Header -->
     <div class="topbar">
-      <div class="brand">
-        <div class="brand-logo">
-          <img src="assets/logo-changelly.png" alt="Changelly">
-        </div>
-        <strong>Changelly · Pickle Course</strong>
+      <div class="brand-logo">
+        <img src="assets/logo-changelly.png" alt="Changelly">
       </div>
       <div class="actions">
         <button id="btn-breakdown" class="btn ghost">Course breakdown</button>
@@ -123,9 +126,8 @@
       <div class="card">
         <h3>Meet your instructor — Pickle</h3>
         <p class="muted">He’s green. He’s sour. He’s into safety. He’s guided tons of beginners through their first crypto steps without pain or jargon.</p>
-        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="margin-top:10px">
           <img src="assets/instructor-pickle.png" alt="Instructor Pickle" style="width:100%;border-radius:12px;border:1px solid var(--line)">
-          <img src="assets/instructor-coins.png" alt="Coins" style="width:100%;border-radius:12px;border:1px solid var(--line)">
         </div>
       </div>
       <div class="cta">
