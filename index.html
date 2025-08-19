@@ -192,7 +192,7 @@
       { id:'l5', title:'$100 into crypto: your first portfolio, no BS', mins:5, img:'assets/lesson-5.png' },
     ];
 
-    // render lessons (cards clickable, no arrows)
+    // render lessons (cards clickable, arrow →)
     const $list = document.getElementById('lessons');
     lessons.forEach(l=>{
       const card = document.createElement('div');
@@ -203,7 +203,7 @@
       card.innerHTML = `
         <div class="thumb"><img src="${l.img}" alt="${l.title}"></div>
         <h5>${l.title}</h5>
-        <div class="meta"><span>${l.mins} min</span><span>Tap to open</span></div>`;
+        <div class="meta"><span>${l.mins} min</span><span>→</span></div>`;
       $list.appendChild(card);
     });
 
