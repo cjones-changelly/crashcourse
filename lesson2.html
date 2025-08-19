@@ -51,48 +51,48 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* FINAL SCREEN — mobile card like your Figma */
+  /* FINAL SCREEN — green card, price tile above phones; phones stick to bottom */
   .finalCard{
     position:relative;
     background:var(--brand);
     color:var(--ink);
     border-radius:24px;
-    padding:22px 18px 18px;
-    overflow:visible; /* чтобы Пикл выглядывал */
-  }
-  .finalCard .peek{
-    position:absolute; left:50%; transform:translateX(-50%);
-    top:-62px; width:150px; height:auto; pointer-events:none; z-index:2;
+    padding:22px 18px 0;    /* без нижнего паддинга, чтобы телефоны прилипли к низу */
+    overflow:hidden;        /* обрезаем внутри по радиусу */
   }
   .finalCard h4{
-    margin:6px 0 8px; font-size:28px; line-height:1.15; font-weight:800;
-    letter-spacing:.2px;
+    margin:6px 0 8px; font-size:28px; line-height:1.15; font-weight:800; letter-spacing:.2px;
   }
-  .finalCard p{
-    margin:0 0 14px; color:rgba(11,14,17,.85);
-  }
+  .finalCard p{ margin:0 0 14px; color:rgba(11,14,17,.85) }
 
-  /* Big App Store button (pill) */
+  /* Big App Store button */
   .storeBig{
     display:flex; align-items:center; justify-content:center;
     height:52px; border-radius:12px; background:#0b0e11; color:#fff;
     text-decoration:none; font-weight:700;
     box-shadow:0 8px 18px rgba(0,0,0,.25);
-    margin:6px 0 14px;
+    margin:6px 0 12px;
   }
   .storeBig img{height:28px; width:auto; display:block}
 
-  /* Art stack under the button */
+  /* Art stack area occupies bottom of card */
   .artStack{
-    position:relative; height:240px; margin-top:6px;
+    position:relative; height:250px; margin-top:4px;
   }
   .artStack .tile{
-    position:absolute; left:10px; top:6px; width:min(78%, 280px);
+    position:absolute; left:16px; top:8px; width:min(78%, 300px);
     filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));
+    z-index:2;           /* над руками */
   }
   .artStack .phones{
-    position:absolute; right:0; bottom:0; width:min(88%, 360px);
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:0; width:min(92%, 420px);
     filter:drop-shadow(0 12px 28px rgba(0,0,0,.25));
+  }
+  @media (max-width:420px){
+    .artStack{height:230px}
+    .artStack .tile{width:min(82%, 280px); left:12px; top:6px}
+    .artStack .phones{width:min(96%, 390px)}
   }
 
   /* CTA */
@@ -187,11 +187,10 @@
         </div>
       </section>
 
-      <!-- SLIDE 3: exact mobile block clone -->
+      <!-- SLIDE 3: mobile card with price tile above, phones stuck to bottom -->
       <section class="slide">
         <div class="wrap">
           <section class="finalCard">
-            <img class="peek" src="assets/l2-pickle-peek.png" alt="Pickle">
             <h4>Found a Gem? Stay on It!</h4>
             <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
 
@@ -200,7 +199,9 @@
             </a>
 
             <div class="artStack" aria-hidden="true">
+              <!-- прайс-пуш сверху -->
               <img class="tile" src="assets/l2-eth-tile.png" alt="">
+              <!-- руки с телефонами прилипают к нижней границе карточки -->
               <img class="phones" src="assets/l2-phones.png" alt="">
             </div>
           </section>
@@ -224,8 +225,6 @@
     const track = document.getElementById('track');
     const slides = Array.from(track.children);
     const dots = document.getElementById('dots');
-    const prev = document.getElementById('prev');
-    const next = document.getElementById('next');
     let i = 0;
 
     slides.forEach((_, idx) => {
@@ -234,6 +233,8 @@
       dots.appendChild(d);
     });
     const dotEls = Array.from(dots.children);
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
 
     function update(){
       track.style.transform = `translateX(${-i*100}%)`;
@@ -265,5 +266,9 @@
     update();
   })();
 </script>
+<!-- стрелки карусели -->
+<button class="arw left" id="prev" aria-label="Previous">‹</button>
+<button class="arw right" id="next" aria-label="Next">›</button>
+<div class="nav"><div class="dots" id="dots"></div></div>
 </body>
 </html>
