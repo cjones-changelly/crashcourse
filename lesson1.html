@@ -1,75 +1,89 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Lesson 1 — Why you’re still early</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lesson 1 — Crypto Course</title>
   <style>
-    :root{
-      --bg:#0f1115;
-      --ink:#e7eaf0;
-      --accent:#9BFF7B;
-      --card:#171a21;
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --text: #e7eaf0;
+      --accent: #7cdfff;
+      --btn: #33d69e;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; background:var(--bg); color:var(--ink);
-      font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 16px;
     }
-    .wrap{max-width:1040px;margin:0 auto;padding:20px 18px 60px;position:relative}
-    .logo{width:174px;height:44px;object-fit:contain}
-
-    .eyebrow{text-align:center;color:#9aa3b2;font-weight:600;margin-top:8px}
-    .title{text-align:center;margin:8px auto 18px;max-width:700px;
-      font-family:Georgia,serif;font-style:italic;
-      font-size:26px;line-height:1.3;font-weight:600}
-
-    .scene{position:relative; padding:28px 0 40px}
-
-    .video{
-      position:relative; margin:0 auto; width:min(760px, 92vw); aspect-ratio:16/9;
-      background:var(--card); border-radius:22px; overflow:hidden;
-      box-shadow:0 12px 28px rgba(0,0,0,.4);
+    header {
+      position: fixed;
+      top: 16px;
+      left: 16px;
     }
-    .video img.bg{width:100%;height:100%;object-fit:cover;opacity:.95}
-    .video .play{position:absolute; inset:0; display:grid; place-items:center}
-    .tri{width:0;height:0;border-left:38px solid var(--accent);
-      border-top:24px solid transparent;border-bottom:24px solid transparent}
-    .video .caption{
-      position:absolute; right:16px; bottom:12px; color:#fff; opacity:.85;
-      font-family:Georgia,serif;font-style:italic;font-size:18px;
+    header a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 24px;
     }
-
-    .cta{margin:40px auto 0; width:max-content}
-    .btn{
-      padding:18px 36px; border:0; border-radius:999px;
-      background:var(--accent); font-weight:700; font-size:18px;
-      cursor:pointer;
+    h2 {
+      margin-top: 60px;
+      margin-bottom: 12px;
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .player {
+      background: #000;
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 16/9;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 24px 0;
+    }
+    .player button {
+      background: none;
+      border: none;
+      font-size: 64px;
+      color: var(--btn);
+      cursor: pointer;
+    }
+    .done-btn {
+      margin-top: auto;
+      margin-bottom: 40px;
+      padding: 16px 32px;
+      background: var(--btn);
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #000;
+      cursor: pointer;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- Header -->
-    <img class="logo" src="assets/logo-changelly.png" alt="changelly">
-
-    <!-- Title -->
-    <div class="eyebrow">Lesson 1</div>
-    <h1 class="title">Why you're still early<br />(and what to do about it)</h1>
-
-    <!-- Scene -->
-    <div class="scene">
-      <div class="video">
-        <img class="bg" src="assets/l1-grid.png" alt="">
-        <div class="play"><div class="tri"></div></div>
-        <div class="caption">Lesson 1</div>
-      </div>
-    </div>
-
-    <!-- CTA -->
-    <div class="cta">
-      <button class="btn">Done!</button>
-    </div>
+  <header>
+    <a href="index.html">←</a>
+  </header>
+  <h2>Why you're still early<br>(and what to do about it)</h2>
+  <div class="player">
+    <button>▶</button>
   </div>
+  <a href="lesson2.html" class="done-btn">Done!</a>
 </body>
 </html>
