@@ -9,7 +9,6 @@
       --bg: #0f1115;
       --card: #171a21;
       --text: #e7eaf0;
-      --accent: #7cdfff;
       --brand: #B1FF8C; /* фирменный зелёный */
     }
     * { box-sizing: border-box; }
@@ -18,72 +17,69 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      display: flex;
-      flex-direction: column;
       min-height: 100vh;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 16px;
     }
-    header {
-      position: fixed;
-      top: 16px;
-      left: 16px;
+    /* header */
+    .bar{
+      position: sticky; top: 0; z-index: 10;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 12px 16px;
+      background: linear-gradient(180deg, rgba(15,17,21,.92), rgba(15,17,21,.75) 60%, rgba(15,17,21,0));
+      backdrop-filter: blur(8px);
     }
-    header a {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 24px;
+    .back{ color: var(--text); text-decoration: none; font-size: 24px; line-height: 1; }
+    .logo{
+      height: 44px; width: auto; object-fit: contain; display:block;
     }
-    h2 {
-      margin-top: 60px;
-      margin-bottom: 12px;
-      font-size: 20px;
-      font-weight: 600;
-      text-align: center;
-      line-height: 1.3;
+    @media (max-width:480px){ .logo{ height:36px; } }
+
+    .wrap{max-width:780px; margin:0 auto; padding: 10px 16px 40px}
+    h2{
+      margin: 18px 0 12px;
+      font-size: 20px; font-weight: 600; text-align: center; line-height: 1.3;
     }
+
     .player {
-      background: #000;
+      background: var(--card);
       width: 100%;
-      max-width: 600px;
       aspect-ratio: 16/9;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 24px 0;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 16px 0 28px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.4);
     }
     .player button {
-      background: none;
-      border: none;
-      font-size: 64px;
-      color: var(--brand); /* фирменный зелёный */
-      cursor: pointer;
+      background: none; border: none;
+      font-size: 64px; line-height: 1; cursor: pointer;
+      color: var(--brand);
     }
-    .done-btn {
-      margin-top: auto;
-      margin-bottom: 40px;
-      padding: 16px 32px;
-      background: var(--brand); /* фирменный зелёный */
-      border: none;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #000;
-      cursor: pointer;
-      text-decoration: none;
+
+    .cta{ display:flex; justify-content:center; }
+    .done-btn{
+      padding: 18px 36px; border: 0; border-radius: 999px;
+      background: var(--brand); color:#07110c;
+      font-size: 18px; font-weight: 700; text-decoration: none;
+      display:inline-flex; align-items:center; justify-content:center;
+      box-shadow: 0 6px 14px rgba(177,255,140,.25);
     }
   </style>
 </head>
 <body>
-  <header>
-    <a href="index.html">←</a>
+  <header class="bar">
+    <a href="index.html" class="back">←</a>
+    <img class="logo" src="assets/logo-changelly.png" alt="Changelly">
   </header>
-  <h2>Why you're still early<br>(and what to do about it)</h2>
-  <div class="player">
-    <button>▶</button>
+
+  <div class="wrap">
+    <h2>Why you're still early<br>(and what to do about it)</h2>
+
+    <div class="player">
+      <button aria-label="Play">▶</button>
+    </div>
+
+    <div class="cta">
+      <a href="lesson2.html" class="done-btn">Done!</a>
+    </div>
   </div>
-  <a href="lesson2.html" class="done-btn">Done!</a>
 </body>
 </html>
