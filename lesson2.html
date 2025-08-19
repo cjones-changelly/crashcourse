@@ -7,7 +7,7 @@
 <style>
   :root{
     --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
-    --brand:#B1FF8C; --line:#242936;
+    --brand:#B1FF8C; --line:#242936; --ink:#0b0e11;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -51,68 +51,60 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* FINAL SCREEN (green card with peek, paired tiles equal size) */
-  .appCard{
+  /* FINAL SCREEN — mobile card like your Figma */
+  .finalCard{
     position:relative;
-    background:#B1FF8C1f;
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:26px 18px 18px;      /* больше верхний паддинг под "руки" */
-    overflow:visible;            /* важно: не обрезаем Пикла */
+    background:var(--brand);
+    color:var(--ink);
+    border-radius:24px;
+    padding:22px 18px 18px;
+    overflow:visible; /* чтобы Пикл выглядывал */
   }
-  .peek{
+  .finalCard .peek{
     position:absolute; left:50%; transform:translateX(-50%);
-    top:-64px;                   /* вынос над карточкой */
-    width:140px; height:auto; pointer-events:none; z-index:2;
+    top:-62px; width:150px; height:auto; pointer-events:none; z-index:2;
   }
-  .appHead h4{margin:6px 0 6px; font-size:18px}
-  .appHead p{
-    margin:0 0 14px; color:#0b0e11; background:rgba(255,255,255,.85);
-    padding:8px 10px; border-radius:10px;
+  .finalCard h4{
+    margin:6px 0 8px; font-size:28px; line-height:1.15; font-weight:800;
+    letter-spacing:.2px;
   }
-  @media (max-width:720px){ .appHead p{ background:transparent; color:var(--muted); padding:0 } }
+  .finalCard p{
+    margin:0 0 14px; color:rgba(11,14,17,.85);
+  }
 
-  /* два равных "тайла" напротив друг друга */
-  .pair{
-    display:grid;
-    grid-template-columns:repeat(2, 300px); /* равные ширины тайлов */
-    justify-content:center;                 /* центрируем пару */
-    gap:16px;
-  }
-  .tile{
-    background:#0e131b; border:1px solid var(--line); border-radius:14px;
-    padding:14px; display:flex; align-items:center; justify-content:center;
-    height:300px;                         /* равная высота тайлов */
-    box-shadow:0 8px 20px rgba(0,0,0,.25);
-  }
-  .tile.qr img{
-    width:100%; height:100%; object-fit:contain;
-    max-width:240px; max-height:240px;   /* QR чуть мельче */
-  }
-  .tile.stores{ flex-direction:column; gap:12px }
-  .storeBtn{
+  /* Big App Store button (pill) */
+  .storeBig{
     display:flex; align-items:center; justify-content:center;
-    height:56px; width:100%;
-    background:#0b0e11; border:1px solid var(--line); border-radius:12px;
+    height:52px; border-radius:12px; background:#0b0e11; color:#fff;
+    text-decoration:none; font-weight:700;
+    box-shadow:0 8px 18px rgba(0,0,0,.25);
+    margin:6px 0 14px;
   }
-  .storeBtn img{ height:40px; width:auto; display:block }
+  .storeBig img{height:28px; width:auto; display:block}
 
-  @media (max-width:720px){
-    .pair{ grid-template-columns:minmax(240px, 1fr); }
-    .tile{ height:auto; padding:16px }
-    .tile.qr img{ max-width:220px; max-height:220px }
+  /* Art stack under the button */
+  .artStack{
+    position:relative; height:240px; margin-top:6px;
+  }
+  .artStack .tile{
+    position:absolute; left:10px; top:6px; width:min(78%, 280px);
+    filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));
+  }
+  .artStack .phones{
+    position:absolute; right:0; bottom:0; width:min(88%, 360px);
+    filter:drop-shadow(0 12px 28px rgba(0,0,0,.25));
   }
 
   /* CTA */
   .cta{display:flex;justify-content:center;margin:16px 0 4px}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;border:0;border-radius:999px;
-       background:var(--brand);color:#07110c;font-weight:700;box-shadow:0 6px 14px rgba(177,255,140,.25)}
+       background:#B1FF8C;color:#07110c;font-weight:700;box-shadow:0 6px 14px rgba(177,255,140,.25)}
 
   /* Nav / progress */
   .nav{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
-  .dot.active{background:var(--brand);opacity:1}
+  .dot.active{background:#B1FF8C;opacity:1}
   .arw{position:absolute;top:50%;transform:translateY(-50%);font-size:28px;line-height:1;background:transparent;border:0;color:#9aa3b2;cursor:pointer}
   .arw.left{left:6px}
   .arw.right{right:6px}
@@ -195,32 +187,21 @@
         </div>
       </section>
 
-      <!-- SLIDE 3: App block fixed -->
+      <!-- SLIDE 3: exact mobile block clone -->
       <section class="slide">
         <div class="wrap">
-          <section class="appCard">
+          <section class="finalCard">
             <img class="peek" src="assets/l2-pickle-peek.png" alt="Pickle">
+            <h4>Found a Gem? Stay on It!</h4>
+            <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
 
-            <div class="appHead">
-              <h4>Found a Gem? Stay on It!</h4>
-              <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
-            </div>
+            <a href="#" class="storeBig" aria-label="Download on the App Store">
+              <img src="assets/badge-appstore.png" alt="Download on the App Store">
+            </a>
 
-            <div class="pair">
-              <div class="tile qr">
-                <img src="assets/l2-qr.png" alt="QR code to download the app">
-              </div>
-              <div class="tile stores">
-                <a href="#" class="storeBtn" aria-label="Download on the App Store">
-                  <img src="assets/badge-appstore.png" alt="Download on the App Store">
-                </a>
-                <a href="#" class="storeBtn" aria-label="Get it on Google Play">
-                  <img src="assets/badge-googleplay.png" alt="Get it on Google Play">
-                </a>
-                <a href="#" class="storeBtn" aria-label="Download Android APK">
-                  <img src="assets/badge-android-apk.png" alt="Download Android APK">
-                </a>
-              </div>
+            <div class="artStack" aria-hidden="true">
+              <img class="tile" src="assets/l2-eth-tile.png" alt="">
+              <img class="phones" src="assets/l2-phones.png" alt="">
             </div>
           </section>
 
