@@ -56,21 +56,36 @@
     background:linear-gradient(180deg,rgba(177,255,140,.22),rgba(177,255,140,.12));
     border:1px solid var(--line); border-radius:16px; padding:16px;
   }
+  .qrHeader h4{margin:0 0 6px}
+  .qrHeader p{margin:0 0 12px;color:#0b0e11;background:rgba(255,255,255,.75);padding:6px 8px;border-radius:8px}
+  @media (max-width:720px){ .qrHeader p{background:transparent;color:var(--muted);padding:0} }
+
   .qrGrid{
     display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:center;
   }
-  .qrGrid .qrWrap{
+  .qrWrap{
     display:flex; align-items:center; justify-content:center;
     background:#0e131b; border:1px solid var(--line); border-radius:12px; padding:12px;
   }
-  .qrGrid .qr{ width:100%; max-width:280px; height:auto; display:block }
+  .qr{ width:100%; max-width:280px; height:auto; display:block }
   .stores{ display:grid; gap:12px; }
   .stores a{ display:block; }
   .stores img{ height:48px; width:auto; display:block }
   @media (max-width:720px){
     .qrGrid{ grid-template-columns:1fr; }
-    .qrGrid .qr{ max-width:240px }
+    .qr{ max-width:240px }
   }
+
+  /* Phones art below the grid */
+  .promo-art{position:relative;border-radius:12px;overflow:hidden;background:#0e131b;border:1px solid var(--line);
+             display:flex;align-items:center;justify-content:center;min-height:160px;margin-top:14px}
+  .promo-art img{max-width:100%;height:auto;display:block}
+  .promo-art .tile{
+    position:absolute; left:10px; top:10px; width:140px; height:auto;
+    border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.12); pointer-events:none;
+  }
+  @media (max-width:720px){ .promo-art .tile{width:110px; left:8px; top:8px} }
 
   /* Nav / progress */
   .nav{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
@@ -164,10 +179,15 @@
         </div>
       </section>
 
-      <!-- SLIDE 3: Big QR + stacked store buttons + CTA -->
+      <!-- SLIDE 3: Text + Big QR left + stacked stores right + phones image below + CTA -->
       <section class="slide">
         <div class="wrap">
           <div class="qrCard">
+            <div class="qrHeader">
+              <h4>Found a Gem? Stay on it!</h4>
+              <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
+            </div>
+
             <div class="qrGrid">
               <div class="qrWrap">
                 <img class="qr" src="assets/l2-qr.png" alt="QR code to download the app">
@@ -183,6 +203,11 @@
                   <img src="assets/badge-android-apk.png" alt="Download Android APK">
                 </a>
               </div>
+            </div>
+
+            <div class="promo-art">
+              <img src="assets/l2-phones.png" alt="mobile app previews">
+              <img src="assets/l2-eth-tile.png" alt="ETH price" class="tile">
             </div>
           </div>
 
@@ -209,7 +234,6 @@
     const next = document.getElementById('next');
     let i = 0;
 
-    // dots
     slides.forEach((_, idx) => {
       const d = document.createElement('span');
       d.className = 'dot' + (idx===0 ? ' active' : '');
@@ -227,7 +251,6 @@
     document.getElementById('prev').addEventListener('click', ()=>go(i-1));
     document.getElementById('next').addEventListener('click', ()=>go(i+1));
 
-    // keyboard
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
