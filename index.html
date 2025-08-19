@@ -4,12 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Crypto Secrets with Pickle — Mini App</title>
+  <!-- Telegram Web Apps SDK (для авто-темизации в миниаппе) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root{
-      --bg:#0b0e11; --card:#12161c; --text:#e7eef7; --muted:#9fb0c3;
-      --accent:#7cf271; --accent-2:#69b7ff; --line:#222a36;
-      --shadow:0 8px 30px rgba(0,0,0,.25)
+      --bg:#0b0e11;
+      --card:#12161c;
+      --text:#e7eaf7;
+      --muted:#9fb0c3;
+      --brand:#B1FF8C;           /* фирменный зелёный */
+      --accent-2:#69b7ff;
+      --line:#222a36;
+      --shadow:0 8px 30px rgba(0,0,0,.25);
+      --radius:16px;
+      --btn-h:44px;              /* ЕДИНАЯ ВЫСОТА КНОПОК */
+      --btn-fs:15px;             /* ЕДИНЫЙ РАЗМЕР ШРИФТА */
+      --btn-pad:0 18px;          /* ЕДИНЫЕ ОТСТУПЫ */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -22,56 +32,55 @@
     a{color:inherit; text-decoration:none}
     .wrap{max-width:980px; margin:0 auto; padding:18px 16px 80px}
 
-    /* Header */
+    /* ---------- Header ---------- */
     .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
     .brand-logo img{width:174px; height:44px; object-fit:contain}
-    .actions{display:flex; gap:8px}
+
+    .actions{display:flex; gap:10px; flex-wrap:wrap}
     .btn{
-      appearance:none; border:0; cursor:pointer; white-space:nowrap;
-      padding:10px 14px; border-radius:999px; font-weight:600;
-      background:#1a2230; color:var(--text); box-shadow:inset 0 0 0 1px var(--line);
-      transition:.18s ease
+      display:inline-flex; align-items:center; justify-content:center;
+      height:var(--btn-h); padding:var(--btn-pad);
+      border:1px solid var(--line); border-radius:999px;
+      font-weight:700; font-size:var(--btn-fs); line-height:1;
+      cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+      background:#1a2230; color:var(--text);
     }
     .btn:hover{transform:translateY(-1px)}
-    .btn.accent{background:var(--accent); color:#0a0f14}
-    .btn.ghost{background:transparent; box-shadow:inset 0 0 0 1px var(--line)}
-    .btn.block{width:100%; text-align:center}
+    .btn:active{transform:translateY(0)}
+    .btn.solid{background:var(--brand); color:#07110c; border-color:transparent; box-shadow:0 6px 14px rgba(177,255,140,.25)}
+    .btn.ghost{background:transparent}
 
-    /* Hero */
+    /* ---------- Hero ---------- */
     .hero{
       display:grid; grid-template-columns:1.15fr .85fr; gap:18px; align-items:center;
-      padding:18px; background:linear-gradient(180deg, rgba(124,242,113,.08), transparent 60%),
-                         radial-gradient(60% 80% at 80% 0%, rgba(105,183,255,.15), transparent 60%);
-      border-radius:24px; box-shadow:var(--shadow);
-      border:1px solid var(--line);
+      padding:18px; background:
+        linear-gradient(180deg, rgba(177,255,140,.10), transparent 60%),
+        radial-gradient(60% 80% at 80% 0%, rgba(105,183,255,.15), transparent 60%);
+      border-radius:24px; box-shadow:var(--shadow); border:1px solid var(--line);
     }
     .h-title{font-size:36px; line-height:1.15; margin:8px 0 10px; font-weight:800; letter-spacing:.2px}
-    .h-title em{font-style:normal; color:var(--accent); text-shadow:0 0 18px rgba(124,242,113,.35)}
+    .h-title em{font-style:normal; color:var(--brand); text-shadow:0 0 18px rgba(177,255,140,.35)}
     .h-sub{color:var(--muted); margin-bottom:14px}
     .hero img{width:100%; border-radius:18px; border:1px solid var(--line)}
     .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
-      background:rgba(124,242,113,.15); color:var(--accent); border:1px dashed rgba(124,242,113,.45); margin-bottom:10px}
+      background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
+    .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
 
-    /* Features */
+    /* ---------- Features ---------- */
     .features{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 8px}
-    .card{
-      background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow)
-    }
+    .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow)}
     .card h4{margin:6px 0 6px; font-size:16px}
     .card p{margin:0; color:var(--muted); font-size:14px}
 
-    /* Lessons */
+    /* ---------- Lessons ---------- */
     .section-title{font-size:24px; font-weight:800; margin:22px 4px 12px}
     .lessons{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
     .lesson{
       background:linear-gradient(180deg,#12161c,#0f141c);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:10px;
+      border:1px solid var(--line); border-radius:16px; padding:10px;
       box-shadow:0 6px 18px rgba(0,0,0,.25);
       transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-      cursor:pointer;
-      outline:none;
+      cursor:pointer; outline:none; display:block; color:inherit;
     }
     .lesson:hover{transform:translateY(-3px); box-shadow:0 12px 26px rgba(0,0,0,.35); border-color:#2e3646}
     .lesson:active{transform:translateY(-1px) scale(.995)}
@@ -79,30 +88,29 @@
     .lesson .thumb img{width:100%; height:100%; object-fit:cover; display:block}
     .lesson h5{margin:0 0 4px; font-size:14px}
     .lesson .meta{display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:12px}
+    .lesson .meta .arrow{font-weight:700; color:var(--brand)}
 
-    /* Instructor & CTA */
+    /* ---------- Instructor & CTA ---------- */
     .two{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
     .cta{
-      background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(124,242,113,.18));
+      background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(177,255,140,.18));
       border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:var(--shadow)
     }
     .input{
-      width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line);
-      background:#0d131c; color:var(--text); outline:none
+      width:100%; height:44px; padding:0 14px; border-radius:12px; border:1px solid var(--line);
+      background:#0d131c; color:var(--text); outline:none; font-size:15px;
     }
     .input::placeholder{color:#708099}
     .stack{display:grid; gap:10px}
     .muted{color:var(--muted); font-size:14px}
 
-    /* FAQ */
+    /* ---------- FAQ ---------- */
     .faq{margin-top:18px}
-    details{
-      background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px
-    }
+    details{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px}
     summary{cursor:pointer; font-weight:700}
     details p{margin:8px 0 0; color:var(--muted)}
 
-    /* Responsive */
+    /* ---------- Responsive ---------- */
     @media (max-width:960px){
       .hero{grid-template-columns:1fr}
       .lessons{grid-template-columns:repeat(2,1fr)}
@@ -120,7 +128,7 @@
       </div>
       <div class="actions">
         <button id="btn-breakdown" class="btn ghost">Course breakdown</button>
-        <a href="lesson1.html" class="btn accent" id="btn-start-link">Get started</a>
+        <a href="lesson1.html" class="btn solid" id="btn-start-link">Get started</a>
       </div>
     </div>
 
@@ -130,10 +138,10 @@
         <span class="pill">5 lessons · 5 minutes each</span>
         <h1 class="h-title">Crypto Secrets with <em>PICKLE</em></h1>
         <p class="h-sub">A short, fun crash course for absolute beginners. Learn crypto without the jargon, play a tiny quiz after each topic, and unlock the next lesson.</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px">
-          <!-- Get started → lesson1.html -->
-          <a class="btn accent" id="cta-start" href="lesson1.html">🚀 Start for free</a>
-          <button class="btn" id="cta-continue">▶️ Continue</button>
+        <div class="hero-cta">
+          <!-- Одинаковые кнопки по стилю и размерам -->
+          <a class="btn solid" id="cta-start" href="lesson1.html">🚀 Start for free</a>
+          <button class="btn ghost" id="cta-continue">▶️ Continue</button>
         </div>
         <p class="muted" style="margin-top:8px">Finish the course to unlock a $100 bonus raffle (brand rules apply).</p>
       </div>
@@ -176,8 +184,8 @@
         <p class="muted" style="margin-top:0">In a Telegram Mini App you’re already signed in via Telegram. Optionally leave your email to get reminders.</p>
         <div class="stack">
           <input id="email" class="input" placeholder="Your email (optional)" inputmode="email" />
-          <button class="btn accent block" id="btn-email">Save & start</button>
-          <button class="btn block" id="btn-login">Sign in with Telegram</button>
+          <button class="btn solid" id="btn-email">Save & start</button>
+          <button class="btn ghost" id="btn-login">Sign in with Telegram</button>
         </div>
       </div>
     </div>
@@ -205,23 +213,33 @@
   </div>
 
   <script>
-    // Telegram theming (как раньше)
+    // Telegram theming (необязательно, но приятно)
     const tg = window.Telegram?.WebApp;
-    if (tg) { tg.expand(); tg.ready(); }
+    if (tg) {
+      tg.expand(); tg.ready();
+      const tp = tg.themeParams || {};
+      const root = document.documentElement;
+      const set = (k, v, def) => root.style.setProperty(k, v || getComputedStyle(root).getPropertyValue(def));
+      set('--bg', tp.bg_color, '--bg');
+      set('--text', tp.text_color, '--text');
+      set('--card', tp.secondary_bg_color, '--card');
+      set('--brand', tp.button_color, '--brand');
+      set('--line', tp.section_separator_color, '--line');
+    }
 
     // Header "Course breakdown" → scroll to section
     document.getElementById('btn-breakdown').onclick = () => {
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
     };
 
-    // Continue button → к последнему уроку (если уже есть прогресс)
+    // Continue → к последнему уроку (если есть прогресс)
     document.getElementById('cta-continue').onclick = () => {
       const last = localStorage.getItem('pickle_progress') || 'l1';
       const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
       location.href = map[last] || 'lesson1.html';
     };
 
-    // Email save (как было)
+    // Email save → старт
     document.getElementById('btn-email').onclick = () => {
       const v = document.getElementById('email').value.trim();
       if (!v) { location.href = 'lesson1.html'; return; }
@@ -231,6 +249,7 @@
       location.href = 'lesson1.html';
     };
 
+    // Login info
     document.getElementById('btn-login').onclick = () => {
       if (tg) {
         const name = tg.initDataUnsafe?.user?.first_name || 'friend';
@@ -240,7 +259,7 @@
       }
     };
 
-    // Lessons list (с картинками PNG и стрелкой →, каждая карточка кликабельна)
+    // Lessons list: кликабельные карточки с →, сохраняем прогресс
     const lessons = [
       { id:'l1', title:'Why you’re still early (and what to do about it)', mins:5, img:'assets/lesson-1.png', url:'lesson1.html' },
       { id:'l2', title:'How to spot a gem before it 10×’s', mins:5, img:'assets/lesson-2.png', url:'lesson2.html' },
@@ -257,16 +276,13 @@
       card.innerHTML = `
         <div class="thumb"><img src="${l.img}" alt="${l.title}" loading="lazy" decoding="async"></div>
         <h5>${l.title}</h5>
-        <div class="meta"><span>${l.mins} min</span><span>→</span></div>`;
+        <div class="meta"><span>${l.mins} min</span><span class="arrow">→</span></div>`;
       $list.appendChild(card);
     });
-
-    // сохраняем прогресс при клике на карточку
     $list.addEventListener('click', (e)=>{
       const a = e.target.closest('.lesson');
       if (!a) return;
-      const id = a.dataset.id;
-      localStorage.setItem('pickle_progress', id);
+      localStorage.setItem('pickle_progress', a.dataset.id);
     });
   </script>
 </body>
