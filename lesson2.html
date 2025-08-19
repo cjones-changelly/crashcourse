@@ -51,15 +51,19 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* FINAL SCREEN (green card, full width, left-side content expanded) */
+  /* FINAL SCREEN (green card with peek, paired tiles equal size) */
   .appCard{
     position:relative;
-    background:#b1ff8c1f;  /* мягкий зеленый фон */
-    border:1px solid var(--line); border-radius:18px; padding:18px; overflow:hidden;
+    background:#B1FF8C1f;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:26px 18px 18px;      /* больше верхний паддинг под "руки" */
+    overflow:visible;            /* важно: не обрезаем Пикла */
   }
   .peek{
-    position:absolute; left:50%; transform:translateX(-50%); top:-42px;
-    width:120px; height:auto; pointer-events:none;
+    position:absolute; left:50%; transform:translateX(-50%);
+    top:-64px;                   /* вынос над карточкой */
+    width:140px; height:auto; pointer-events:none; z-index:2;
   }
   .appHead h4{margin:6px 0 6px; font-size:18px}
   .appHead p{
@@ -68,20 +72,35 @@
   }
   @media (max-width:720px){ .appHead p{ background:transparent; color:var(--muted); padding:0 } }
 
-  .appGrid{
-    display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:center;
+  /* два равных "тайла" напротив друг друга */
+  .pair{
+    display:grid;
+    grid-template-columns:repeat(2, 300px); /* равные ширины тайлов */
+    justify-content:center;                 /* центрируем пару */
+    gap:16px;
   }
-  .qrWrap{
+  .tile{
+    background:#0e131b; border:1px solid var(--line); border-radius:14px;
+    padding:14px; display:flex; align-items:center; justify-content:center;
+    height:300px;                         /* равная высота тайлов */
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+  }
+  .tile.qr img{
+    width:100%; height:100%; object-fit:contain;
+    max-width:240px; max-height:240px;   /* QR чуть мельче */
+  }
+  .tile.stores{ flex-direction:column; gap:12px }
+  .storeBtn{
     display:flex; align-items:center; justify-content:center;
-    background:#0e131b; border:1px solid var(--line); border-radius:12px; padding:14px;
+    height:56px; width:100%;
+    background:#0b0e11; border:1px solid var(--line); border-radius:12px;
   }
-  .qr{ width:100%; max-width:320px; height:auto; display:block }
-  .stores{ display:grid; gap:12px; align-content:start }
-  .stores a{ display:block }
-  .stores img{ height:56px; width:auto; display:block }
+  .storeBtn img{ height:40px; width:auto; display:block }
+
   @media (max-width:720px){
-    .appGrid{ grid-template-columns:1fr; }
-    .qr{ max-width:260px }
+    .pair{ grid-template-columns:minmax(240px, 1fr); }
+    .tile{ height:auto; padding:16px }
+    .tile.qr img{ max-width:220px; max-height:220px }
   }
 
   /* CTA */
@@ -176,29 +195,29 @@
         </div>
       </section>
 
-      <!-- SLIDE 3: Copied app block (left content full width) + CTA -->
+      <!-- SLIDE 3: App block fixed -->
       <section class="slide">
         <div class="wrap">
           <section class="appCard">
-            <!-- Пикл, выглядывающий сверху (можно удалить, если не нужен) -->
             <img class="peek" src="assets/l2-pickle-peek.png" alt="Pickle">
+
             <div class="appHead">
               <h4>Found a Gem? Stay on It!</h4>
               <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
             </div>
 
-            <div class="appGrid">
-              <div class="qrWrap">
-                <img class="qr" src="assets/l2-qr.png" alt="QR code to download the app">
+            <div class="pair">
+              <div class="tile qr">
+                <img src="assets/l2-qr.png" alt="QR code to download the app">
               </div>
-              <div class="stores">
-                <a href="#" aria-label="Download on the App Store">
+              <div class="tile stores">
+                <a href="#" class="storeBtn" aria-label="Download on the App Store">
                   <img src="assets/badge-appstore.png" alt="Download on the App Store">
                 </a>
-                <a href="#" aria-label="Get it on Google Play">
+                <a href="#" class="storeBtn" aria-label="Get it on Google Play">
                   <img src="assets/badge-googleplay.png" alt="Get it on Google Play">
                 </a>
-                <a href="#" aria-label="Download Android APK">
+                <a href="#" class="storeBtn" aria-label="Download Android APK">
                   <img src="assets/badge-android-apk.png" alt="Download Android APK">
                 </a>
               </div>
@@ -228,7 +247,6 @@
     const next = document.getElementById('next');
     let i = 0;
 
-    // dots
     slides.forEach((_, idx) => {
       const d = document.createElement('span');
       d.className = 'dot' + (idx===0 ? ' active' : '');
