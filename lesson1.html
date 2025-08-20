@@ -32,7 +32,7 @@
 
     .wrap{ max-width:780px; margin:0 auto; padding: 10px 16px 40px }
 
-    /* Eyebrow + Title (типографика как в lesson2) */
+    /* Eyebrow + Title (как в lesson2) */
     .eyebrow{ margin-top:8px; text-align:center; color:var(--muted); font-weight:600 }
     .title{
       margin:6px auto 18px; text-align:center; max-width:680px;
@@ -52,13 +52,12 @@
       font-size:64px; line-height:1; color:var(--brand);
     }
 
-    /* CTA */
-    .cta{ display:flex; justify-content:center }
-    .done-btn{
-      padding:18px 36px; border:0; border-radius:999px;
-      background:var(--brand); color:#07110c;
-      font-size:18px; font-weight:700; text-decoration:none;
-      display:inline-flex; align-items:center; justify-content:center;
+    /* CTA (точно как в lesson2) */
+    .cta{ display:flex; justify-content:center; margin-top:4px }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:16px 28px; border:0; border-radius:999px;
+      background:var(--brand); color:#07110c; font-weight:700;
       box-shadow:0 6px 14px rgba(177,255,140,.25);
     }
   </style>
@@ -78,7 +77,7 @@
     </div>
 
     <div class="cta">
-      <a href="lesson2.html" class="done-btn">Done!</a>
+      <a href="lesson2.html" class="btn">Got it! Let’s keep going ⌄</a>
     </div>
   </main>
 </body>
