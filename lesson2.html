@@ -8,6 +8,7 @@
   :root{
     --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
     --brand:#B1FF8C; --line:#242936; --ink:#0b0e11; --danger:#ff5f6d;
+    --btn-h:52px; --btn-fs:16px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -51,14 +52,18 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* Shared CTA */
+  /* Shared CTA (унификация размеров) */
   .cta{display:flex;justify-content:center;margin:16px 0 4px}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-       padding:16px 28px;border:0;border-radius:999px;
-       background:var(--brand);color:#07110c;font-weight:700;
-       box-shadow:0 6px 14px rgba(177,255,140,.25)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    height:var(--btn-h); padding:0 28px;
+    border:0; border-radius:999px;
+    background:var(--brand); color:#07110c;
+    font-size:var(--btn-fs); font-weight:800; line-height:1;
+    box-shadow:0 6px 14px rgba(177,255,140,.25);
+  }
 
-  /* Progress dots (оставляем, но ненавязчиво) */
+  /* Progress dots (ненавязчиво) */
   .nav{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
@@ -69,8 +74,13 @@
              border-radius:24px;padding:22px 18px 0;overflow:hidden}
   .finalCard h4{margin:6px 0 8px;font-size:28px;line-height:1.15;font-weight:800;letter-spacing:.2px}
   .finalCard p{margin:0 0 14px;color:rgba(11,14,17,.85)}
-  .storeBig{display:flex;align-items:center;justify-content:center;height:52px;border-radius:12px;background:#0b0e11;color:#fff;
-            text-decoration:none;font-weight:800;font-size:16px;letter-spacing:.2px;box-shadow:0 8px 18px rgba(0,0,0,.25);margin:6px 0 12px}
+  .storeBig{
+    display:flex;align-items:center;justify-content:center;
+    height:var(--btn-h); padding:0 28px;
+    border-radius:12px; background:#0b0e11; color:#fff;
+    text-decoration:none; font-weight:800; font-size:var(--btn-fs); line-height:1;
+    box-shadow:0 8px 18px rgba(0,0,0,.25); margin:6px 0 12px;
+  }
   .artStack{position:relative;height:250px;margin-top:4px}
   .artStack .tile{position:absolute;left:16px;top:8px;width:min(78%,300px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));z-index:2}
   .artStack .phones{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(92%,420px);filter:drop-shadow(0 12px 28px rgba(0,0,0,.25))}
@@ -100,6 +110,7 @@
   .reveal .why{color:var(--muted)}
 
   .next-wrap{display:flex;justify-content:center;margin:14px 0 6px}
+  /* .next — это .btn, так что размеры уже унифицированы */
   .next{display:none}
   .next.show{display:inline-flex}
 
@@ -253,7 +264,7 @@
         <div class="wrap">
           <div class="q-counter">Question 5/5</div>
           <p class="q-text">“Risk-free staking” with fixed 20% daily returns. Invite-only via a Telegram bot, send funds to a wallet</p>
-        <div class="choices">
+          <div class="choices">
             <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
             <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
           </div>
@@ -267,7 +278,6 @@
 
     </div>
 
-    <!-- progress (скрытых стрелок больше нет) -->
     <div class="nav"><div class="dots" id="dots"></div></div>
   </div>
 
@@ -342,7 +352,7 @@
       });
     });
 
-    // клавиатура и свайп (оставляем, но без стрелок)
+    // клавиатура и свайп (оставляем, но без визуальных стрелок)
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
@@ -380,7 +390,7 @@
         whyGreen && (whyGreen.style.display = correct==='green' ? 'inline' : 'none');
         reveal.classList.add('show');
         nextBtn.classList.add('show');
-        answered[localIdx] = true; // отмечаем вопрос как отвеченный
+        answered[localIdx] = true;
       }
       picks.forEach(p=>p.addEventListener('click', ()=>show(p.dataset.choice)));
 
