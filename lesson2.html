@@ -7,7 +7,7 @@
 <style>
   :root{
     --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
-    --brand:#B1FF8C; --line:#242936; --ink:#0b0e11;
+    --brand:#B1FF8C; --line:#242936; --ink:#0b0e11; --danger:#ff5f6d;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -51,63 +51,55 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* FINAL SCREEN — green card, price tile above phones; phones stick to bottom */
-  .finalCard{
-    position:relative;
-    background:var(--brand);
-    color:var(--ink);
-    border-radius:24px;
-    padding:22px 18px 0;    /* без нижнего паддинга — телефоны прилипают к низу */
-    overflow:hidden;        /* обрезаем по радиусу */
-  }
-  .finalCard h4{
-    margin:6px 0 8px; font-size:28px; line-height:1.15; font-weight:800; letter-spacing:.2px;
-  }
-  .finalCard p{ margin:0 0 14px; color:rgba(11,14,17,.85) }
-
-  /* Big Download button (text only) */
-  .storeBig{
-    display:flex; align-items:center; justify-content:center;
-    height:52px; border-radius:12px; background:#0b0e11; color:#fff;
-    text-decoration:none; font-weight:800; font-size:16px; letter-spacing:.2px;
-    box-shadow:0 8px 18px rgba(0,0,0,.25);
-    margin:6px 0 12px;
-  }
-
-  /* Art stack area occupies bottom of card */
-  .artStack{
-    position:relative; height:250px; margin-top:4px;
-  }
-  .artStack .tile{
-    position:absolute; left:16px; top:8px; width:min(78%, 300px);
-    filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));
-    z-index:2;           /* над руками */
-  }
-  .artStack .phones{
-    position:absolute; left:50%; transform:translateX(-50%);
-    bottom:0; width:min(92%, 420px);
-    filter:drop-shadow(0 12px 28px rgba(0,0,0,.25));
-  }
-  @media (max-width:420px){
-    .artStack{height:230px}
-    .artStack .tile{width:min(82%, 280px); left:12px; top:6px}
-    .artStack .phones{width:min(96%, 390px)}
-  }
-
-  /* CTA */
+  /* CTA button */
   .cta{display:flex;justify-content:center;margin:16px 0 4px}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;border:0;border-radius:999px;
-       background:#B1FF8C;color:#07110c;font-weight:700;box-shadow:0 6px 14px rgba(177,255,140,.25)}
+       background:var(--brand);color:#07110c;font-weight:700;box-shadow:0 6px 14px rgba(177,255,140,.25)}
 
   /* Nav / progress */
   .nav{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
-  .dot.active{background:#B1FF8C;opacity:1}
+  .dot.active{background:var(--brand);opacity:1}
   .arw{position:absolute;top:50%;transform:translateY(-50%);font-size:28px;line-height:1;background:transparent;border:0;color:#9aa3b2;cursor:pointer}
   .arw.left{left:6px}
   .arw.right{right:6px}
   .arw:disabled{opacity:.3;cursor:default}
+
+  /* ---------- QUIZ ---------- */
+  .quiz-head{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px}
+  .quiz-title{font-family:Georgia,serif;font-style:italic;font-size:28px;text-align:center}
+  .quiz-sub{color:var(--muted);text-align:center;max-width:680px}
+  .quiz-sub a{color:#9dc8ff;text-decoration:underline}
+  .q-counter{margin:10px 0 4px;color:var(--muted);font-weight:600;text-align:center}
+  .q-text{margin:0 0 14px;text-align:center;font-size:16px;color:#d9dee8}
+
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:720px;margin:0 auto}
+  .pick{
+    display:flex;align-items:center;gap:10px;justify-content:flex-start;
+    padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
+    font-weight:600;cursor:pointer;transition:transform .06s ease,border-color .12s ease;
+  }
+  .pick:hover{transform:translateY(-1px)}
+  .pick .ico{font-size:18px}
+  .pick.active{border-color:var(--brand)}
+  .pick.wrong{border-color:var(--danger)}
+
+  .reveal{
+    margin:14px auto 8px;max-width:720px;background:#0d1219;border:1px solid var(--line);
+    border-radius:14px;padding:14px;display:none;
+  }
+  .reveal.show{display:flex;gap:12px;align-items:flex-start}
+  .reveal .yn{font-family:Georgia,serif;font-style:italic;font-size:22px;min-width:56px}
+  .reveal .why{color:var(--muted)}
+
+  .next-wrap{display:flex;justify-content:center;margin:14px 0 6px}
+  .next{display:none}
+  .next.show{display:inline-flex}
+
+  @media (max-width:720px){
+    .choices{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
@@ -186,25 +178,143 @@
         </div>
       </section>
 
-      <!-- SLIDE 3: mobile card with price tile above, phones stuck to bottom -->
+      <!-- SLIDE 3: CTA -> go to quiz -->
       <section class="slide">
         <div class="wrap">
-          <section class="finalCard">
-            <h4>Found a Gem? Stay on It!</h4>
-            <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
-
-            <a href="#" class="storeBig" aria-label="Download Changelly">
-              Download Changelly
-            </a>
-
-            <div class="artStack" aria-hidden="true">
-              <img class="tile" src="assets/l2-eth-tile.png" alt="">
-              <img class="phones" src="assets/l2-phones.png" alt="">
-            </div>
-          </section>
-
           <div class="cta">
-            <a href="lesson3.html" class="btn">Got it!</a>
+            <a href="#" class="btn" data-goto="3">Got it! Let’s keep going ⌄</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- -------- QUIZ SLIDES (5) -------- -->
+
+      <!-- Q1 -->
+      <section class="slide quiz" data-correct="red">
+        <div class="wrap">
+          <div class="quiz-head">
+            <h2 class="quiz-title">Red flag or green flag?</h2>
+            <p class="quiz-sub">Check your scam radar with our latest quiz. Read the coin pitch and ask yourself: Would you be involved in it?<br>
+              <span>Pick: <a>Green flag</a> or <a>red flag</a>. Then reveal the answer and learn why</span></p>
+          </div>
+          <div class="q-counter">Question 1/5</div>
+          <p class="q-text">Guaranteed 1,000x next week. No docs, no devs, but lots of hype</p>
+
+          <div class="choices">
+            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
+            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+          </div>
+
+          <div class="reveal">
+            <div class="yn">—</div>
+            <div class="why">
+              <span class="why-red">This is classic scam bait. No transparency, no documentation, and impossible promises.</span>
+              <span class="why-green">If there’s only hype and no fundamentals, it’s not a green flag.</span>
+            </div>
+          </div>
+
+          <div class="next-wrap">
+            <button class="btn next">Next question</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q2 -->
+      <section class="slide quiz" data-correct="green">
+        <div class="wrap">
+          <div class="q-counter">Question 2/5</div>
+          <p class="q-text">Open-source repo with frequent commits and third-party audits published</p>
+
+          <div class="choices">
+            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
+            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+          </div>
+
+          <div class="reveal">
+            <div class="yn">—</div>
+            <div class="why">
+              <span class="why-green">Transparency + active development + audits = strong signal the team ships and cares about security.</span>
+              <span class="why-red">Without these signals you’d be guessing; with them, the risk is lower.</span>
+            </div>
+          </div>
+
+          <div class="next-wrap">
+            <button class="btn next">Next question</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q3 -->
+      <section class="slide quiz" data-correct="red">
+        <div class="wrap">
+          <div class="q-counter">Question 3/5</div>
+          <p class="q-text">Anonymous team, and 80% of supply unlocks to insiders next month</p>
+
+          <div class="choices">
+            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
+            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+          </div>
+
+          <div class="reveal">
+            <div class="yn">—</div>
+            <div class="why">
+              <span class="why-red">Huge insider unlock + no accountability = dump risk. Tokenomics matter.</span>
+              <span class="why-green">Green flags need fair distribution and aligned incentives — not this.</span>
+            </div>
+          </div>
+
+          <div class="next-wrap">
+            <button class="btn next">Next question</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q4 -->
+      <section class="slide quiz" data-correct="green">
+        <div class="wrap">
+          <div class="q-counter">Question 4/5</div>
+          <p class="q-text">Real utility: token pays app fees; users grow weekly; market cap is still small</p>
+
+          <div class="choices">
+            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
+            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+          </div>
+
+          <div class="reveal">
+            <div class="yn">—</div>
+            <div class="why">
+              <span class="why-green">Utility + traction can be a legit edge. Smaller cap means upside — with risk, of course.</span>
+              <span class="why-red">If there were no usage, it’d be a red flag. Here the usage is the point.</span>
+            </div>
+          </div>
+
+          <div class="next-wrap">
+            <button class="btn next">Next question</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q5 -->
+      <section class="slide quiz" data-correct="red">
+        <div class="wrap">
+          <div class="q-counter">Question 5/5</div>
+          <p class="q-text">“Risk-free staking” with fixed 20% daily returns. Invite-only via a Telegram bot, send funds to a wallet</p>
+
+          <div class="choices">
+            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
+            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+          </div>
+
+          <div class="reveal">
+            <div class="yn">—</div>
+            <div class="why">
+              <span class="why-red">Guaranteed high returns are a hallmark of ponzis/phishing. Never send funds to random wallets.</span>
+              <span class="why-green">A legit yield is variable, transparent and auditable — not a magic 20% daily.</span>
+            </div>
+          </div>
+
+          <div class="next-wrap">
+            <a class="btn next" id="levelUp" href="lesson3.html">Level up!</a>
           </div>
         </div>
       </section>
@@ -226,6 +336,7 @@
     const next = document.getElementById('next');
     let i = 0;
 
+    // dots
     slides.forEach((_, idx) => {
       const d = document.createElement('span');
       d.className = 'dot' + (idx===0 ? ' active' : '');
@@ -240,9 +351,16 @@
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); } catch(e){}
     }
     function go(n){ i = Math.max(0, Math.min(slides.length-1, n)); update(); }
+
+    // header CTA jump to quiz
+    document.querySelectorAll('[data-goto]').forEach(a=>{
+      a.addEventListener('click', e=>{ e.preventDefault(); go(parseInt(a.dataset.goto,10)||0); });
+    });
+
     prev.addEventListener('click', ()=>go(i-1));
     next.addEventListener('click', ()=>go(i+1));
 
+    // keyboard
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
@@ -258,6 +376,40 @@
       const thr = Math.min(80, window.innerWidth*0.12);
       if (dx < -thr) go(i+1);
       else if (dx > thr) go(i-1);
+    });
+
+    // ---- Quiz logic ----
+    const quizSlides = slides.filter(s => s.classList.contains('quiz'));
+    quizSlides.forEach((slide, idx)=>{
+      const correct = slide.dataset.correct; // "green" or "red"
+      const picks = slide.querySelectorAll('.pick');
+      const reveal = slide.querySelector('.reveal');
+      const yn = reveal.querySelector('.yn');
+      const whyRed = reveal.querySelector('.why-red');
+      const whyGreen = reveal.querySelector('.why-green');
+      const nextBtn = slide.querySelector('.next');
+
+      function show(choice){
+        // style buttons
+        picks.forEach(p=>{
+          p.disabled = true;
+          p.classList.toggle('active', p.dataset.choice===choice);
+          if(p.dataset.choice!==correct) p.classList.add('wrong');
+        });
+        // fill reveal
+        const isCorrect = choice===correct;
+        yn.textContent = isCorrect ? 'Yes!' : 'No.';
+        whyRed.style.display = correct==='red' ? 'inline' : 'none';
+        whyGreen.style.display = correct==='green' ? 'inline' : 'none';
+        reveal.classList.add('show');
+        nextBtn.classList.add('show');
+      }
+
+      picks.forEach(p=>p.addEventListener('click', ()=>show(p.dataset.choice)));
+      // next button: go to next slide
+      if (idx < quizSlides.length-1) {
+        nextBtn.addEventListener('click', ()=> go(slides.indexOf(slide)+1));
+      }
     });
 
     update();
