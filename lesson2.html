@@ -95,13 +95,16 @@
   .q-text{margin:0 0 14px;text-align:center;font-size:16px;color:#d9dee8}
 
   .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:720px;margin:0 auto}
-  .pick{display:flex;align-items:center;gap:10px;justify-content:flex-start;
-        padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
-        font-weight:600;cursor:pointer;transition:transform .06s ease,border-color .12s ease}
+  .pick{
+    display:flex;align-items:center;gap:12px;justify-content:flex-start;
+    padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
+    font-size:17px; font-weight:500; /* больше и без жирного */
+    cursor:pointer;transition:transform .06s ease,border-color .12s ease;
+  }
   .pick:hover{transform:translateY(-1px)}
-  .pick .ico{font-size:18px}
   .pick.active{border-color:var(--brand)}
   .pick.wrong{border-color:var(--danger)}
+  .pick .ico-flag{width:28px;height:28px;display:block;flex:0 0 28px}
 
   .reveal{margin:14px auto 8px;max-width:720px;background:#0d1219;border:1px solid var(--line);
           border-radius:14px;padding:14px;display:none}
@@ -110,11 +113,16 @@
   .reveal .why{color:var(--muted)}
 
   .next-wrap{display:flex;justify-content:center;margin:14px 0 6px}
-  /* .next — это .btn, так что размеры уже унифицированы */
   .next{display:none}
   .next.show{display:inline-flex}
 
-  @media (max-width:720px){.choices{grid-template-columns:1fr}}
+  @media (max-width:720px){
+    .choices{grid-template-columns:1fr}
+  }
+  @media (max-width:360px){
+    .pick{font-size:16px}
+    .pick .ico-flag{width:26px;height:26px;flex-basis:26px}
+  }
 </style>
 </head>
 <body>
@@ -195,8 +203,14 @@
           <p class="q-text">Guaranteed 1,000x next week. No docs, no devs, but lots of hype</p>
 
           <div class="choices">
-            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
-            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+            <button class="pick" data-choice="green">
+              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
+              <span>Green Flag</span>
+            </button>
+            <button class="pick" data-choice="red">
+              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
+              <span>Red Flag</span>
+            </button>
           </div>
 
           <div class="reveal"><div class="yn">—</div><div class="why">
@@ -213,14 +227,23 @@
         <div class="wrap">
           <div class="q-counter">Question 2/5</div>
           <p class="q-text">Open-source repo with frequent commits and third-party audits published</p>
+
           <div class="choices">
-            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
-            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+            <button class="pick" data-choice="green">
+              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
+              <span>Green Flag</span>
+            </button>
+            <button class="pick" data-choice="red">
+              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
+              <span>Red Flag</span>
+            </button>
           </div>
+
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-green">Transparency + active development + audits = strong signal the team ships and cares about security.</span>
             <span class="why-red">Without these signals you’d be guessing; with them, the risk is lower.</span>
           </div></div>
+
           <div class="next-wrap"><button class="btn next">Next question</button></div>
         </div>
       </section>
@@ -230,14 +253,23 @@
         <div class="wrap">
           <div class="q-counter">Question 3/5</div>
           <p class="q-text">Anonymous team, and 80% of supply unlocks to insiders next month</p>
+
           <div class="choices">
-            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
-            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+            <button class="pick" data-choice="green">
+              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
+              <span>Green Flag</span>
+            </button>
+            <button class="pick" data-choice="red">
+              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
+              <span>Red Flag</span>
+            </button>
           </div>
+
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-red">Huge insider unlock + no accountability = dump risk. Tokenomics matter.</span>
             <span class="why-green">Green flags need fair distribution and aligned incentives — not this.</span>
           </div></div>
+
           <div class="next-wrap"><button class="btn next">Next question</button></div>
         </div>
       </section>
@@ -247,14 +279,23 @@
         <div class="wrap">
           <div class="q-counter">Question 4/5</div>
           <p class="q-text">Real utility: token pays app fees; users grow weekly; market cap is still small</p>
+
           <div class="choices">
-            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
-            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+            <button class="pick" data-choice="green">
+              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
+              <span>Green Flag</span>
+            </button>
+            <button class="pick" data-choice="red">
+              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
+              <span>Red Flag</span>
+            </button>
           </div>
+
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-green">Utility + traction can be a legit edge. Smaller cap means upside — with risk, of course.</span>
             <span class="why-red">If there were no usage, it’d be a red flag. Here the usage is the point.</span>
           </div></div>
+
           <div class="next-wrap"><button class="btn next">Next question</button></div>
         </div>
       </section>
@@ -264,14 +305,23 @@
         <div class="wrap">
           <div class="q-counter">Question 5/5</div>
           <p class="q-text">“Risk-free staking” with fixed 20% daily returns. Invite-only via a Telegram bot, send funds to a wallet</p>
+
           <div class="choices">
-            <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
-            <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
+            <button class="pick" data-choice="green">
+              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
+              <span>Green Flag</span>
+            </button>
+            <button class="pick" data-choice="red">
+              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
+              <span>Red Flag</span>
+            </button>
           </div>
+
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-red">Guaranteed high returns are a hallmark of ponzis/phishing. Never send funds to random wallets.</span>
             <span class="why-green">A legit yield is variable, transparent and auditable — not a magic 20% daily.</span>
           </div></div>
+
           <div class="next-wrap"><a class="btn next" id="levelUp" href="lesson3.html">Level up!</a></div>
         </div>
       </section>
@@ -335,7 +385,7 @@
       i = n; update();
     }
 
-    // кнопки Next на 1 и 2 экранах
+    // "Next" на экранах 1 и 2
     document.querySelectorAll('.go-next').forEach(btn=>{
       btn.addEventListener('click', e=>{
         const slide = e.target.closest('.slide');
@@ -352,7 +402,7 @@
       });
     });
 
-    // клавиатура и свайп (оставляем, но без визуальных стрелок)
+    // клавиатура и свайп (оставляем, но не подчёркиваем)
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
