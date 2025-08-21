@@ -16,9 +16,12 @@
        font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif}
   a{color:inherit;text-decoration:none}
 
-  /* Header */
-  .bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
-       padding:12px 16px;background:linear-gradient(180deg,rgba(15,17,21,.95),rgba(15,17,21,.7) 60%,rgba(15,17,21,0));backdrop-filter:blur(8px)}
+  /* Header — НЕ липкая, без блюра и градиента */
+  .bar{
+    position:relative; top:auto; z-index:auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; background:var(--bg);
+  }
   .back{font-size:24px;line-height:1}
   .logo{height:44px;width:auto;object-fit:contain;display:block}
   @media (max-width:480px){.logo{height:36px}}
@@ -98,8 +101,8 @@
   .pick{
     display:flex;align-items:center;gap:12px;justify-content:flex-start;
     padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
-    font-size:17px; font-weight:500; /* больше и без жирного */
-    cursor:pointer;transition:transform .06s ease,border-color .12s ease;
+    font-size:17px; font-weight:500; cursor:pointer;
+    transition:transform .06s ease,border-color .12s ease;
   }
   .pick:hover{transform:translateY(-1px)}
   .pick.active{border-color:var(--brand)}
@@ -116,13 +119,7 @@
   .next{display:none}
   .next.show{display:inline-flex}
 
-  @media (max-width:720px){
-    .choices{grid-template-columns:1fr}
-  }
-  @media (max-width:360px){
-    .pick{font-size:16px}
-    .pick .ico-flag{width:26px;height:26px;flex-basis:26px}
-  }
+  @media (max-width:720px){.choices{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -227,7 +224,6 @@
         <div class="wrap">
           <div class="q-counter">Question 2/5</div>
           <p class="q-text">Open-source repo with frequent commits and third-party audits published</p>
-
           <div class="choices">
             <button class="pick" data-choice="green">
               <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
@@ -238,12 +234,10 @@
               <span>Red Flag</span>
             </button>
           </div>
-
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-green">Transparency + active development + audits = strong signal the team ships and cares about security.</span>
             <span class="why-red">Without these signals you’d be guessing; with them, the risk is lower.</span>
           </div></div>
-
           <div class="next-wrap"><button class="btn next">Next question</button></div>
         </div>
       </section>
@@ -253,7 +247,6 @@
         <div class="wrap">
           <div class="q-counter">Question 3/5</div>
           <p class="q-text">Anonymous team, and 80% of supply unlocks to insiders next month</p>
-
           <div class="choices">
             <button class="pick" data-choice="green">
               <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
@@ -264,12 +257,10 @@
               <span>Red Flag</span>
             </button>
           </div>
-
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-red">Huge insider unlock + no accountability = dump risk. Tokenomics matter.</span>
             <span class="why-green">Green flags need fair distribution and aligned incentives — not this.</span>
           </div></div>
-
           <div class="next-wrap"><button class="btn next">Next question</button></div>
         </div>
       </section>
@@ -279,7 +270,6 @@
         <div class="wrap">
           <div class="q-counter">Question 4/5</div>
           <p class="q-text">Real utility: token pays app fees; users grow weekly; market cap is still small</p>
-
           <div class="choices">
             <button class="pick" data-choice="green">
               <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
@@ -290,12 +280,10 @@
               <span>Red Flag</span>
             </button>
           </div>
-
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-green">Utility + traction can be a legit edge. Smaller cap means upside — with risk, of course.</span>
             <span class="why-red">If there were no usage, it’d be a red flag. Here the usage is the point.</span>
           </div></div>
-
           <div class="next-wrap"><button class="btn next">Next question</button></div>
         </div>
       </section>
@@ -305,7 +293,6 @@
         <div class="wrap">
           <div class="q-counter">Question 5/5</div>
           <p class="q-text">“Risk-free staking” with fixed 20% daily returns. Invite-only via a Telegram bot, send funds to a wallet</p>
-
           <div class="choices">
             <button class="pick" data-choice="green">
               <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
@@ -316,12 +303,10 @@
               <span>Red Flag</span>
             </button>
           </div>
-
           <div class="reveal"><div class="yn">—</div><div class="why">
             <span class="why-red">Guaranteed high returns are a hallmark of ponzis/phishing. Never send funds to random wallets.</span>
             <span class="why-green">A legit yield is variable, transparent and auditable — not a magic 20% daily.</span>
           </div></div>
-
           <div class="next-wrap"><a class="btn next" id="levelUp" href="lesson3.html">Level up!</a></div>
         </div>
       </section>
