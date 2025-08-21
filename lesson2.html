@@ -27,7 +27,6 @@
   .track{display:flex;transition:transform .28s ease;will-change:transform}
   .slide{flex:0 0 100%;min-height:calc(100dvh - 72px);
          padding:14px 16px 28px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
-  /* УЗКИЙ КОНТЕНТ — чтобы стрелки не перекрывались */
   .wrap{width:100%;max-width:760px;margin:0 auto}
 
   .eyebrow{margin-top:8px;text-align:center;color:var(--muted);font-weight:600}
@@ -52,28 +51,22 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* CTA button */
+  /* Shared CTA */
   .cta{display:flex;justify-content:center;margin:16px 0 4px}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;border:0;border-radius:999px;
-       background:var(--brand);color:#07110c;font-weight:700;box-shadow:0 6px 14px rgba(177,255,140,.25)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+       padding:16px 28px;border:0;border-radius:999px;
+       background:var(--brand);color:#07110c;font-weight:700;
+       box-shadow:0 6px 14px rgba(177,255,140,.25)}
 
-  /* Nav / progress */
+  /* Progress dots (оставляем, но ненавязчиво) */
   .nav{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
   .dot.active{background:var(--brand);opacity:1}
 
-  /* СТРЕЛКИ — крупнее и поверх */
-  .arw{position:absolute;top:50%;transform:translateY(-50%);font-size:40px;line-height:1;background:transparent;border:0;color:#c5ccda;cursor:pointer;z-index:30}
-  .arw.left{left:6px}
-  .arw.right{right:6px}
-  .arw:disabled{opacity:.35;cursor:default}
-
   /* Promo card (screen 3) */
-  .finalCard{
-    position:relative;background:var(--brand);color:var(--ink);
-    border-radius:24px;padding:22px 18px 0;overflow:hidden;
-  }
+  .finalCard{position:relative;background:var(--brand);color:var(--ink);
+             border-radius:24px;padding:22px 18px 0;overflow:hidden}
   .finalCard h4{margin:6px 0 8px;font-size:28px;line-height:1.15;font-weight:800;letter-spacing:.2px}
   .finalCard p{margin:0 0 14px;color:rgba(11,14,17,.85)}
   .storeBig{display:flex;align-items:center;justify-content:center;height:52px;border-radius:12px;background:#0b0e11;color:#fff;
@@ -120,9 +113,6 @@
   </header>
 
   <div class="viewport" id="vp">
-    <button class="arw left" id="prev" aria-label="Previous">‹</button>
-    <button class="arw right" id="next" aria-label="Next">›</button>
-
     <div class="track" id="track">
 
       <!-- SLIDE 1: Intro -->
@@ -132,14 +122,14 @@
           <h1 class="title">How to spot a gem before it 10x's</h1>
 
           <div class="intro">
-            <div class="art">
-              <img src="assets/l2-hero-graph.png" alt="chart and coins">
-            </div>
+            <div class="art"><img src="assets/l2-hero-graph.png" alt="chart and coins"></div>
             <div>
               <p>Everyone wants to find The One: that tiny crypto project that quietly turns $100 into $1,000. But most people go about it the wrong way. They chase influencer hype, go for coins they don’t understand, and pray for moonshots. However, that’s not searching for a gem; it’s gambling.</p>
               <p>This lesson will give you a simple, repeatable checklist to spot high-potential coins before they pump, using smart signals that real investors watch for</p>
             </div>
           </div>
+
+          <div class="cta"><button class="btn go-next">Next</button></div>
         </div>
       </section>
 
@@ -156,6 +146,8 @@
             <div class="item"><img class="flag" src="assets/l2-flag-4.png" alt="4"><div><h4>Is it still early?</h4><p>Check the market cap. A coin that’s already huge (like $20B+) won’t 10x easily. A smaller cap means more upside, but more risk, too</p></div></div>
             <div class="item"><img class="flag" src="assets/l2-flag-5.png" alt="5"><div><h4>How does the token actually work?</h4><p>Look for limited supply, actual reasons to use the token, and if it was launched fair (meaning it’s not fully owned by insiders)</p></div></div>
           </div>
+
+          <div class="cta"><button class="btn go-next">Next</button></div>
         </div>
       </section>
 
@@ -173,7 +165,7 @@
           </section>
 
           <div class="cta">
-            <a href="#" class="btn" data-goto="3">Got it! Let’s keep going ⌄</a>
+            <a href="#" class="btn" data-goto="3">Got it!</a>
           </div>
         </div>
       </section>
@@ -196,13 +188,10 @@
             <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
           </div>
 
-          <div class="reveal">
-            <div class="yn">—</div>
-            <div class="why">
-              <span class="why-red">This is classic scam bait. No transparency, no documentation, and impossible promises.</span>
-              <span class="why-green">If there’s only hype and no fundamentals, it’s not a green flag.</span>
-            </div>
-          </div>
+          <div class="reveal"><div class="yn">—</div><div class="why">
+            <span class="why-red">This is classic scam bait. No transparency, no documentation, and impossible promises.</span>
+            <span class="why-green">If there’s only hype and no fundamentals, it’s not a green flag.</span>
+          </div></div>
 
           <div class="next-wrap"><button class="btn next">Next question</button></div>
         </div>
@@ -264,7 +253,7 @@
         <div class="wrap">
           <div class="q-counter">Question 5/5</div>
           <p class="q-text">“Risk-free staking” with fixed 20% daily returns. Invite-only via a Telegram bot, send funds to a wallet</p>
-          <div class="choices">
+        <div class="choices">
             <button class="pick" data-choice="green"><span class="ico">🟩</span> Green Flag</button>
             <button class="pick" data-choice="red"><span class="ico">🚩</span> Red Flag</button>
           </div>
@@ -278,6 +267,7 @@
 
     </div>
 
+    <!-- progress (скрытых стрелок больше нет) -->
     <div class="nav"><div class="dots" id="dots"></div></div>
   </div>
 
@@ -286,8 +276,6 @@
     const track = document.getElementById('track');
     const slides = Array.from(track.children);
     const dots = document.getElementById('dots');
-    const prev = document.getElementById('prev');
-    const next = document.getElementById('next');
     let i = 0;
 
     // индексы квиз-слайдов
@@ -310,20 +298,15 @@
       const pos = answered.indexOf(false);
       return pos === -1 ? null : quizIdxs[pos];
     }
-
     function inQuiz(idx){ return idx >= firstQuiz && idx <= lastQuiz; }
 
     function canGoForward(fromIdx){
-      // свободная навигация до квиза
       if (!inQuiz(fromIdx)) return true;
-      // в квизе: если текущий вопрос не отвечен — нельзя
       const qPos = quizIdxs.indexOf(fromIdx);
       if (qPos !== -1 && !answered[qPos]) return false;
       return true;
     }
-
     function clampTarget(target){
-      // если ещё есть неотвеченные — нельзя перелистывать дальше первого неотвеченного
       const fua = firstUnansweredSlideIdx();
       if (fua !== null && target > fua) return fua;
       return target;
@@ -332,43 +315,38 @@
     function update(){
       track.style.transform = `translateX(${-i*100}%)`;
       dotEls.forEach((d,idx)=>d.classList.toggle('active', idx===i));
-
-      // контролируем доступность кнопки "вперёд"
-      let nextEnabled = i < slides.length-1;
-      if (nextEnabled && inQuiz(i) && !canGoForward(i)) nextEnabled = false;
-      next.disabled = !nextEnabled;
-      prev.disabled = i===0;
-
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); } catch(e){}
     }
 
     function go(n){
       n = Math.max(0, Math.min(slides.length-1, n));
-      // нельзя входить в середину квиза — только к первому неотвеченному
       if (n > firstQuiz) n = clampTarget(n);
-      // движемся вперёд? проверяем блокировку
       if (n > i && !canGoForward(i)) return;
       i = n; update();
     }
 
-    // «Got it!» прыжок к началу квиза
-    document.querySelectorAll('[data-goto]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        e.preventDefault();
-        go(parseInt(a.dataset.goto,10)||firstQuiz||0);
+    // кнопки Next на 1 и 2 экранах
+    document.querySelectorAll('.go-next').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const slide = e.target.closest('.slide');
+        const idx = slides.indexOf(slide);
+        go(idx+1);
       });
     });
 
-    prev.addEventListener('click', ()=>go(i-1));
-    next.addEventListener('click', ()=>go(i+1));
+    // «Got it!» -> первый вопрос квиза
+    document.querySelectorAll('[data-goto]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        go(parseInt(a.dataset.goto,10) || firstQuiz || 0);
+      });
+    });
 
-    // клавиатура
+    // клавиатура и свайп (оставляем, но без стрелок)
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
     });
-
-    // swipe
     let sx=0, dx=0, dragging=false;
     const vp = document.getElementById('vp');
     vp.addEventListener('touchstart', e=>{ sx = e.touches[0].clientX; dragging=true; dx=0; }, {passive:true});
@@ -380,7 +358,7 @@
       else if (dx > thr) go(i-1);
     });
 
-    // ---- ЛОГИКА КВИЗА ----
+    // ЛОГИКА КВИЗА
     quizSlides.forEach((qObj, localIdx)=>{
       const slide = qObj.el;
       const picks = slide.querySelectorAll('.pick');
@@ -389,30 +367,23 @@
       const whyRed = reveal.querySelector('.why-red');
       const whyGreen = reveal.querySelector('.why-green');
       const nextBtn = slide.querySelector('.next');
-      const correct = slide.dataset.correct; // "green" | "red"
+      const correct = slide.dataset.correct;
 
       function show(choice){
-        // отмечаем кнопки
         picks.forEach(p=>{
           p.disabled = true;
           p.classList.toggle('active', p.dataset.choice===choice);
           if(p.dataset.choice !== correct) p.classList.add('wrong');
         });
-        const isCorrect = choice===correct;
-        yn.textContent = isCorrect ? 'Yes!' : 'No.';
+        yn.textContent = (choice===correct) ? 'Yes!' : 'No.';
         whyRed && (whyRed.style.display = correct==='red' ? 'inline' : 'none');
         whyGreen && (whyGreen.style.display = correct==='green' ? 'inline' : 'none');
         reveal.classList.add('show');
         nextBtn.classList.add('show');
-
-        // фиксируем, что вопрос отвечен
-        answered[localIdx] = true;
-        update(); // пересчитать доступность стрелки
+        answered[localIdx] = true; // отмечаем вопрос как отвеченный
       }
-
       picks.forEach(p=>p.addEventListener('click', ()=>show(p.dataset.choice)));
 
-      // "Next question" переводит на следующий слайд (или Level up! ведёт на lesson3.html)
       if (localIdx < quizSlides.length-1) {
         nextBtn.addEventListener('click', ()=> go(qObj.idx + 1));
       }
