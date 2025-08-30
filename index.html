@@ -113,9 +113,7 @@
         <p class="h-sub"><em>5 juicy lessons they never taught you</em></p>
         <p class="h-sub">Let Pickle be your guide through the crunchy truths of crypto</p>
         <div class="hero-cta">
-          <!-- старт: ведёт к форме -->
           <a class="btn solid" id="cta-start" href="#join">Get started for $49.99 → $0</a>
-          <!-- continue: по умолчанию скрыт, включаем после e-mail -->
           <button class="btn ghost hidden" id="cta-continue">Continue</button>
         </div>
         <p class="muted" style="margin-top:8px">Finish the Course – Unlock a $100 Bonus</p>
@@ -147,7 +145,7 @@
         <div class="stack">
           <input id="email" class="input" placeholder="Your email" inputmode="email" autocomplete="email" required />
           <button class="btn solid" id="btn-email">Save & start</button>
-          <button class="btn ghost" id="btn-login">Sign in with Telegram</button>
+          <!-- удалено: Sign in with Telegram -->
         </div>
       </div>
     </div>
@@ -179,47 +177,55 @@
     };
     function scrollToJoin(){
       const el = document.getElementById('join');
-      if (!el) return;
+      if (!el || el.classList.contains('hidden')) {
+        // если блока нет (скрыт после ввода e-mail) — сразу к урокам
+        location.href = getLastLessonUrl(); return;
+      }
       el.scrollIntoView({behavior:'smooth', block:'start'});
       const email = document.getElementById('email');
       if (email) setTimeout(()=>{ email.focus({preventScroll:true}); email.select?.(); }, 250);
     }
-    document.getElementById('btn-start-link').addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
+    const headerStart = document.getElementById('btn-start-link');
+    headerStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
     document.getElementById('cta-start').addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
 
-    // ====== Continue visibility & behavior ======
+    // ===== Continue / Start visibility =====
     const ctaStart = document.getElementById('cta-start');
     const ctaContinue = document.getElementById('cta-continue');
+    const joinBlock = document.getElementById('join');
 
     function getLastLessonUrl(){
       const last = localStorage.getItem('pickle_progress') || 'l1';
       const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
       return map[last] || 'lesson1.html';
     }
-    function refreshHeroButtons(){
+    function refreshUI(){
       const hasEmail = !!localStorage.getItem('pickle_email');
+
+      // верхняя кнопка в хедере
+      headerStart.classList.toggle('hidden', hasEmail);
+
+      // блок с почтой
+      if (hasEmail) joinBlock.classList.add('hidden'); else joinBlock.classList.remove('hidden');
+
+      // кнопки в hero
       if (hasEmail){
-        // показать Continue (solid), скрыть Start
         ctaStart.classList.add('hidden');
         ctaContinue.classList.remove('hidden');
         ctaContinue.classList.remove('ghost');
         ctaContinue.classList.add('solid');
       } else {
-        // показать Start, скрыть Continue
         ctaContinue.classList.add('hidden');
         ctaContinue.classList.remove('solid');
         ctaContinue.classList.add('ghost');
         ctaStart.classList.remove('hidden');
       }
     }
-    refreshHeroButtons();
+    refreshUI();
 
-    ctaContinue.addEventListener('click', ()=>{
-      // сюда пользователь попадёт только если есть e-mail
-      location.href = getLastLessonUrl();
-    });
+    ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
 
-    // ====== Email → /api/subscribe (остаёмся внутри миниапа) ======
+    // ===== Email → /api/subscribe =====
     const emailInput = document.getElementById('email');
     const btnEmail = document.getElementById('btn-email');
 
@@ -230,13 +236,13 @@
     }
     const validateEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-    emailInput.addEventListener('input', ()=>{
+    emailInput?.addEventListener('input', ()=>{
       if (emailInput.classList.contains('invalid') && validateEmail(emailInput.value.trim())) {
         emailInput.classList.remove('invalid'); showHelp('');
       }
     });
 
-    btnEmail.addEventListener('click', async () => {
+    btnEmail?.addEventListener('click', async () => {
       const v = emailInput.value.trim();
       if (!v){ emailInput.classList.add('invalid'); showHelp('Email is required'); emailInput.focus(); return; }
       if (!validateEmail(v)){ emailInput.classList.add('invalid'); showHelp('Please enter a valid email'); emailInput.focus(); return; }
@@ -249,26 +255,17 @@
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
           body: JSON.stringify({
-            email: v,
-            tg_user_id: u.id || '',
-            tg_username: u.username || '',
-            source: 'pickle-miniapp'
+            email: v, tg_user_id: u.id || '', tg_username: u.username || '', source: 'pickle-miniapp'
           })
         });
-
-        // успех — любой 2xx/3xx
         let ok = res.ok || (res.status >= 300 && res.status < 400);
-        try {
-          const data = await res.json();
-          if (typeof data?.ok === 'boolean') ok = ok && data.ok;
-        } catch(_){}
-
+        try { const data = await res.json(); if (typeof data?.ok === 'boolean') ok = ok && data.ok; } catch(_){}
         if (!ok) throw new Error('subscribe failed');
 
         localStorage.setItem('pickle_email', v);
         localStorage.setItem('pickle_progress', 'l1');
 
-        // сразу ведём в первый (или в последний, если уже есть)
+        refreshUI(); // обновим визуально (кнопки/форму)
         location.href = getLastLessonUrl();
       } catch (e){
         showHelp('Could not save email. Please try again.');
@@ -276,16 +273,6 @@
         btnEmail.disabled = false; btnEmail.textContent = old;
       }
     });
-
-    // Login demo
-    document.getElementById('btn-login').onclick = () => {
-      if (tg) {
-        const name = tg.initDataUnsafe?.user?.first_name || 'friend';
-        tg.showAlert(`Hi, ${name}! Your progress will be synced.`);
-      } else {
-        alert('In a browser we simulate sign-in. Inside Telegram your account is used automatically.');
-      }
-    };
 
     // Lessons list
     const lessons = [
