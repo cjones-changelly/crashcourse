@@ -16,7 +16,7 @@
        font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif}
   a{color:inherit;text-decoration:none}
 
-  /* Header — НЕ липкая, без блюра и градиента */
+  /* Header — НЕ липкая */
   .bar{
     position:relative; top:auto; z-index:auto;
     display:flex; align-items:center; justify-content:space-between;
@@ -55,7 +55,7 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* Shared CTA (унификация размеров) */
+  /* Shared CTA */
   .cta{display:flex;justify-content:center;margin:16px 0 4px}
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -235,7 +235,7 @@
     const dots = document.getElementById('dots');
     let i = 0;
 
-    // helper: поднимаемся наверх экрана
+    // helper: вверх
     function scrollTop(){
       const el = document.scrollingElement || document.documentElement || document.body;
       el.scrollTop = 0;
@@ -257,7 +257,7 @@
     function go(n){
       n = Math.max(0, Math.min(slides.length-1, n));
       i = n;
-      scrollTop();            // ← вверх при смене "страницы"
+      scrollTop();
       update();
     }
 
@@ -278,7 +278,7 @@
       });
     });
 
-    // Клавиатура и свайп (не акцентируем, но поддерживаем)
+    // Клавиатура и свайп
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
@@ -294,38 +294,23 @@
       else if (dx > thr) go(i-1);
     });
 
-    // ---------- QUIZ (один слайд, 5 вопросов) ----------
+    // ---------- QUIZ ----------
     const questions = [
-      {
-        text: "Guaranteed 1,000x next week. No docs, no devs, but lots of hype",
-        correct: "red",
-        whyRed: "This is classic scam bait: no transparency or documentation, only impossible promises.",
-        whyGreen: "If there’s only hype and no fundamentals, it’s not a green flag."
-      },
-      {
-        text: "A new DeFi tool with a working product, a public GitHub, and weekly updates from the team.",
-        correct: "green",
-        whyGreen: "Transparency + active development + public repo/updates = solid green signal.",
-        whyRed: "Without these signals you’d be guessing; with them, risk is lower."
-      },
-      {
-        text: "This token has a billion-dollar market cap but no real utility. However, it’s hyping and covered by many influencers.",
-        correct: "red",
-        whyRed: "High cap + no utility = weak fundamentals; influencer hype doesn’t change that.",
-        whyGreen: "Green flags come from utility and traction, not pure hype."
-      },
-      {
-        text: "The dev team holds 80% of the token supply. They say they’ll unlock it later.",
-        correct: "red",
-        whyRed: "Huge insider share + unlock risk = potential dump. Tokenomics matter.",
-        whyGreen: "A healthy distribution avoids outsized insider control."
-      },
-      {
-        text: "The founder has a big YouTube channel and says ‘this is the next Solana.’",
-        correct: "red",
-        whyRed: "Influencer clout ≠ fundamentals. Marketing alone is a red flag without proof.",
-        whyGreen: "Green needs data: usage, code, audits — not slogans."
-      }
+      { text:"Guaranteed 1,000x next week. No docs, no devs, but lots of hype", correct:"red",
+        whyRed:"This is classic scam bait: no transparency or documentation, only impossible promises.",
+        whyGreen:"If there’s only hype and no fundamentals, it’s not a green flag." },
+      { text:"A new DeFi tool with a working product, a public GitHub, and weekly updates from the team.", correct:"green",
+        whyGreen:"Transparency + active development + public repo/updates = solid green signal.",
+        whyRed:"Without these signals you’d be guessing; with them, risk is lower." },
+      { text:"This token has a billion-dollar market cap but no real utility. However, it’s hyping and covered by many influencers.", correct:"red",
+        whyRed:"High cap + no utility = weak fundamentals; influencer hype doesn’t change that.",
+        whyGreen:"Green flags come from utility and traction, not pure hype." },
+      { text:"The dev team holds 80% of the token supply. They say they’ll unlock it later.", correct:"red",
+        whyRed:"Huge insider share + unlock risk = potential dump. Tokenomics matter.",
+        whyGreen:"A healthy distribution avoids outsized insider control." },
+      { text:"The founder has a big YouTube channel and says ‘this is the next Solana.’", correct:"red",
+        whyRed:"Influencer clout ≠ fundamentals. Marketing alone is a red flag without proof.",
+        whyGreen:"Green needs data: usage, code, audits — not slogans." }
     ];
 
     const qCounter = document.getElementById('qCounter');
@@ -356,8 +341,8 @@
       answered = false;
 
       nextBtn.textContent = (qi === questions.length-1) ? 'Level up!' : 'Next question';
-      nextBtn.classList.remove('show');  // скрываем кнопку до ответа
-      scrollTop();                       // вверх при смене вопроса
+      nextBtn.classList.remove('show');
+      scrollTop();
     }
 
     function choose(choice){
@@ -375,12 +360,12 @@
       yn.textContent = correct ? 'Yes!' : 'No.';
       why.textContent = q.correct === 'red' ? q.whyRed : q.whyGreen;
       reveal.classList.add('show');
-      nextBtn.classList.add('show');     // показываем кнопку после ответа
+      nextBtn.classList.add('show');
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred(correct ? 'medium' : 'light'); } catch(e){}
     }
 
     pickGreen.addEventListener('click', ()=>choose('green'));
-    pickRed addEventListener('click', ()=>choose('red'));
+    pickRed.addEventListener('click', ()=>choose('red'));   /* ← здесь была опечатка, точка возвращена */
 
     nextBtn.addEventListener('click', ()=>{
       if (qi === questions.length - 1) {
@@ -408,17 +393,13 @@
   const lastId = localStorage.getItem('pickle_progress') || 'l1';
   const hasEmail = !!localStorage.getItem('pickle_email');
 
-  // 1) Без e-mail — на форму
   if (!hasEmail) { location.replace('index.html#join'); return; }
-
-  // 2) Нельзя заходить дальше достигнутого
   if (idToIdx[LESSON_ID] > idToIdx[lastId]) {
     try{ tg?.HapticFeedback?.impactOccurred('light'); }catch(_){}
     location.replace(fileFor(lastId));
     return;
   }
 
-  // 3) Кнопки
   window.pickleNext = function(){
     const curIdx = idToIdx[LESSON_ID];
     const savedIdx = idToIdx[localStorage.getItem('pickle_progress') || 'l1'];
