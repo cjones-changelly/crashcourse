@@ -66,7 +66,7 @@
     box-shadow:0 6px 14px rgba(177,255,140,.25);
   }
 
-  /* Progress dots (ненавязчиво) */
+  /* Progress dots */
   .nav{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
@@ -89,7 +89,7 @@
   .artStack .phones{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(92%,420px);filter:drop-shadow(0 12px 28px rgba(0,0,0,.25))}
   @media (max-width:420px){.artStack{height:230px}.artStack .tile{width:min(82%,280px);left:12px;top:6px}.artStack .phones{width:min(96%,390px)}}
 
-  /* ---------- QUIZ ---------- */
+  /* ---------- QUIZ (одна страница) ---------- */
   .quiz-head{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px}
   .quiz-title{font-family:Georgia,serif;font-style:italic;font-size:28px;text-align:center}
   .quiz-sub{color:var(--muted);text-align:center;max-width:680px}
@@ -187,129 +187,34 @@
         </div>
       </section>
 
-      <!-- -------- QUIZ (5 слайдов) -------- -->
-
-      <!-- Q1 -->
-      <section class="slide quiz" data-correct="red">
+      <!-- SLIDE 4: QUIZ (один слайд, 5 вопросов) -->
+      <section class="slide quiz">
         <div class="wrap">
           <div class="quiz-head">
             <h2 class="quiz-title">Red flag or green flag?</h2>
             <p class="quiz-sub">Check your scam radar with our latest quiz. Read the coin pitch and ask yourself: Would you be involved in it?<br>
               <span>Pick: <a>Green flag</a> or <a>red flag</a>. Then reveal the answer and learn why</span></p>
           </div>
-          <div class="q-counter">Question 1/5</div>
-          <p class="q-text">Guaranteed 1,000x next week. No docs, no devs, but lots of hype</p>
+
+          <div class="q-counter" id="qCounter">Question 1/5</div>
+          <p class="q-text" id="qText">—</p>
 
           <div class="choices">
-            <button class="pick" data-choice="green">
+            <button class="pick" id="pickGreen" data-choice="green">
               <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
               <span>Green Flag</span>
             </button>
-            <button class="pick" data-choice="red">
+            <button class="pick" id="pickRed" data-choice="red">
               <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
               <span>Red Flag</span>
             </button>
           </div>
 
-          <div class="reveal"><div class="yn">—</div><div class="why">
-            <span class="why-red">This is classic scam bait. No transparency, no documentation, and impossible promises.</span>
-            <span class="why-green">If there’s only hype and no fundamentals, it’s not a green flag.</span>
-          </div></div>
+          <div class="reveal" id="reveal"><div class="yn" id="yn">—</div><div class="why" id="why">—</div></div>
 
-          <div class="next-wrap"><button class="btn next">Next question</button></div>
-        </div>
-      </section>
-
-      <!-- Q2 -->
-      <section class="slide quiz" data-correct="green">
-        <div class="wrap">
-          <div class="q-counter">Question 2/5</div>
-          <p class="q-text">Open-source repo with frequent commits and third-party audits published</p>
-          <div class="choices">
-            <button class="pick" data-choice="green">
-              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
-              <span>Green Flag</span>
-            </button>
-            <button class="pick" data-choice="red">
-              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
-              <span>Red Flag</span>
-            </button>
-          </div>
-          <div class="reveal"><div class="yn">—</div><div class="why">
-            <span class="why-green">Transparency + active development + audits = strong signal the team ships and cares about security.</span>
-            <span class="why-red">Without these signals you’d be guessing; with them, the risk is lower.</span>
-          </div></div>
-          <div class="next-wrap"><button class="btn next">Next question</button></div>
-        </div>
-      </section>
-
-      <!-- Q3 -->
-      <section class="slide quiz" data-correct="red">
-        <div class="wrap">
-          <div class="q-counter">Question 3/5</div>
-          <p class="q-text">Anonymous team, and 80% of supply unlocks to insiders next month</p>
-          <div class="choices">
-            <button class="pick" data-choice="green">
-              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
-              <span>Green Flag</span>
-            </button>
-            <button class="pick" data-choice="red">
-              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
-              <span>Red Flag</span>
-            </button>
-          </div>
-          <div class="reveal"><div class="yn">—</div><div class="why">
-            <span class="why-red">Huge insider unlock + no accountability = dump risk. Tokenomics matter.</span>
-            <span class="why-green">Green flags need fair distribution and aligned incentives — not this.</span>
-          </div></div>
-          <div class="next-wrap"><button class="btn next">Next question</button></div>
-        </div>
-      </section>
-
-      <!-- Q4 -->
-      <section class="slide quiz" data-correct="green">
-        <div class="wrap">
-          <div class="q-counter">Question 4/5</div>
-          <p class="q-text">Real utility: token pays app fees; users grow weekly; market cap is still small</p>
-          <div class="choices">
-            <button class="pick" data-choice="green">
-              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
-              <span>Green Flag</span>
-            </button>
-            <button class="pick" data-choice="red">
-              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
-              <span>Red Flag</span>
-            </button>
-          </div>
-          <div class="reveal"><div class="yn">—</div><div class="why">
-            <span class="why-green">Utility + traction can be a legit edge. Smaller cap means upside — with risk, of course.</span>
-            <span class="why-red">If there were no usage, it’d be a red flag. Here the usage is the point.</span>
-          </div></div>
-          <div class="next-wrap"><button class="btn next">Next question</button></div>
-        </div>
-      </section>
-
-      <!-- Q5 -->
-      <section class="slide quiz" data-correct="red">
-        <div class="wrap">
-          <div class="q-counter">Question 5/5</div>
-          <p class="q-text">“Risk-free staking” with fixed 20% daily returns. Invite-only via a Telegram bot, send funds to a wallet</p>
-          <div class="choices">
-            <button class="pick" data-choice="green">
-              <img class="ico-flag" src="assets/icon-flag-green.png" alt="" aria-hidden="true">
-              <span>Green Flag</span>
-            </button>
-            <button class="pick" data-choice="red">
-              <img class="ico-flag" src="assets/icon-flag-red.png" alt="" aria-hidden="true">
-              <span>Red Flag</span>
-            </button>
-          </div>
-          <div class="reveal"><div class="yn">—</div><div class="why">
-            <span class="why-red">Guaranteed high returns are a hallmark of ponzis/phishing. Never send funds to random wallets.</span>
-            <span class="why-green">A legit yield is variable, transparent and auditable — not a magic 20% daily.</span>
-          </div></div>
           <div class="next-wrap">
-            <a class="btn next" id="levelUp" href="lesson3.html" onclick="pickleNext(); return false;">Level up!</a>
+            <button class="btn next" id="nextBtn">Next question</button>
+            <!-- На последнем вопросе кнопка превратится в Level up! и вызовет pickleNext() -->
           </div>
         </div>
       </section>
@@ -326,15 +231,7 @@
     const dots = document.getElementById('dots');
     let i = 0;
 
-    // индексы квиз-слайдов
-    const quizSlides = slides
-      .map((s,idx)=>({el:s, idx, isQuiz:s.classList.contains('quiz')}))
-      .filter(o=>o.isQuiz);
-    const quizIdxs = quizSlides.map(o=>o.idx);
-    const firstQuiz = quizIdxs[0], lastQuiz = quizIdxs[quizIdxs.length-1];
-    const answered = new Array(quizIdxs.length).fill(false);
-
-    // точки
+    // точки для 4 слайдов
     slides.forEach((_, idx) => {
       const d = document.createElement('span');
       d.className = 'dot' + (idx===0 ? ' active' : '');
@@ -342,34 +239,13 @@
     });
     const dotEls = Array.from(dots.children);
 
-    function firstUnansweredSlideIdx(){
-      const pos = answered.indexOf(false);
-      return pos === -1 ? null : quizIdxs[pos];
-    }
-    function inQuiz(idx){ return idx >= firstQuiz && idx <= lastQuiz; }
-
-    function canGoForward(fromIdx){
-      if (!inQuiz(fromIdx)) return true;
-      const qPos = quizIdxs.indexOf(fromIdx);
-      if (qPos !== -1 && !answered[qPos]) return false;
-      return true;
-    }
-    function clampTarget(target){
-      const fua = firstUnansweredSlideIdx();
-      if (fua !== null && target > fua) return fua;
-      return target;
-    }
-
     function update(){
       track.style.transform = `translateX(${-i*100}%)`;
       dotEls.forEach((d,idx)=>d.classList.toggle('active', idx===i));
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); } catch(e){}
     }
-
     function go(n){
       n = Math.max(0, Math.min(slides.length-1, n));
-      if (n > firstQuiz) n = clampTarget(n);
-      if (n > i && !canGoForward(i)) return;
       i = n; update();
     }
 
@@ -382,15 +258,15 @@
       });
     });
 
-    // «Got it!» -> первый вопрос квиза
+    // «Got it!» -> слайд с квизом (индекс 3)
     document.querySelectorAll('[data-goto]').forEach(a=>{
       a.addEventListener('click', e=>{
         e.preventDefault();
-        go(parseInt(a.dataset.goto,10) || firstQuiz || 0);
+        go(3);
       });
     });
 
-    // клавиатура и свайп (оставляем, но не подчёркиваем)
+    // Клавиатура и свайп (не акцентируем, но поддерживаем)
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
@@ -406,37 +282,104 @@
       else if (dx > thr) go(i-1);
     });
 
-    // ЛОГИКА КВИЗА
-    quizSlides.forEach((qObj, localIdx)=>{
-      const slide = qObj.el;
-      const picks = slide.querySelectorAll('.pick');
-      const reveal = slide.querySelector('.reveal');
-      const yn = reveal.querySelector('.yn');
-      const whyRed = reveal.querySelector('.why-red');
-      const whyGreen = reveal.querySelector('.why-green');
-      const nextBtn = slide.querySelector('.next');
-      const correct = slide.dataset.correct;
-
-      function show(choice){
-        picks.forEach(p=>{
-          p.disabled = true;
-          p.classList.toggle('active', p.dataset.choice===choice);
-          if(p.dataset.choice !== correct) p.classList.add('wrong');
-        });
-        yn.textContent = (choice===correct) ? 'Yes!' : 'No.';
-        whyRed && (whyRed.style.display = correct==='red' ? 'inline' : 'none');
-        whyGreen && (whyGreen.style.display = correct==='green' ? 'inline' : 'none');
-        reveal.classList.add('show');
-        nextBtn.classList.add('show');
-        answered[localIdx] = true;
+    // ---------- QUIZ (один слайд, 5 вопросов) ----------
+    const questions = [
+      {
+        text: "Guaranteed 1,000x next week. No docs, no devs, but lots of hype",
+        correct: "red",
+        whyRed: "This is classic scam bait: no transparency or documentation, only impossible promises.",
+        whyGreen: "If there’s only hype and no fundamentals, it’s not a green flag."
+      },
+      {
+        text: "A new DeFi tool with a working product, a public GitHub, and weekly updates from the team.",
+        correct: "green",
+        whyGreen: "Transparency + active development + public repo/updates = solid green signal.",
+        whyRed: "Without these signals you’d be guessing; with them, risk is lower."
+      },
+      {
+        text: "This token has a billion-dollar market cap but no real utility. However, it’s hyping and covered by many influencers.",
+        correct: "red",
+        whyRed: "High cap + no utility = weak fundamentals; influencer hype doesn’t change that.",
+        whyGreen: "Green flags come from utility and traction, not pure hype."
+      },
+      {
+        text: "The dev team holds 80% of the token supply. They say they’ll unlock it later.",
+        correct: "red",
+        whyRed: "Huge insider share + unlock risk = potential dump. Tokenomics matter.",
+        whyGreen: "A healthy distribution avoids outsized insider control."
+      },
+      {
+        text: "The founder has a big YouTube channel and says ‘this is the next Solana.’",
+        correct: "red",
+        whyRed: "Influencer clout ≠ fundamentals. Marketing alone is a red flag without proof.",
+        whyGreen: "Green needs data: usage, code, audits — not slogans."
       }
-      picks.forEach(p=>p.addEventListener('click', ()=>show(p.dataset.choice)));
+    ];
 
-      if (localIdx < quizSlides.length-1) {
-        nextBtn.addEventListener('click', ()=> go(qObj.idx + 1));
+    const qCounter = document.getElementById('qCounter');
+    const qText = document.getElementById('qText');
+    const reveal = document.getElementById('reveal');
+    const yn = document.getElementById('yn');
+    const why = document.getElementById('why');
+    const nextBtn = document.getElementById('nextBtn');
+    const pickGreen = document.getElementById('pickGreen');
+    const pickRed = document.getElementById('pickRed');
+    const picks = [pickGreen, pickRed];
+
+    let qi = 0;           // индекс вопроса
+    let answered = false; // ответили ли на текущий
+
+    function renderQuestion(){
+      const q = questions[qi];
+      qCounter.textContent = `Question ${qi+1}/5`;
+      qText.textContent = q.text;
+
+      // reset UI
+      picks.forEach(p=>{
+        p.disabled = false;
+        p.classList.remove('active','wrong');
+      });
+      reveal.classList.remove('show');
+      yn.textContent = '—';
+      why.textContent = '—';
+      answered = false;
+
+      // next button состояние
+      nextBtn.textContent = (qi === questions.length-1) ? 'Level up!' : 'Next question';
+    }
+
+    function choose(choice){
+      if (answered) return;
+      const q = questions[qi];
+      answered = true;
+
+      picks.forEach(p=>{
+        p.disabled = true;
+        p.classList.toggle('active', p.dataset.choice===choice);
+        if (p.dataset.choice !== q.correct) p.classList.add('wrong');
+      });
+
+      const correct = (choice === q.correct);
+      yn.textContent = correct ? 'Yes!' : 'No.';
+      why.textContent = q.correct === 'red' ? q.whyRed : q.whyGreen;
+      reveal.classList.add('show');
+      try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred(correct ? 'medium' : 'light'); } catch(e){}
+    }
+
+    pickGreen.addEventListener('click', ()=>choose('green'));
+    pickRed.addEventListener('click', ()=>choose('red'));
+
+    nextBtn.addEventListener('click', ()=>{
+      if (qi === questions.length - 1) {
+        // последний вопрос — переходим на следующий урок
+        if (typeof window.pickleNext === 'function') window.pickleNext();
+        return;
       }
+      qi += 1;
+      renderQuestion();
     });
 
+    renderQuestion();
     update();
   })();
 </script>
