@@ -34,7 +34,7 @@
     /* ---------- Header ---------- */
     .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
     .brand-logo img{
-      height:44px; width:auto; object-fit:contain; display:block;
+      height:44px; width:auto; object-fit:contain; display:block; /* новый квадратный логотип ок */
     }
     @media (max-width:480px){ .brand-logo img{ height:36px; } }
 
@@ -64,7 +64,9 @@
     .h-title{font-size:36px; line-height:1.15; margin:8px 0 10px; font-weight:800; letter-spacing:.2px}
     .h-title em{font-style:normal; color:var(--brand); text-shadow:0 0 18px rgba(177,255,140,.35)}
     .h-sub{color:var(--muted); margin-bottom:14px}
-    .hero img{width:100%; border-radius:18px; border:none; display:block}
+    .hero img{
+      width:100%; border-radius:18px; border:none; display:block; /* без рамки у изображения */
+    }
     .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
       background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
     .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
@@ -102,11 +104,13 @@
     .input{
       width:100%; height:44px; padding:0 14px; border-radius:12px; border:1px solid var(--line);
       background:#0d131c; color:var(--text); outline:none; font-size:15px;
+      transition:border-color .2s, box-shadow .2s;
     }
     .input::placeholder{color:#708099}
     .stack{display:grid; gap:10px}
     .muted{color:var(--muted); font-size:14px}
     .input.invalid{border-color:#ff5f6d; box-shadow:0 0 0 3px rgba(255,95,109,.15)}
+    .input.success{border-color:#32d296; box-shadow:0 0 0 3px rgba(50,210,150,.20)}
     .help-error{color:#ff9aa3; font-size:13px; margin-top:-4px}
 
     /* ---------- FAQ ---------- */
@@ -142,7 +146,7 @@
     <section class="hero">
       <div>
         <span class="pill">Unpickle the truth</span>
-        <h1 class="h-title">Crypto Secrets with</h1>
+        <h1 class="h-title">Crypto Secrets with <em>PICKLE</em></h1>
         <p class="h-sub"><em>5 juicy lessons they never taught you</em></p>
         <p class="h-sub">Let Pickle be your guide through the crunchy truths of crypto</p>
         <div class="hero-cta">
@@ -221,26 +225,24 @@
   </div>
 
   <script>
-    // Telegram theming — не трогаем зелёный бренда
+    // Telegram theming — не трогаем фирменный зелёный
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.expand(); tg.ready();
       const tp = tg.themeParams || {};
       const root = document.documentElement;
-      const set = (cssVar, value) => { if (value) root.style.setProperty(cssVar, value); };
+      const set = (v, val)=>{ if (val) root.style.setProperty(v, val) };
       set('--bg', tp.bg_color);
       set('--text', tp.text_color);
       set('--card', tp.secondary_bg_color);
       set('--line', tp.section_separator_color);
-      // не делаем set('--brand', tp.button_color);
+      // --brand намеренно не меняем
     }
 
-    // Header "Course breakdown" → scroll to section
+    // Прокрутка к разделам
     document.getElementById('btn-breakdown').onclick = () => {
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
     };
-
-    // Кнопки "Get started" → к форме
     function scrollToJoin(){
       const el = document.getElementById('join');
       if (!el) return;
@@ -249,8 +251,8 @@
       if (email) setTimeout(()=>{ email.focus({preventScroll:true}); email.select?.(); }, 250);
       try { tg?.HapticFeedback?.impactOccurred('light'); } catch(e){}
     }
-    document.getElementById('btn-start-link').addEventListener('click', (e)=>{ e.preventDefault(); scrollToJoin(); });
-    document.getElementById('cta-start').addEventListener('click', (e)=>{ e.preventDefault(); scrollToJoin(); });
+    document.getElementById('btn-start-link').addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
+    document.getElementById('cta-start').addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
 
     // Continue → к последнему уроку
     document.getElementById('cta-continue').onclick = () => {
@@ -259,7 +261,7 @@
       location.href = map[last] || 'lesson1.html';
     };
 
-    // ===== Обязательный e-mail + отправка в бота через sendData (для Google Sheets-сценария) =====
+    // ===== Обязательный e-mail + отправка в бота через sendData =====
     const emailInput = document.getElementById('email');
     const btnEmail = document.getElementById('btn-email');
 
@@ -275,23 +277,31 @@
     }
     function validateEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) }
 
+    emailInput.addEventListener('input', ()=>{
+      if (emailInput.classList.contains('invalid') && validateEmail(emailInput.value.trim())) {
+        emailInput.classList.remove('invalid'); showHelp('');
+      }
+    });
+
     btnEmail.addEventListener('click', async () => {
       const v = emailInput.value.trim();
       if (!v) { emailInput.classList.add('invalid'); showHelp('Email is required'); emailInput.focus(); return; }
       if (!validateEmail(v)) { emailInput.classList.add('invalid'); showHelp('Please enter a valid email'); emailInput.focus(); return; }
       emailInput.classList.remove('invalid'); showHelp('');
 
-      const btnOld = btnEmail.textContent;
-      btnEmail.disabled = true; btnEmail.textContent = 'Saving…';
+      const old = btnEmail.textContent; btnEmail.disabled = true; btnEmail.textContent = 'Saving…';
 
       try {
         if (!tg) throw new Error('Not in Telegram');
-        tg.sendData(JSON.stringify({
-          type: 'subscribe',
-          email: v,
-          source: 'pickle-miniapp'
-        }));
+
+        // Отправляем данные боту
+        tg.sendData(JSON.stringify({ type:'subscribe', email:v, source:'pickle-miniapp' }));
         try { tg.HapticFeedback?.notificationOccurred('success'); } catch(e){}
+
+        // Маленькая задержка, чтобы Telegram гарантированно забрал sendData
+        emailInput.classList.add('success');
+        await new Promise(r=>setTimeout(r, 350));
+
         localStorage.setItem('pickle_email', v);
         localStorage.setItem('pickle_progress', 'l1');
         location.href = 'lesson1.html';
@@ -299,15 +309,19 @@
         showHelp('Open this course inside Telegram to continue.');
         try { tg?.showAlert?.('Open this course inside Telegram to continue.'); } catch(e){}
       } finally {
-        btnEmail.disabled = false; btnEmail.textContent = btnOld;
+        btnEmail.disabled = false; btnEmail.textContent = old;
       }
     });
 
-    emailInput.addEventListener('input', ()=>{
-      if (emailInput.classList.contains('invalid') && validateEmail(emailInput.value.trim())) {
-        emailInput.classList.remove('invalid'); showHelp('');
+    // Login info demo
+    document.getElementById('btn-login').onclick = () => {
+      if (tg) {
+        const name = tg.initDataUnsafe?.user?.first_name || 'friend';
+        tg.showAlert(`Hi, ${name}! Your progress will be synced.`);
+      } else {
+        alert('In a browser we simulate sign-in. Inside Telegram your account is used automatically.');
       }
-    });
+    };
 
     // Lessons list
     const lessons = [
