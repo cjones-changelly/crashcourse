@@ -121,10 +121,11 @@
 
   @media (max-width:720px){.choices{grid-template-columns:1fr}}
 </style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <header class="bar">
-    <a href="index.html" class="back" aria-label="Back">←</a>
+    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">←</a>
     <img src="assets/logo-changelly.png" alt="Changelly" class="logo">
   </header>
 
@@ -307,7 +308,9 @@
             <span class="why-red">Guaranteed high returns are a hallmark of ponzis/phishing. Never send funds to random wallets.</span>
             <span class="why-green">A legit yield is variable, transparent and auditable — not a magic 20% daily.</span>
           </div></div>
-          <div class="next-wrap"><a class="btn next" id="levelUp" href="lesson3.html">Level up!</a></div>
+          <div class="next-wrap">
+            <a class="btn next" id="levelUp" href="lesson3.html" onclick="pickleNext(); return false;">Level up!</a>
+          </div>
         </div>
       </section>
 
@@ -436,6 +439,49 @@
 
     update();
   })();
+</script>
+
+<!-- прогресс/гейтинг для урока 2 -->
+<script>
+(function(){
+  const LESSON_ID = 'l2';
+  const order = ['l1','l2','l3','l4','l5'];
+  const idToIdx = Object.fromEntries(order.map((id,i)=>[id,i]));
+  const tg = window.Telegram?.WebApp;
+
+  const fileFor = id => `lesson${id.replace('l','')}.html`;
+  const lastId = localStorage.getItem('pickle_progress') || 'l1';
+  const hasEmail = !!localStorage.getItem('pickle_email');
+
+  // 1) Без e-mail — на форму
+  if (!hasEmail) { location.replace('index.html#join'); return; }
+
+  // 2) Нельзя заходить дальше достигнутого
+  if (idToIdx[LESSON_ID] > idToIdx[lastId]) {
+    try{ tg?.HapticFeedback?.impactOccurred('light'); }catch(_){}
+    location.replace(fileFor(lastId));
+    return;
+  }
+
+  // 3) Кнопки
+  window.pickleNext = function(){
+    const curIdx = idToIdx[LESSON_ID];
+    const savedIdx = idToIdx[localStorage.getItem('pickle_progress') || 'l1'];
+    const nextId = order[Math.min(curIdx + 1, order.length - 1)];
+
+    if (curIdx >= savedIdx) {
+      localStorage.setItem('pickle_progress', nextId);
+      try{ tg?.HapticFeedback?.notificationOccurred('success'); }catch(_){}
+    }
+
+    if (curIdx + 1 < order.length) location.href = fileFor(nextId);
+    else location.href = 'index.html#breakdown';
+  };
+
+  window.pickleBack = function(){
+    location.href = 'index.html';
+  };
+})();
 </script>
 </body>
 </html>
