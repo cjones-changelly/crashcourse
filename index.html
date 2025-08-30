@@ -1,299 +1,179 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Crypto Secrets with Pickle — Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Changelly · Pickle Course</title>
   <style>
     :root{
-      --bg:#0b0e11;
-      --card:#12161c;
-      --text:#e7eaf7;
-      --muted:#9fb0c3;
-      --brand:#B1FF8C;           /* фирменный зелёный */
-      --accent-2:#69b7ff;
-      --line:#222a36;
-      --shadow:0 8px 30px rgba(0,0,0,.25);
-      --radius:16px;
-      --btn-h:44px;              /* единая высота кнопок */
-      --btn-fs:15px;             /* единый размер шрифта */
-      --btn-pad:0 18px;          /* единые отступы */
+      --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2; --line:#242936;
+      --brand:#B1FF8C; --ink:#0b0e11;
+      --btn-h:52px; --btn-fs:16px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; background:var(--bg); color:var(--text);
-      font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-      scroll-behavior:smooth;
     }
     a{color:inherit; text-decoration:none}
-    .wrap{max-width:980px; margin:0 auto; padding:18px 16px 80px}
+    img{max-width:100%; display:block}
 
-    /* ---------- Header ---------- */
-    .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
-    .brand-logo img{
-      height:44px;               /* фиксируем высоту */
-      width:auto;                /* ширина по содержимому (квадрат 44×44) */
-      object-fit:contain;
-      display:block;
+    /* Header (как было — только тексты внутри) */
+    header.bar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 16px; background:var(--bg);
     }
-    @media (max-width:480px){
-      .brand-logo img{ height:36px; }
-    }
-
-    .actions{display:flex; gap:10px; flex-wrap:wrap}
+    .logo{height:44px; width:auto; object-fit:contain}
+    .nav{display:flex; gap:10px; align-items:center}
+    .link{padding:8px 12px; border-radius:999px; border:1px solid var(--line); color:var(--text)}
     .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      height:var(--btn-h); padding:var(--btn-pad);
-      border:1px solid var(--line); border-radius:999px;
-      font-weight:700; font-size:var(--btn-fs); line-height:1;
-      cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
-      background:#1a2230; color:var(--text);
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      height:var(--btn-h); padding:0 24px; border:0; border-radius:999px;
+      background:var(--brand); color:#07110c; font-weight:800; font-size:var(--btn-fs); line-height:1;
+      box-shadow:0 6px 14px rgba(177,255,140,.25);
     }
-    .btn:hover{transform:translateY(-1px)}
-    .btn:active{transform:translateY(0)}
-    .btn.solid{background:var(--brand); color:#07110c; border-color:transparent; box-shadow:0 6px 14px rgba(177,255,140,.25)}
-    .btn.ghost{background:transparent}
 
-    /* ---------- Hero ---------- */
-    .hero{
-      display:grid; grid-template-columns:1.15fr .85fr; gap:18px; align-items:center;
-      padding:18px; background:
-        linear-gradient(180deg, rgba(177,255,140,.10), transparent 60%),
-        radial-gradient(60% 80% at 80% 0%, rgba(105,183,255,.15), transparent 60%);
-      border-radius:24px; box-shadow:var(--shadow);
-      border:none; /* без рамки */
-    }
-    .h-title{font-size:36px; line-height:1.15; margin:8px 0 10px; font-weight:800; letter-spacing:.2px}
-    .h-title em{font-style:normal; color:var(--brand); text-shadow:0 0 18px rgba(177,255,140,.35)}
-    .h-sub{color:var(--muted); margin-bottom:14px}
-    .hero img{
-      width:100%; border-radius:18px; border:none; /* без рамки у изображения */
-      display:block;
-    }
-    .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
-      background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
-    .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
+    /* Hero */
+    .hero{max-width:1000px; margin:8px auto 20px; padding:0 16px; display:grid; grid-template-columns:1.1fr .9fr; gap:18px; align-items:center}
+    .hero h1{margin:4px 0 6px; font-size:32px; font-weight:800}
+    .eyebrow{color:var(--muted); font-weight:600; margin-bottom:6px}
+    .sub{font-style:italic; color:#cfd6e6; margin:8px 0}
+    .note{margin:8px 0 16px; color:#dfe4ef}
+    .cta-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .hero .art{border-radius:16px; overflow:hidden; box-shadow:0 12px 28px rgba(0,0,0,.35); border:1px solid var(--line)}
+    /* по твоей правке раньше рамку могли убирать — если надо без линии, снимай следующий бордер */
+    .hero .art{border:none}
 
-    /* ---------- Features ---------- */
-    .features{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 8px}
-    .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow)}
-    .card h4{margin:6px 0 6px; font-size:16px}
-    .card p{margin:0; color:var(--muted); font-size:14px}
+    @media (max-width:900px){ .hero{grid-template-columns:1fr} }
 
-    /* ---------- Lessons ---------- */
-    .section-title{font-size:24px; font-weight:800; margin:22px 4px 12px}
-    .lessons{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
-    .lesson{
-      background:linear-gradient(180deg,#12161c,#0f141c);
-      border:1px solid var(--line); border-radius:16px; padding:10px;
-      box-shadow:0 6px 18px rgba(0,0,0,.25);
-      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-      cursor:pointer; outline:none; display:block; color:inherit;
+    /* Features (3 карточки) */
+    .features{max-width:1000px; margin:8px auto 24px; padding:0 16px;
+      display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+    .feat{
+      border:1px solid var(--line); background:#0d1219; border-radius:16px; padding:14px;
     }
-    .lesson:hover{transform:translateY(-3px); box-shadow:0 12px 26px rgba(0,0,0,.35); border-color:#2e3646}
-    .lesson:active{transform:translateY(-1px) scale(.995)}
-    .lesson .thumb{height:84px; border-radius:12px; overflow:hidden; border:1px solid var(--line); margin-bottom:8px}
-    .lesson .thumb img{width:100%; height:100%; object-fit:cover; display:block}
-    .lesson h5{margin:0 0 4px; font-size:14px}
-    .lesson .meta{display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:12px}
-    .lesson .meta .arrow{font-weight:700; color:var(--brand)}
+    .feat h3{margin:2px 0 6px; font-size:18px; font-weight:800}
+    .feat p{margin:0; color:var(--muted)}
+    @media (max-width:780px){ .features{grid-template-columns:1fr} }
 
-    /* ---------- Instructor & CTA ---------- */
-    .two{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
-    .cta{
-      background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(177,255,140,.18));
-      border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:var(--shadow)
+    /* Course cards */
+    .section{max-width:1000px; margin:6px auto 40px; padding:0 16px}
+    .section h2{margin:8px 0 10px; font-size:22px; font-weight:800}
+    .cards{display:grid; grid-template-columns:repeat(5,1fr); gap:12px}
+    .card{
+      display:block; background:#0d1219; border:1px solid var(--line); border-radius:16px; padding:12px;
+      transition:transform .08s ease;
     }
-    .input{
-      width:100%; height:44px; padding:0 14px; border-radius:12px; border:1px solid var(--line);
-      background:#0d131c; color:var(--text); outline:none; font-size:15px;
-    }
-    .input::placeholder{color:#708099}
-    .stack{display:grid; gap:10px}
-    .muted{color:var(--muted); font-size:14px}
+    .card:hover{transform:translateY(-2px)}
+    .card h4{margin:4px 0 6px; font-size:15px}
+    .meta{color:var(--muted); font-size:13px}
+    .go{position:absolute; right:10px; top:10px; font-size:18px; opacity:.9}
+    .tile{position:relative}
+    .tile .thumb{width:100%; height:auto; border-radius:12px; border:1px solid var(--line)}
+    .tile .go{position:absolute; right:10px; bottom:10px}
 
-    /* ---------- FAQ ---------- */
-    .faq{margin-top:18px}
-    details{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px}
-    summary{cursor:pointer; font-weight:700}
-    details p{margin:8px 0 0; color:var(--muted)}
-
-    /* ---------- Responsive ---------- */
-    @media (max-width:960px){
-      .hero{grid-template-columns:1fr}
-      .lessons{grid-template-columns:repeat(2,1fr)}
-      .features{grid-template-columns:1fr}
-      .two{grid-template-columns:1fr}
-    }
+    @media (max-width:1000px){ .cards{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:520px){ .cards{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- Header -->
-    <div class="topbar">
-      <div class="brand-logo">
-        <img src="assets/logo-changelly.png" alt="Changelly">
-      </div>
-      <div class="actions">
-        <button id="btn-breakdown" class="btn ghost">Course breakdown</button>
-        <a href="lesson1.html" class="btn solid" id="btn-start-link">Get started</a>
+
+  <!-- HEADER -->
+  <header class="bar">
+    <img class="logo" src="assets/logo-changelly.png" alt="Changelly"/>
+    <nav class="nav">
+      <a class="link" href="#breakdown">Course breakdown</a>
+      <!-- оставляем только существующие элементы -->
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Course breakdown · Get started</div>
+      <h1>Crypto Secrets with</h1>
+      <!-- у нас тут есть подписи/подзаголовки — меняю тексты -->
+      <p class="sub"><em>5 juicy lessons they never taught you</em></p>
+      <p class="note">Let Pickle be your guide through the crunchy truths of crypto</p>
+      <div class="cta-row">
+        <a class="btn" href="lesson1.html">Get started for $49.99 → $0</a>
       </div>
     </div>
+    <div class="art">
+      <!-- используем имеющееся у нас hero-изображение -->
+      <img src="assets/hero.png" alt="Pickle course hero"/>
+    </div>
+  </section>
 
-    <!-- Hero -->
-    <section class="hero">
-      <div>
-        <span class="pill">5 lessons · 5 minutes each</span>
-        <h1 class="h-title">Crypto Secrets with <em>PICKLE</em></h1>
-        <p class="h-sub">A short, fun crash course for absolute beginners. Learn crypto without the jargon, play a tiny quiz after each topic, and unlock the next lesson.</p>
-        <div class="hero-cta">
-          <a class="btn solid" id="cta-start" href="lesson1.html">🚀 Start for free</a>
-          <button class="btn ghost" id="cta-continue">▶️ Continue</button>
+  <!-- FEATURES (редактируем тексты, не добавляя новых карточек) -->
+  <section class="features" aria-label="Why this course">
+    <article class="feat">
+      <h3>Understand crypto in 25 minutes</h3>
+      <p>Go from zero to crypto hero in less than a week</p>
+    </article>
+    <article class="feat">
+      <h3>Learn by Playing</h3>
+      <p>Quizzes, unlocks, and a talking pickle</p>
+    </article>
+    <article class="feat">
+      <h3>Finish the Course – Unlock a $100 Bonus</h3>
+      <p>Real tools powered by Changelly. Start right away</p>
+    </article>
+  </section>
+
+  <!-- COURSE BREAKDOWN -->
+  <section class="section" id="breakdown">
+    <h2>Course Breakdown</h2>
+    <div class="cards">
+      <!-- 1 -->
+      <a class="card" href="lesson1.html">
+        <div class="tile">
+          <img class="thumb" src="assets/card-1.png" alt="Lesson 1"/>
+          <span class="go">→</span>
         </div>
-        <p class="muted" style="margin-top:8px">Finish the course to unlock a $100 bonus raffle (brand rules apply).</p>
-      </div>
-      <div>
-        <img alt="Pickle hero" src="assets/hero-pickle.png" />
-      </div>
-    </section>
-
-    <!-- Features -->
-    <div class="features">
-      <div class="card">
-        <h4>Understand crypto in 25 minutes</h4>
-        <p>From zero to confident on basics and next steps.</p>
-      </div>
-      <div class="card">
-        <h4>Learn by playing</h4>
-        <p>Short quizzes and unlocks keep you motivated.</p>
-      </div>
-      <div class="card">
-        <h4>Real tools, not hype</h4>
-        <p>We show safe tools and how to avoid scams.</p>
-      </div>
-    </div>
-
-    <!-- Lessons -->
-    <h3 class="section-title" id="breakdown">Course Breakdown</h3>
-    <div class="lessons" id="lessons"></div>
-
-    <!-- Instructor + CTA -->
-    <div class="two">
-      <div class="card">
-        <h3 style="margin:0 0 8px">Meet your instructor — Pickle</h3>
-        <p class="muted">He’s green. He’s sour. He’s into safety. He’s guided tons of beginners through their first crypto steps without pain or jargon.</p>
-        <div style="margin-top:10px">
-          <img src="assets/instructor-pickle.png" alt="Instructor Pickle" style="width:100%; border-radius:12px; border:1px solid var(--line)" loading="lazy" decoding="async">
+        <h4>Why you’re still early (and what to do about it)</h4>
+        <div class="meta">4 min</div>
+      </a>
+      <!-- 2 -->
+      <a class="card" href="lesson2.html">
+        <div class="tile">
+          <img class="thumb" src="assets/card-2.png" alt="Lesson 2"/>
+          <span class="go">→</span>
         </div>
-      </div>
-      <div class="cta">
-        <h3 style="margin:0 0 8px">Sync your progress</h3>
-        <p class="muted" style="margin-top:0">In a Telegram Mini App you’re already signed in via Telegram. Optionally leave your email to get reminders.</p>
-        <div class="stack">
-          <input id="email" class="input" placeholder="Your email (optional)" inputmode="email" />
-          <button class="btn solid" id="btn-email">Save & start</button>
-          <button class="btn ghost" id="btn-login">Sign in with Telegram</button>
+        <h4>How to spot a gem before it 10x’s</h4>
+        <div class="meta">5 min</div>
+      </a>
+      <!-- 3 -->
+      <a class="card" href="lesson3.html">
+        <div class="tile">
+          <img class="thumb" src="assets/card-3.png" alt="Lesson 3"/>
+          <span class="go">→</span>
         </div>
-      </div>
+        <h4>The wallet mistakes that could cost you everything</h4>
+        <div class="meta">6 min</div>
+      </a>
+      <!-- 4 -->
+      <a class="card" href="lesson4.html">
+        <div class="tile">
+          <img class="thumb" src="assets/card-4.png" alt="Lesson 4"/>
+          <span class="go">→</span>
+        </div>
+        <h4>Buy, hold, or run? Reading the market without the jargon</h4>
+        <div class="meta">4 min</div>
+      </a>
+      <!-- 5 -->
+      <a class="card" href="lesson5.html">
+        <div class="tile">
+          <img class="thumb" src="assets/card-5.png" alt="Lesson 5"/>
+          <span class="go">→</span>
+        </div>
+        <h4>$100 into crypto: your first portfolio, no BS</h4>
+        <div class="meta">6 min</div>
+      </a>
     </div>
+  </section>
 
-    <!-- FAQ -->
-    <div class="faq">
-      <h3 class="section-title">Any Questions?</h3>
-      <details>
-        <summary>Is this beginner‑friendly?</summary>
-        <p>Totally. You only need Telegram. Each lesson is 3–5 minutes plus a tiny quiz.</p>
-      </details>
-      <details>
-        <summary>Do I need to invest money during the course?</summary>
-        <p>No. It’s educational. We show safe tools and steps, but you don’t have to buy anything.</p>
-      </details>
-      <details>
-        <summary>How long does it take to finish?</summary>
-        <p>About 25 minutes including quizzes.</p>
-      </details>
-      <details>
-        <summary>Why a talking pickle?</summary>
-        <p>Because crypto doesn’t have to be boring 🤷‍♂️</p>
-      </details>
-    </div>
-  </div>
-
-  <script>
-    // Telegram theming — не трогаем зелёный бренда
-    const tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.expand(); tg.ready();
-      const tp = tg.themeParams || {};
-      const root = document.documentElement;
-      const set = (cssVar, value) => { if (value) root.style.setProperty(cssVar, value); };
-      set('--bg', tp.bg_color);
-      set('--text', tp.text_color);
-      set('--card', tp.secondary_bg_color);
-      set('--line', tp.section_separator_color);
-      // не делаем set('--brand', tp.button_color);
-    }
-
-    // Header "Course breakdown" → scroll to section
-    document.getElementById('btn-breakdown').onclick = () => {
-      document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
-    };
-
-    // Continue → к последнему уроку
-    document.getElementById('cta-continue').onclick = () => {
-      const last = localStorage.getItem('pickle_progress') || 'l1';
-      const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
-      location.href = map[last] || 'lesson1.html';
-    };
-
-    // Email save → старт
-    document.getElementById('btn-email').onclick = () => {
-      const v = document.getElementById('email').value.trim();
-      if (!v) { location.href = 'lesson1.html'; return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { alert('Looks like an invalid email'); return; }
-      localStorage.setItem('pickle_email', v);
-      if (tg) tg.HapticFeedback?.notificationOccurred('success');
-      location.href = 'lesson1.html';
-    };
-
-    // Login info
-    document.getElementById('btn-login').onclick = () => {
-      if (tg) {
-        const name = tg.initDataUnsafe?.user?.first_name || 'friend';
-        tg.showAlert(`Hi, ${name}! Your progress will be synced.`);
-      } else {
-        alert('In a browser we simulate sign‑in. Inside Telegram your account is used automatically.');
-      }
-    };
-
-    // Lessons list
-    const lessons = [
-      { id:'l1', title:'Why you’re still early (and what to do about it)', mins:5, img:'assets/lesson-1.png', url:'lesson1.html' },
-      { id:'l2', title:'How to spot a gem before it 10×’s', mins:5, img:'assets/lesson-2.png', url:'lesson2.html' },
-      { id:'l3', title:'The wallet mistakes that could cost you everything', mins:5, img:'assets/lesson-3.png', url:'lesson3.html' },
-      { id:'l4', title:'Buy, hold, or run? Reading the market without the jargon', mins:5, img:'assets/lesson-4.png', url:'lesson4.html' },
-      { id:'l5', title:'$100 into crypto: your first portfolio, no BS', mins:5, img:'assets/lesson-5.png', url:'lesson5.html' },
-    ];
-    const $list = document.querySelector('#lessons');
-    lessons.forEach(l=>{
-      const card = document.createElement('a');
-      card.className = 'lesson';
-      card.href = l.url;
-      card.dataset.id = l.id;
-      card.innerHTML = `
-        <div class="thumb"><img src="${l.img}" alt="${l.title}" loading="lazy" decoding="async"></div>
-        <h5>${l.title}</h5>
-        <div class="meta"><span>${l.mins} min</span><span class="arrow">→</span></div>`;
-      $list.appendChild(card);
-    });
-    $list.addEventListener('click', (e)=>{
-      const a = e.target.closest('.lesson');
-      if (!a) return;
-      localStorage.setItem('pickle_progress', a.dataset.id);
-    });
-  </script>
 </body>
 </html>
