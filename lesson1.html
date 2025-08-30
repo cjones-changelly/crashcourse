@@ -61,10 +61,11 @@
       box-shadow:0 6px 14px rgba(177,255,140,.25);
     }
   </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <header class="bar">
-    <a href="index.html" class="back" aria-label="Back">←</a>
+    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">←</a>
     <img class="logo" src="assets/logo-changelly.png" alt="Changelly">
   </header>
 
@@ -77,8 +78,46 @@
     </div>
 
     <div class="cta">
-      <a href="lesson2.html" class="btn">Done!</a>
+      <a href="lesson2.html" class="btn" onclick="pickleNext(); return false;">Done!</a>
     </div>
   </main>
+
+  <!-- прогресс/гейтинг -->
+  <script>
+  (function(){
+    const LESSON_ID = 'l1';
+    const order = ['l1','l2','l3','l4','l5'];
+    const idToIdx = Object.fromEntries(order.map((id,i)=>[id,i]));
+    const tg = window.Telegram?.WebApp;
+
+    const fileFor = id => `lesson${id.replace('l','')}.html`;
+    const lastId = localStorage.getItem('pickle_progress') || 'l1';
+    const hasEmail = !!localStorage.getItem('pickle_email');
+
+    // без e-mail — на форму
+    if (!hasEmail) { location.replace('index.html#join'); return; }
+    // нельзя входить дальше достигнутого
+    if (idToIdx[LESSON_ID] > idToIdx[lastId]) {
+      try{ tg?.HapticFeedback?.impactOccurred('light'); }catch(_){}
+      location.replace(fileFor(lastId)); return;
+    }
+
+    // кнопки
+    window.pickleNext = function(){
+      const curIdx = idToIdx[LESSON_ID];
+      const savedIdx = idToIdx[localStorage.getItem('pickle_progress') || 'l1'];
+      const nextId = order[Math.min(curIdx + 1, order.length - 1)];
+
+      if (curIdx >= savedIdx) {
+        localStorage.setItem('pickle_progress', nextId);
+        try{ tg?.HapticFeedback?.notificationOccurred('success'); }catch(_){}
+      }
+
+      if (curIdx + 1 < order.length) location.href = fileFor(nextId);
+      else location.href = 'index.html#breakdown';
+    };
+    window.pickleBack = function(){ location.href = 'index.html'; };
+  })();
+  </script>
 </body>
 </html>
