@@ -231,6 +231,12 @@
     const dots = document.getElementById('dots');
     let i = 0;
 
+    // helper: поднимаемся наверх экрана
+    function scrollTop(){
+      const el = document.scrollingElement || document.documentElement || document.body;
+      el.scrollTop = 0;
+    }
+
     // точки для 4 слайдов
     slides.forEach((_, idx) => {
       const d = document.createElement('span');
@@ -246,7 +252,9 @@
     }
     function go(n){
       n = Math.max(0, Math.min(slides.length-1, n));
-      i = n; update();
+      i = n;
+      scrollTop();            // ← поднимаем вверх при смене "страницы" урока
+      update();
     }
 
     // "Next" на экранах 1 и 2
@@ -345,6 +353,7 @@
 
       nextBtn.textContent = (qi === questions.length-1) ? 'Level up!' : 'Next question';
       nextBtn.classList.remove('show');  // скрываем кнопку до ответа
+      scrollTop();                       // ← поднимаем вверх при смене вопроса
     }
 
     function choose(choice){
@@ -375,7 +384,7 @@
         return;
       }
       qi += 1;
-      renderQuestion();
+      renderQuestion();   // scrollTop вызовется внутри renderQuestion()
     });
 
     renderQuestion();
