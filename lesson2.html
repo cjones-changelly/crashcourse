@@ -326,15 +326,14 @@
     const pickRed = document.getElementById('pickRed');
     const picks = [pickGreen, pickRed];
 
-    let qi = 0;           // индекс вопроса
-    let answered = false; // ответили ли на текущий
+    let qi = 0;
+    let answered = false;
 
     function renderQuestion(){
       const q = questions[qi];
       qCounter.textContent = `Question ${qi+1}/5`;
       qText.textContent = q.text;
 
-      // reset UI
       picks.forEach(p=>{
         p.disabled = false;
         p.classList.remove('active','wrong');
@@ -344,8 +343,8 @@
       why.textContent = '—';
       answered = false;
 
-      // next button состояние
       nextBtn.textContent = (qi === questions.length-1) ? 'Level up!' : 'Next question';
+      nextBtn.classList.remove('show');  // скрываем кнопку до ответа
     }
 
     function choose(choice){
@@ -363,6 +362,7 @@
       yn.textContent = correct ? 'Yes!' : 'No.';
       why.textContent = q.correct === 'red' ? q.whyRed : q.whyGreen;
       reveal.classList.add('show');
+      nextBtn.classList.add('show');     // показываем кнопку после ответа
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred(correct ? 'medium' : 'light'); } catch(e){}
     }
 
@@ -371,7 +371,6 @@
 
     nextBtn.addEventListener('click', ()=>{
       if (qi === questions.length - 1) {
-        // последний вопрос — переходим на следующий урок
         if (typeof window.pickleNext === 'function') window.pickleNext();
         return;
       }
