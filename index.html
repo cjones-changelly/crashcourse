@@ -35,18 +35,10 @@
     .btn.solid{background:var(--brand); color:#07110c; border-color:transparent; box-shadow:0 6px 14px rgba(177,255,140,.25)}
     .btn.ghost{background:transparent}
 
-    /* Welcome bar (для залогиненных по e-mail) */
+    /* Welcome bar (для тех, у кого сохранён e-mail) */
     .welcome{display:flex; align-items:center; gap:12px}
-    .welcome-pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 12px; border-radius:999px; font-weight:700;
-      background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45);
-      white-space:nowrap;
-    }
-    .welcome-text{font-weight:800; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:50vw}
-    @media (max-width:520px){
-      .welcome-text{display:none} /* на узких экранах оставим только pill и кнопку */
-    }
+    .welcome-text{font-weight:800; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52vw}
+    @media (max-width:520px){ .welcome-text{max-width:46vw} }
 
     /* Hero */
     .hero{display:grid; grid-template-columns:1.15fr .85fr; gap:18px; align-items:center;
@@ -100,6 +92,16 @@
     summary{cursor:pointer; font-weight:700}
     details p{margin:8px 0 0; color:var(--muted)}
 
+    /* Attention animation for Continue */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-3px); }
+      40% { transform: translateX(3px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+    }
+    .shake { animation: shake .5s ease; }
+
     @media (max-width:960px){
       .hero{grid-template-columns:1fr}
       .lessons{grid-template-columns:repeat(2,1fr)}
@@ -114,22 +116,21 @@
     <div class="topbar">
       <div class="brand-logo"><img src="assets/logo-changelly.png" alt="Changelly"></div>
 
-      <!-- обычные кнопки шапки (для тех, кто ещё не оставил e-mail) -->
+      <!-- Обычные кнопки шапки (для тех, кто ещё не оставил e-mail) -->
       <div class="actions" id="actions-default">
         <a href="#join" class="btn solid" id="btn-start-link">Get started</a>
         <button id="btn-breakdown" class="btn ghost">Course breakdown</button>
       </div>
 
-      <!-- приветственный баннер (виден только тем, у кого сохранён e-mail) -->
+      <!-- Приветственный бар (только если e-mail уже сохранён) -->
       <div class="welcome hidden" id="welcome-bar">
-        <span class="welcome-pill">👋 Welcome back</span>
-        <div class="welcome-text" id="welcome-text">Welcome back, friend!</div>
+        <div class="welcome-text" id="welcome-text">👋 Welcome back, friend!</div>
         <button class="btn solid" id="welcome-continue">Continue</button>
       </div>
     </div>
 
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" id="hero">
       <div>
         <span class="pill">Unpickle the truth</span>
         <h1 class="h-title">Crypto Secrets with <em>PICKLE</em></h1>
@@ -168,7 +169,7 @@
         <div class="stack">
           <input id="email" class="input" placeholder="Your email" inputmode="email" autocomplete="email" required />
           <button class="btn solid" id="btn-email">Save & start</button>
-          <!-- удалено: Sign in with Telegram -->
+          <!-- (удалено "Sign in with Telegram") -->
         </div>
       </div>
     </div>
@@ -207,6 +208,15 @@
       if (email && email.includes('@')) return email.split('@')[0];
       return 'friend';
     }
+    function nudgeContinue(){
+      const btn = document.getElementById('cta-continue');
+      document.getElementById('hero').scrollIntoView({behavior:'smooth', block:'start'});
+      if (!btn.classList.contains('hidden')) {
+        btn.classList.add('shake');
+        setTimeout(()=>btn.classList.remove('shake'), 600);
+        try { tg?.HapticFeedback?.impactOccurred('light'); } catch(_){}
+      }
+    }
 
     // ===== Header: default actions vs welcome bar =====
     const actionsDefault = document.getElementById('actions-default');
@@ -215,7 +225,8 @@
     const welcomeContinue = document.getElementById('welcome-continue');
 
     // Навигация
-    document.getElementById('btn-breakdown').onclick = () => {
+    const btnBreakdown = document.getElementById('btn-breakdown');
+    btnBreakdown.onclick = () => {
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
     };
     function scrollToJoin(){
@@ -233,6 +244,7 @@
     const ctaContinue = document.getElementById('cta-continue');
     ctaStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
     ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
+    welcomeContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
 
     // Join block
     const joinBlock = document.getElementById('join');
@@ -243,9 +255,7 @@
       // header: actions vs welcome
       actionsDefault.classList.toggle('hidden', hasEmail);
       welcomeBar.classList.toggle('hidden', !hasEmail);
-      if (hasEmail) {
-        welcomeText.textContent = `Welcome back, ${getUserName()}!`;
-      }
+      if (hasEmail) welcomeText.textContent = `👋 Welcome back, ${getUserName()}!`;
 
       // hero buttons
       if (hasEmail){
@@ -264,8 +274,6 @@
       joinBlock.classList.toggle('hidden', hasEmail);
     }
     refreshUI();
-
-    welcomeContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
 
     // ===== Email → /api/subscribe =====
     const emailInput = document.getElementById('email');
@@ -305,9 +313,10 @@
         if (!ok) throw new Error('subscribe failed');
 
         localStorage.setItem('pickle_email', v);
-        localStorage.setItem('pickle_progress', 'l1');
+        // если пользователь только что подписался — старт с первого урока:
+        if (!localStorage.getItem('pickle_progress')) localStorage.setItem('pickle_progress', 'l1');
 
-        refreshUI(); // обновим шапку/hero/форму
+        refreshUI();
         location.href = getLastLessonUrl();
       } catch (e){
         showHelp('Could not save email. Please try again.');
@@ -316,7 +325,7 @@
       }
     });
 
-    // Lessons list
+    // ===== Lessons list + gating =====
     const lessons = [
       { id:'l1', title:'Why you’re still early (and what to do about it)', mins:4, img:'assets/lesson-1.png', url:'lesson1.html' },
       { id:'l2', title:'How to spot a gem before it 10x’s', mins:5, img:'assets/lesson-2.png', url:'lesson2.html' },
@@ -324,18 +333,38 @@
       { id:'l4', title:'Buy, hold, or run? Reading the market without the jargon', mins:4, img:'assets/lesson-4.png', url:'lesson4.html' },
       { id:'l5', title:'$100 into crypto: your first portfolio, no BS', mins:6, img:'assets/lesson-5.png', url:'lesson5.html' },
     ];
+    const idToIndex = Object.fromEntries(lessons.map((l,i)=>[l.id,i]));
     const $list = document.querySelector('#lessons');
     lessons.forEach(l=>{
       const card = document.createElement('a');
       card.className = 'lesson';
       card.href = l.url; card.dataset.id = l.id;
-      card.innerHTML = `<div class="thumb"><img src="${l.img}" alt="${l.title}" loading="lazy" decoding="async"></div>
-        <h5>${l.title}</h5><div class="meta"><span>${l.mins} min</span><span class="arrow">→</span></div>`;
+      card.innerHTML = `
+        <div class="thumb"><img src="${l.img}" alt="${l.title}" loading="lazy" decoding="async"></div>
+        <h5>${l.title}</h5>
+        <div class="meta"><span>${l.mins} min</span><span class="arrow">→</span></div>`;
       $list.appendChild(card);
     });
-    $list.addEventListener('click', e=>{
+
+    $list.addEventListener('click', (e)=>{
       const a = e.target.closest('.lesson'); if (!a) return;
-      localStorage.setItem('pickle_progress', a.dataset.id);
+      const hasEmail = !!localStorage.getItem('pickle_email');
+      if (!hasEmail){
+        e.preventDefault();
+        scrollToJoin();
+        return;
+      }
+      // с e-mail: пускаем только до достигнутого урока
+      const currentId = localStorage.getItem('pickle_progress') || 'l1';
+      const maxIdx = idToIndex[currentId] ?? 0;
+      const targetIdx = idToIndex[a.dataset.id] ?? 0;
+
+      if (targetIdx > maxIdx){
+        e.preventDefault();
+        nudgeContinue(); // вернём к кнопке Continue и слегка "потрясём" её
+      } else {
+        // Разрешаем открывать достигнутые уроки. НЕ обновляем прогресс тут.
+      }
     });
   </script>
 </body>
