@@ -25,6 +25,7 @@
     .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
     .brand-logo img{height:44px; width:auto; object-fit:contain; display:block}
     @media (max-width:480px){ .brand-logo img{ height:36px } }
+
     .actions{display:flex; gap:10px; flex-wrap:wrap}
     .btn{display:inline-flex; align-items:center; justify-content:center; height:var(--btn-h); padding:var(--btn-pad);
       border:1px solid var(--line); border-radius:999px; font-weight:700; font-size:var(--btn-fs); line-height:1;
@@ -33,6 +34,19 @@
     .btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(0)}
     .btn.solid{background:var(--brand); color:#07110c; border-color:transparent; box-shadow:0 6px 14px rgba(177,255,140,.25)}
     .btn.ghost{background:transparent}
+
+    /* Welcome bar (для залогиненных по e-mail) */
+    .welcome{display:flex; align-items:center; gap:12px}
+    .welcome-pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 12px; border-radius:999px; font-weight:700;
+      background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45);
+      white-space:nowrap;
+    }
+    .welcome-text{font-weight:800; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:50vw}
+    @media (max-width:520px){
+      .welcome-text{display:none} /* на узких экранах оставим только pill и кнопку */
+    }
 
     /* Hero */
     .hero{display:grid; grid-template-columns:1.15fr .85fr; gap:18px; align-items:center;
@@ -99,9 +113,18 @@
     <!-- Header -->
     <div class="topbar">
       <div class="brand-logo"><img src="assets/logo-changelly.png" alt="Changelly"></div>
-      <div class="actions">
+
+      <!-- обычные кнопки шапки (для тех, кто ещё не оставил e-mail) -->
+      <div class="actions" id="actions-default">
         <a href="#join" class="btn solid" id="btn-start-link">Get started</a>
         <button id="btn-breakdown" class="btn ghost">Course breakdown</button>
+      </div>
+
+      <!-- приветственный баннер (виден только тем, у кого сохранён e-mail) -->
+      <div class="welcome hidden" id="welcome-bar">
+        <span class="welcome-pill">👋 Welcome back</span>
+        <div class="welcome-text" id="welcome-text">Welcome back, friend!</div>
+        <button class="btn solid" id="welcome-continue">Continue</button>
       </div>
     </div>
 
@@ -171,44 +194,60 @@
       set('--card', tp.secondary_bg_color); set('--line', tp.section_separator_color);
     }
 
+    // ===== helpers =====
+    function getLastLessonUrl(){
+      const last = localStorage.getItem('pickle_progress') || 'l1';
+      const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
+      return map[last] || 'lesson1.html';
+    }
+    function getUserName(){
+      const n = tg?.initDataUnsafe?.user?.first_name || '';
+      if (n) return n;
+      const email = localStorage.getItem('pickle_email') || '';
+      if (email && email.includes('@')) return email.split('@')[0];
+      return 'friend';
+    }
+
+    // ===== Header: default actions vs welcome bar =====
+    const actionsDefault = document.getElementById('actions-default');
+    const welcomeBar = document.getElementById('welcome-bar');
+    const welcomeText = document.getElementById('welcome-text');
+    const welcomeContinue = document.getElementById('welcome-continue');
+
     // Навигация
     document.getElementById('btn-breakdown').onclick = () => {
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
     };
     function scrollToJoin(){
       const el = document.getElementById('join');
-      if (!el || el.classList.contains('hidden')) {
-        // если блока нет (скрыт после ввода e-mail) — сразу к урокам
-        location.href = getLastLessonUrl(); return;
-      }
+      if (!el || el.classList.contains('hidden')) { location.href = getLastLessonUrl(); return; }
       el.scrollIntoView({behavior:'smooth', block:'start'});
       const email = document.getElementById('email');
       if (email) setTimeout(()=>{ email.focus({preventScroll:true}); email.select?.(); }, 250);
     }
     const headerStart = document.getElementById('btn-start-link');
     headerStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
-    document.getElementById('cta-start').addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
 
-    // ===== Continue / Start visibility =====
+    // Hero CTA
     const ctaStart = document.getElementById('cta-start');
     const ctaContinue = document.getElementById('cta-continue');
+    ctaStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
+    ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
+
+    // Join block
     const joinBlock = document.getElementById('join');
 
-    function getLastLessonUrl(){
-      const last = localStorage.getItem('pickle_progress') || 'l1';
-      const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
-      return map[last] || 'lesson1.html';
-    }
     function refreshUI(){
       const hasEmail = !!localStorage.getItem('pickle_email');
 
-      // верхняя кнопка в хедере
-      headerStart.classList.toggle('hidden', hasEmail);
+      // header: actions vs welcome
+      actionsDefault.classList.toggle('hidden', hasEmail);
+      welcomeBar.classList.toggle('hidden', !hasEmail);
+      if (hasEmail) {
+        welcomeText.textContent = `Welcome back, ${getUserName()}!`;
+      }
 
-      // блок с почтой
-      if (hasEmail) joinBlock.classList.add('hidden'); else joinBlock.classList.remove('hidden');
-
-      // кнопки в hero
+      // hero buttons
       if (hasEmail){
         ctaStart.classList.add('hidden');
         ctaContinue.classList.remove('hidden');
@@ -220,10 +259,13 @@
         ctaContinue.classList.add('ghost');
         ctaStart.classList.remove('hidden');
       }
+
+      // join block visibility
+      joinBlock.classList.toggle('hidden', hasEmail);
     }
     refreshUI();
 
-    ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
+    welcomeContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
 
     // ===== Email → /api/subscribe =====
     const emailInput = document.getElementById('email');
@@ -265,7 +307,7 @@
         localStorage.setItem('pickle_email', v);
         localStorage.setItem('pickle_progress', 'l1');
 
-        refreshUI(); // обновим визуально (кнопки/форму)
+        refreshUI(); // обновим шапку/hero/форму
         location.href = getLastLessonUrl();
       } catch (e){
         showHelp('Could not save email. Please try again.');
