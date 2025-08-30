@@ -1,25 +1,23 @@
 // api/telegram-webhook.js
-// Vercel Edge Function: Telegram webhook → Google Sheets (Apps Script Web App) + чатовая отладка
+// Telegram webhook → Google Sheets (Apps Script Web App). Без отладочных сообщений.
 
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
-  // --- 1) Проверка секрета от Telegram (задаётся в setWebhook секретом secret_token=...) ---
+  // Проверка секретного заголовка Telegram (secret_token)
   const expected = process.env.TG_WEBHOOK_SECRET;
   const got = req.headers.get('x-telegram-bot-api-secret-token');
   if (expected && got !== expected) {
-    return j({ ok: false, error: 'forbidden' }, 403);
+    return json({ ok: false, error: 'forbidden' }, 403);
   }
 
-  // Разрешаем только POST от Telegram. На GET/прочее отвечаем 200, чтобы не плодить ретраи.
+  // На не-POST отвечаем 200 (Telegram иногда пингует)
   if (req.method !== 'POST') {
-    return j({ ok: true, info: 'telegram webhook up' }, 200);
+    return json({ ok: true }, 200);
   }
 
   const BOT_TOKEN = process.env.BOT_TOKEN;
-  if (!BOT_TOKEN) return j({ ok: false, error: 'BOT_TOKEN missing' }, 500);
-
-  const DEBUG_TO_CHAT = process.env.DEBUG_TO_CHAT === '1';
+  if (!BOT_TOKEN) return json({ ok: false, error: 'BOT_TOKEN missing' }, 500);
 
   const update = await safeJson(req);
   const msg = update?.message;
@@ -33,7 +31,7 @@ export default async function handler(req) {
     });
 
   try {
-    // --- 2) /start: присылаем кнопку открытия миниапа (web_app) ---
+    // /start → кнопка открытия миниапа
     if (msg?.text === '/start' && chat_id) {
       const url = process.env.MINIAPP_URL || 'https://your-app.vercel.app';
       await api('sendMessage', {
@@ -45,10 +43,10 @@ export default async function handler(req) {
           one_time_keyboard: true,
         },
       });
-      return j({ ok: true });
+      return json({ ok: true });
     }
 
-    // --- 3) Данные из WebApp (sendData) ---
+    // Данные из WebApp (Telegram.WebApp.sendData)
     const wad = msg?.web_app_data?.data;
     if (wad && chat_id) {
       const from = msg.from || {};
@@ -59,17 +57,16 @@ export default async function handler(req) {
         const parsed = JSON.parse(wad);
         email = String(parsed.email || '').trim();
         source = parsed.source || source;
-      } catch (_) {}
+      } catch {}
 
       if (!email) {
         await api('sendMessage', { chat_id, text: 'Could not read your email. Please try again.' });
-        return j({ ok: true });
+        return json({ ok: true });
       }
 
-      // --- 4) Отправляем строку в Google Sheets через Apps Script Web App ---
-      const SHEETS_URL = process.env.SHEETS_URL;         // РЕКОМЕНДОВАНО: https://script.google.com/macros/s/<ID>/exec
-      const SHEETS_SECRET = process.env.SHEETS_SECRET;   // если включили защиту в Apps Script
-      let debugMsg = 'no SHEETS_URL';
+      // Отправка в Google Sheets через Apps Script Web App (/exec)
+      const SHEETS_URL = process.env.SHEETS_URL;       // формат: https://script.google.com/macros/s/<ID>/exec
+      const SHEETS_SECRET = process.env.SHEETS_SECRET; // если включена проверка секрета в Apps Script
 
       if (SHEETS_URL) {
         const payload = {
@@ -81,59 +78,44 @@ export default async function handler(req) {
           secret: SHEETS_SECRET || undefined,
         };
 
-        // Надёжный POST: сначала пробуем без авто-редиректа, чтобы не потерять тело при 302/303
+        // Безопасная обработка возможного редиректа (302/303) без потери тела POST
         try {
           const first = await fetch(SHEETS_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            redirect: 'manual', // <— важно: сами обработаем редирект
+            redirect: 'manual',
           });
 
           if (isRedirect(first.status)) {
             const loc = first.headers.get('location');
-            if (!loc) throw new Error('redirect-without-location');
-            // Строим абсолютную ссылку на случай относительного Location
-            const finalUrl = new URL(loc, SHEETS_URL).toString();
-
-            const second = await fetch(finalUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
-            });
-
-            const txt2 = await second.text();
-            debugMsg = `Sheets(redirected): ${second.status} ${trim(txt2, 200)}`;
-          } else {
-            const txt1 = await first.text();
-            debugMsg = `Sheets: ${first.status} ${trim(txt1, 200)}`;
+            if (loc) {
+              const finalUrl = new URL(loc, SHEETS_URL).toString();
+              await fetch(finalUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+              }).catch(() => null);
+            }
           }
-        } catch (err) {
-          debugMsg = `Sheets error: ${String(err)}`;
+        } catch {
+          // тихо игнорируем — пользователю всё равно отправим «Thanks», чтобы UX был гладким
         }
       }
 
-      // --- 5) Ответ пользователю (и отладка в чат при DEBUG_TO_CHAT=1) ---
-      let text = 'Thanks! Your email is saved. You can continue in the Mini App 🎉';
-      if (DEBUG_TO_CHAT) text += `\n\n${debugMsg}`;
-      await api('sendMessage', { chat_id, text });
-
-      return j({ ok: true });
+      await api('sendMessage', { chat_id, text: 'Thanks! Your email is saved. You can continue in the Mini App 🎉' });
+      return json({ ok: true });
     }
 
-    // --- Прочие апдейты просто подтверждаем ---
-    return j({ ok: true });
-  } catch (e) {
-    // Не отдаём Telegram 5xx — чтобы не копились ретраи
-    if (chat_id && DEBUG_TO_CHAT) {
-      await api('sendMessage', { chat_id, text: `Webhook error: ${String(e)}` }).catch(() => null);
-    }
-    return j({ ok: true, warn: String(e) });
+    return json({ ok: true });
+  } catch {
+    // Не возвращаем 5xx чтобы не было ретраев
+    return json({ ok: true });
   }
 }
 
-/* ---------- helpers ---------- */
-function j(obj, status = 200) {
+/* helpers */
+function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
     status,
     headers: { 'content-type': 'application/json; charset=utf-8' },
@@ -144,8 +126,4 @@ async function safeJson(req) {
 }
 function isRedirect(code) {
   return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
-}
-function trim(s, n) {
-  if (!s) return '';
-  return s.length > n ? s.slice(0, n) + '…' : s;
 }
