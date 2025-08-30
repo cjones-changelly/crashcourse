@@ -93,7 +93,6 @@
   .quiz-head{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px}
   .quiz-title{font-family:Georgia,serif;font-style:italic;font-size:28px;text-align:center}
   .quiz-sub{color:var(--muted);text-align:center;max-width:680px}
-  .quiz-sub a{color:#9dc8ff;text-decoration:underline}
   .q-counter{margin:10px 0 4px;color:var(--muted);font-weight:600;text-align:center}
   .q-text{margin:0 0 14px;text-align:center;font-size:16px;color:#d9dee8}
 
@@ -101,13 +100,16 @@
   .pick{
     display:flex;align-items:center;gap:12px;justify-content:flex-start;
     padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
+    color:var(--text); text-decoration:none;
     font-size:17px; font-weight:500; cursor:pointer;
     transition:transform .06s ease,border-color .12s ease;
+    -webkit-tap-highlight-color: transparent;
   }
   .pick:hover{transform:translateY(-1px)}
   .pick.active{border-color:var(--brand)}
   .pick.wrong{border-color:var(--danger)}
   .pick .ico-flag{width:28px;height:28px;display:block;flex:0 0 28px}
+  .pick span{font-weight:700; text-decoration:none;}
 
   .reveal{margin:14px auto 8px;max-width:720px;background:#0d1219;border:1px solid var(--line);
           border-radius:14px;padding:14px;display:none}
@@ -192,8 +194,10 @@
         <div class="wrap">
           <div class="quiz-head">
             <h2 class="quiz-title">Red flag or green flag?</h2>
-            <p class="quiz-sub">Check your scam radar with our latest quiz. Read the coin pitch and ask yourself: Would you be involved in it?<br>
-              <span>Pick: <a>Green flag</a> or <a>red flag</a>. Then reveal the answer and learn why</span></p>
+            <p class="quiz-sub">
+              Check your scam radar with our latest quiz. Read the coin pitch and ask yourself: Would you be involved in it?<br>
+              <span>Pick: Green flag or red flag. Then reveal the answer and learn why</span>
+            </p>
           </div>
 
           <div class="q-counter" id="qCounter">Question 1/5</div>
@@ -253,7 +257,7 @@
     function go(n){
       n = Math.max(0, Math.min(slides.length-1, n));
       i = n;
-      scrollTop();            // ← поднимаем вверх при смене "страницы" урока
+      scrollTop();            // ← вверх при смене "страницы"
       update();
     }
 
@@ -353,7 +357,7 @@
 
       nextBtn.textContent = (qi === questions.length-1) ? 'Level up!' : 'Next question';
       nextBtn.classList.remove('show');  // скрываем кнопку до ответа
-      scrollTop();                       // ← поднимаем вверх при смене вопроса
+      scrollTop();                       // вверх при смене вопроса
     }
 
     function choose(choice){
@@ -376,7 +380,7 @@
     }
 
     pickGreen.addEventListener('click', ()=>choose('green'));
-    pickRed.addEventListener('click', ()=>choose('red'));
+    pickRed addEventListener('click', ()=>choose('red'));
 
     nextBtn.addEventListener('click', ()=>{
       if (qi === questions.length - 1) {
@@ -384,7 +388,7 @@
         return;
       }
       qi += 1;
-      renderQuestion();   // scrollTop вызовется внутри renderQuestion()
+      renderQuestion();
     });
 
     renderQuestion();
