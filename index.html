@@ -124,7 +124,7 @@
 
       <!-- Приветственный бар (только если e-mail уже сохранён) -->
       <div class="welcome hidden" id="welcome-bar">
-        <div class="welcome-text" id="welcome-text">👋 Welcome back, friend!</div>
+        <div class="welcome-text" id="welcome-text">👋 Hey, friend!</div>
         <button class="btn solid" id="welcome-continue">Continue</button>
       </div>
     </div>
@@ -255,7 +255,7 @@
       // header: actions vs welcome
       actionsDefault.classList.toggle('hidden', hasEmail);
       welcomeBar.classList.toggle('hidden', !hasEmail);
-      if (hasEmail) welcomeText.textContent = `👋 Welcome back, ${getUserName()}!`;
+      if (hasEmail) welcomeText.textContent = `👋 Hey, ${getUserName()}!`;
 
       // hero buttons
       if (hasEmail){
