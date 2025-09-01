@@ -18,9 +18,12 @@
     }
     a{color:inherit; text-decoration:none}
 
-    /* Header (not sticky) */
+    /* Header (не sticky) */
     .bar{display:flex; align-items:center; justify-content:space-between; padding:12px 16px}
-    .back{ color:var(--text); text-decoration:none; font-size:26px; line-height:1 }
+    .back{
+      display:inline-block; color:var(--text); font-size:28px; line-height:1;
+      padding:2px 6px; border-radius:8px; user-select:none;
+    }
     .logo{ height:44px; width:auto; object-fit:contain; display:block }
     @media (max-width:480px){ .logo{ height:36px } }
 
@@ -37,9 +40,9 @@
     .stage{ display:flex; justify-content:center }
     .frame{ width:680px; max-width:100% }
 
-    /* SIMPLE FADE FLIP (без 3D) */
+    /* Fade flip (без зеркала) */
     .flip-wrap{ position:relative; height:500px; overflow:hidden }
-    .face{ position:absolute; inset:0; display:flex; width:100%; height:100%; transition:opacity .28s ease; }
+    .face{ position:absolute; inset:0; display:flex; width:100%; height:100%; transition:opacity .28s ease }
     .front{ opacity:1; pointer-events:auto }
     .back { opacity:0; pointer-events:none }
     .flipped .front{ opacity:0; pointer-events:none }
@@ -56,19 +59,20 @@
     }
     .card-top img{ width:100%; height:100%; object-fit:cover; display:block }
 
-    .card-body{ padding:14px 10px; text-align:center }
-    .card-title{ font-size:24px; font-weight:800; margin:6px 0 8px }
-    .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); margin:0 0 6px }
-    .card-desc{ font-size:14px; color:var(--muted); margin:0 }
+    /* ЕДИНЫЕ стили контента для обеих сторон */
+    .face .card-body{ padding:16px 10px 0; text-align:center }
+    .face .card-title{ font-size:24px; font-weight:800; line-height:1.22; margin:8px 0 8px }
+    .face .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); margin:0 0 6px }
+    .face .card-desc{ font-size:14px; line-height:1.5; color:var(--muted); margin:0 }
 
-    /* Flip button (иконка всегда чёрная) */
+    /* Flip button */
     .flip-btn{
       position:absolute; left:50%; transform:translateX(-50%); bottom:36px;
       height:42px; padding:0 18px; border-radius:999px; border:0; cursor:pointer;
       display:inline-flex; align-items:center; gap:8px; font-weight:800;
       background:#fff; color:#0a0a0a;
     }
-    .flip-btn svg{ width:22px; height:22px; display:block; color:#0a0a0a }
+    .flip-btn svg{ width:22px; height:22px; display:block; color:#0a0a0a } /* всегда чёрный */
     .flip-btn:active{ transform:translateX(-50%) scale(.98) }
 
     /* Gallery nav */
@@ -234,8 +238,8 @@
 
   let idx = 0;
   const deck = document.getElementById('deck');
-  const frontImg = deck.querySelector('#imgFront');
-  const backImg  = deck.querySelector('#imgBack');
+  const frontImg = document.getElementById('imgFront');
+  const backImg  = document.getElementById('imgBack');
   const tF = document.getElementById('titleFront');
   const tB = document.getElementById('titleBack');
   const dF = document.getElementById('descFront');
@@ -265,8 +269,6 @@
   function flip(){ document.querySelector('.flip-wrap').classList.toggle('flipped'); }
   btnFlip1.addEventListener('click', flip);
   btnFlip2.addEventListener('click', flip);
-
-  // нажатием по карточке тоже флип (кроме самой кнопки)
   document.getElementById('deck').addEventListener('click', (e)=>{
     if(e.target.closest('.flip-btn')) return;
     flip();
