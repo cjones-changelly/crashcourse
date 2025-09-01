@@ -18,12 +18,9 @@
     }
     a{color:inherit; text-decoration:none}
 
-    /* Header (не sticky) */
+    /* Header как в lesson1, но без sticky */
     .bar{display:flex; align-items:center; justify-content:space-between; padding:12px 16px}
-    .back{
-      display:inline-block; color:var(--text); font-size:28px; line-height:1;
-      padding:2px 6px; border-radius:8px; user-select:none;
-    }
+    .back{ color:var(--text); text-decoration:none; font-size:24px; line-height:1; user-select:none }
     .logo{ height:44px; width:auto; object-fit:contain; display:block }
     @media (max-width:480px){ .logo{ height:36px } }
 
@@ -40,13 +37,19 @@
     .stage{ display:flex; justify-content:center }
     .frame{ width:680px; max-width:100% }
 
-    /* Fade flip (без зеркала) */
-    .flip-wrap{ position:relative; height:500px; overflow:hidden }
-    .face{ position:absolute; inset:0; display:flex; width:100%; height:100%; transition:opacity .28s ease }
-    .front{ opacity:1; pointer-events:auto }
-    .back { opacity:0; pointer-events:none }
-    .flipped .front{ opacity:0; pointer-events:none }
-    .flipped .back { opacity:1; pointer-events:auto }
+    /* 3D flip без зеркала (вращаем СТОРОНЫ, а не контейнер) */
+    .flip-wrap{ position:relative; height:500px; overflow:hidden; perspective:1000px; -webkit-perspective:1000px }
+    .pair{ position:absolute; inset:0 }
+    .face{
+      position:absolute; inset:0; width:100%; height:100%;
+      transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+      backface-visibility:hidden; -webkit-backface-visibility:hidden;
+      transition:transform .45s cubic-bezier(.2,.7,.2,1);
+    }
+    .front{ transform:rotateY(0deg) }
+    .back { transform:rotateY(-180deg) }
+    .flipped .front{ transform:rotateY(180deg) }
+    .flipped .back { transform:rotateY(0deg) }
 
     .card{
       background:var(--card); border-radius:24px; display:flex; flex-direction:column;
@@ -60,10 +63,10 @@
     .card-top img{ width:100%; height:100%; object-fit:cover; display:block }
 
     /* ЕДИНЫЕ стили контента для обеих сторон */
-    .face .card-body{ padding:16px 10px 0; text-align:center }
-    .face .card-title{ font-size:24px; font-weight:800; line-height:1.22; margin:8px 0 8px }
-    .face .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); margin:0 0 6px }
-    .face .card-desc{ font-size:14px; line-height:1.5; color:var(--muted); margin:0 }
+    .card-body{ padding:16px 10px 0; text-align:center }
+    .card-title{ font-size:24px; font-weight:800; line-height:1.22; margin:8px 0 8px }
+    .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); margin:0 0 6px }
+    .card-desc{ font-size:14px; line-height:1.5; color:var(--muted); margin:0 }
 
     /* Flip button */
     .flip-btn{
@@ -72,7 +75,7 @@
       display:inline-flex; align-items:center; gap:8px; font-weight:800;
       background:#fff; color:#0a0a0a;
     }
-    .flip-btn svg{ width:22px; height:22px; display:block; color:#0a0a0a } /* всегда чёрный */
+    .flip-btn svg{ width:22px; height:22px; display:block; color:#0a0a0a }
     .flip-btn:active{ transform:translateX(-50%) scale(.98) }
 
     /* Gallery nav */
@@ -113,47 +116,48 @@
     <div class="stage">
       <div class="frame">
         <div class="flip-wrap" id="deck">
-          <!-- FRONT -->
-          <section class="face front">
-            <article class="card">
-              <div class="card-top"><img id="imgFront" alt="Card image"></div>
-              <div class="card-body">
-                <div id="titleFront" class="card-title">—</div>
-                <p class="card-subttl">What’s happening:</p>
-                <p id="descFront" class="card-desc">—</p>
-              </div>
-              <button id="btnFlip1" class="flip-btn" aria-label="Flip card">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polyline points="23 4 23 10 17 10"></polyline>
-                  <polyline points="1 20 1 14 7 14"></polyline>
-                  <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
-                  <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
-                </svg>
-                Flip
-              </button>
-            </article>
-          </section>
-
-          <!-- BACK -->
-          <section class="face back">
-            <article class="card">
-              <div class="card-top"><img id="imgBack" alt="Card image"></div>
-              <div class="card-body">
-                <div id="titleBack" class="card-title">—</div>
-                <p class="card-subttl">Your move:</p>
-                <p id="descBack" class="card-desc">—</p>
-              </div>
-              <button id="btnFlip2" class="flip-btn" aria-label="Flip card back">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polyline points="23 4 23 10 17 10"></polyline>
-                  <polyline points="1 20 1 14 7 14"></polyline>
-                  <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
-                  <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
-                </svg>
-                Flip
-              </button>
-            </article>
-          </section>
+          <div class="pair">
+            <!-- FRONT -->
+            <section class="face front">
+              <article class="card">
+                <div class="card-top"><img id="imgFront" alt="Card image"></div>
+                <div class="card-body">
+                  <div id="titleFront" class="card-title">—</div>
+                  <p class="card-subttl">What’s happening:</p>
+                  <p id="descFront" class="card-desc">—</p>
+                </div>
+                <button id="btnFlip1" class="flip-btn" aria-label="Flip card">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
+                    <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
+                  </svg>
+                  Flip
+                </button>
+              </article>
+            </section>
+            <!-- BACK -->
+            <section class="face back">
+              <article class="card">
+                <div class="card-top"><img id="imgBack" alt="Card image"></div>
+                <div class="card-body">
+                  <div id="titleBack" class="card-title">—</div>
+                  <p class="card-subttl">Your move:</p>
+                  <p id="descBack" class="card-desc">—</p>
+                </div>
+                <button id="btnFlip2" class="flip-btn" aria-label="Flip card back">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
+                    <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
+                  </svg>
+                  Flip
+                </button>
+              </article>
+            </section>
+          </div>
         </div>
 
         <!-- навигация под карточкой -->
@@ -171,7 +175,7 @@
     </div>
   </main>
 
-  <!-- прогресс/гейтинг -->
+  <!-- прогресс/гейтинг — копия из lesson1 -->
   <script>
   (function(){
     const LESSON_ID = 'l4';
@@ -238,6 +242,7 @@
 
   let idx = 0;
   const deck = document.getElementById('deck');
+  const pair = deck.querySelector('.pair');
   const frontImg = document.getElementById('imgFront');
   const backImg  = document.getElementById('imgBack');
   const tF = document.getElementById('titleFront');
@@ -257,7 +262,7 @@
     tF.textContent = c.title; tB.textContent = c.title;
     dF.textContent = c.front; dB.textContent = c.back;
 
-    document.querySelector('.flip-wrap').classList.remove('flipped');
+    deck.classList.remove('flipped');
     prev.disabled = idx===0; next.disabled = idx===cards.length-1;
     indexEl.textContent = `Card ${idx+1}/${cards.length}`;
   }
@@ -266,13 +271,10 @@
   prev.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); }});
   next.addEventListener('click', ()=>{ if(idx<cards.length-1){ idx++; render(); }});
 
-  function flip(){ document.querySelector('.flip-wrap').classList.toggle('flipped'); }
+  function flip(){ deck.classList.toggle('flipped'); }
   btnFlip1.addEventListener('click', flip);
   btnFlip2.addEventListener('click', flip);
-  document.getElementById('deck').addEventListener('click', (e)=>{
-    if(e.target.closest('.flip-btn')) return;
-    flip();
-  }, {passive:true});
+  deck.addEventListener('click', (e)=>{ if(e.target.closest('.flip-btn')) return; flip(); }, {passive:true});
   </script>
 </body>
 </html>
