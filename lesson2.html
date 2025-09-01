@@ -51,9 +51,10 @@
   .finalCard h4{margin:6px 0 8px;font-size:28px;line-height:1.15;font-weight:800;letter-spacing:.2px}
   .finalCard p{margin:0 0 14px;color:rgba(11,14,17,.85)}
   .storeBig{display:flex;align-items:center;justify-content:center;height:var(--btn-h);padding:0 28px;border-radius:12px;background:#0b0e11;color:#fff;text-decoration:none;font-weight:800;font-size:var(--btn-fs);line-height:1;box-shadow:0 8px 18px rgba(0,0,0,.25);margin:6px 0 12px}
-  .artStack{position:relative;height:250px;margin-top:26px} /* ⬅ стало 22px (было ~4px) */
-  .artStack .tile{position:absolute;left:16px;top:8px;width:min(78%,300px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));z-index:2}
-  .artStack .phones{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(92%,420px);filter:drop-shadow(0 12px 28px rgba(0,0,0,.25))}
+
+  .artStack{position:relative;height:250px;margin-top:22px}
+  .artStack .tile{position:absolute;left:16px;top:8px;width:min(78%,300px);/* УБРАЛИ ТЕНЬ */filter:none}
+  .artStack .phones{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(92%,420px);/* УБРАЛИ ТЕНЬ */filter:none}
   @media (max-width:420px){.artStack{height:230px}.artStack .tile{width:min(82%,280px);left:12px;top:6px}.artStack .phones{width:min(96%,390px)}}
 
   /* QUIZ */
@@ -155,30 +156,19 @@
             <h4>Found a Gem? Stay on It!</h4>
             <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
 
-            <!-- теперь это реальная ссылка -->
             <a id="dlLink" href="https://changelly.com" class="storeBig" rel="noopener">Download Changelly</a>
 
             <div class="artStack" aria-hidden="true">
               <img
                 class="tile"
                 src="assets/l2-eth-tile.png"
-                srcset="
-                  assets/l2-eth-tile.png 1x,
-                  assets/l2-eth-tile@2x.png 2x,
-                  assets/l2-eth-tile@3x.png 3x
-                "
-                sizes="(max-width:420px) 82vw, 300px"
-                alt="">
+                srcset="assets/l2-eth-tile.png 1x, assets/l2-eth-tile@2x.png 2x, assets/l2-eth-tile@3x.png 3x"
+                sizes="(max-width:420px) 82vw, 300px" alt="">
               <img
                 class="phones"
                 src="assets/l2-phones.png"
-                srcset="
-                  assets/l2-phones.png 1x,
-                  assets/l2-phones@2x.png 2x,
-                  assets/l2-phones@3x.png 3x
-                "
-                sizes="(max-width:420px) 96vw, 420px"
-                loading="lazy" decoding="async" alt="">
+                srcset="assets/l2-phones.png 1x, assets/l2-phones@2x.png 2x, assets/l2-phones@3x.png 3x"
+                sizes="(max-width:420px) 96vw, 420px" loading="lazy" decoding="async" alt="">
             </div>
           </section>
 
@@ -281,7 +271,7 @@
 </script>
 
 <script>
-  // открываем ссылку правильно в Telegram WebApp
+  // правильное открытие ссылки в Telegram WebApp
   (function(){
     const tg = window.Telegram?.WebApp;
     const link = document.getElementById('dlLink');
