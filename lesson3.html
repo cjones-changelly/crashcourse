@@ -61,8 +61,9 @@
        padding:10px 12px;background:#0d1219;border:1px solid var(--line);border-radius:12px}
   .tick{
     width:26px;height:26px;border-radius:7px;background:#0b121a;border:1px solid #243044;
-    display:grid;place-items:center;color:var(--brand);font-weight:800;line-height:1
+    display:grid;place-items:center;overflow:hidden;
   }
+  .tick-ico{width:18px;height:18px;display:block}
 
   /* --- Квиз (экран 3) --- */
   .bank, .board{background:#0d1219;border:1px solid var(--line);border-radius:16px}
@@ -72,6 +73,7 @@
 
   .col{background:#0b1118;border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:220px}
   .col h3{display:flex;align-items:center;gap:10px;margin:0 0 6px;font-size:20px}
+  .label-ico{width:44px;height:44px;display:block}
   .hint{color:var(--muted);font-size:13px;margin:0 0 12px}
 
   .chip{
@@ -124,14 +126,14 @@
           <div class="rule"></div>
 
           <div class="list">
-            <div class="row"><div class="tick">✓</div><div>I backed up my seed phrase offline (pen + paper, no screenshots!)</div></div>
-            <div class="row"><div class="tick">✓</div><div>I enabled 2FA on all my centralized exchange accounts</div></div>
-            <div class="row"><div class="tick">✓</div><div>I never sign transactions I don’t understand</div></div>
-            <div class="row"><div class="tick">✓</div><div>I use a cold wallet (hardware or offline) for larger sums</div></div>
-            <div class="row"><div class="tick">✓</div><div>I use a separate “degen” wallet for risky mints or airdrops</div></div>
-            <div class="row"><div class="tick">✓</div><div>I triple-check wallet URLs before connecting</div></div>
-            <div class="row"><div class="tick">✓</div><div>I don’t store my seed phrase on my phone, email, or the cloud</div></div>
-            <div class="row"><div class="tick">✓</div><div>I test with small amounts before big transfers</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I backed up my seed phrase offline (pen + paper, no screenshots!)</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I enabled 2FA on all my centralized exchange accounts</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I never sign transactions I don’t understand</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I use a cold wallet (hardware or offline) for larger sums</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I use a separate “degen” wallet for risky mints or airdrops</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I triple-check wallet URLs before connecting</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I don’t store my seed phrase on my phone, email, or the cloud</div></div>
+            <div class="row"><div class="tick"><img class="tick-ico" src="assets/icon-check.png" srcset="assets/icon-check.png 1x, assets/icon-check@2x.png 2x" alt=""></div><div>I test with small amounts before big transfers</div></div>
           </div>
 
           <div class="cta"><button class="btn go-next">Time to cook something up ▾</button></div>
@@ -152,11 +154,19 @@
           <!-- Drop board -->
           <section class="board" aria-label="Drop zones">
             <div id="safe" class="col" aria-label="Safe practice" data-expect="safe">
-              <h3>🛡️ Safe practice</h3>
+              <h3>
+                <img class="label-ico" src="assets/icon-safe-practice.png"
+                     srcset="assets/icon-safe-practice.png 1x, assets/icon-safe-practice@2x.png 2x" alt="">
+                Safe practice
+              </h3>
               <p class="hint">Drop the security best-practices here</p>
             </div>
             <div id="risky" class="col" aria-label="Risky behavior" data-expect="risky">
-              <h3>⚠️ Risky behavior</h3>
+              <h3>
+                <img class="label-ico" src="assets/icon-risky-behavior.png"
+                     srcset="assets/icon-risky-behavior.png 1x, assets/icon-risky-behavior@2x.png 2x" alt="">
+                Risky behavior
+              </h3>
               <p class="hint">Drop the beginner mistakes here</p>
             </div>
           </section>
@@ -302,9 +312,8 @@
   }
   function allPlaced(){ return bank.querySelectorAll('.chip').length===0; }
 
-  // ← ИЗМЕНЁННАЯ ЛОГИКА ПРОВЕРКИ
+  // Проверка: подсветка только когда всё разложено
   function check(){
-    // 1) Пока не всё разложено — только подсказка, без подсветки
     if (!allPlaced()){
       banner.className='banner';
       banner.textContent='Place every item into one of the boxes first.';
@@ -314,7 +323,6 @@
       return;
     }
 
-    // 2) Всё разложено — очищаем прошлую подсветку и проверяем
     document.querySelectorAll('.chip').forEach(c=>c.classList.remove('wrong','correct'));
 
     let wrong=0;
