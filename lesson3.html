@@ -13,8 +13,11 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--text);
-       font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+    overscroll-behavior-y: contain; /* уменьшаем «пулл-ту-клоуз» */
+  }
   a{color:inherit;text-decoration:none}
 
   /* Header */
@@ -77,25 +80,17 @@
   .hint{color:var(--muted);font-size:13px;margin:0 0 12px}
 
   .chip{
-    user-select:none;-webkit-user-drag:element; touch-action:none;
+    user-select:none; -webkit-user-drag:element; touch-action:none;
     display:inline-flex;align-items:center;justify-content:center;
     padding:10px 14px;border-radius:12px;background:#111824;border:1px solid #243044;
     color:var(--text);font-weight:600;cursor:grab;box-shadow:0 2px 8px rgba(0,0,0,.25);
-    transition:transform .1s ease, border-color .15s ease, background .15s ease;
+    transition:transform .06s ease, border-color .15s ease, background .15s ease, opacity .06s ease;
   }
-  .chip:active{cursor:grabbing;transform:scale(.98)}
-  .chip.dragging{opacity:.85}
-  .chip.hidden-src{visibility:hidden}
-  .chip.wrong{border-color:var(--danger); box-shadow:0 0 0 2px rgba(255,107,107,.25)}
-  .chip.correct{border-color:rgba(177,255,140,.55)}
+  .chip:active{cursor:grabbing}
+  .chip.dragging{
+    opacity:1; transform:scale(1.02);
+  }
   .dropping{outline:2px dashed rgba(177,255,140,.45); outline-offset:-6px}
-
-  .ghost{
-    position:fixed; left:0; top:0; z-index:9999; pointer-events:none;
-    transform:translate(-9999px,-9999px); /* off-screen until positioned */
-    border-radius:12px; background:#111824; border:1px solid #243044;
-    box-shadow:0 8px 24px rgba(0,0,0,.45); opacity:.95;
-  }
 
   .banner{margin:14px auto 10px;max-width:860px;padding:12px 14px;border-radius:14px;border:1px solid #3a4457;background:#101722;color:#cfd7e3;text-align:center}
   .banner.ok{background:rgba(177,255,140,.12);border-color:rgba(177,255,140,.4);color:#eaffd9}
@@ -269,6 +264,7 @@
   const banner = document.getElementById('banner');
   const checkBtn = document.getElementById('check');
   const nextBtn = document.getElementById('next');
+  const tg = window.Telegram?.WebApp;
 
   // создать чипы
   for (const it of items) {
@@ -276,39 +272,16 @@
     el.className = 'chip';
     el.textContent = it.txt;
     el.id = it.id;
-    el.draggable = true; // для десктопа
     el.dataset.answer = it.answer;
+    el.draggable = false; // избегаем HTML5 DnD, используем pointer/touch везде
     bank.appendChild(el);
   }
 
-  /* ---------- HTML5 DnD для десктопа ---------- */
-  let dragId = null;
-  document.addEventListener('dragstart', (e)=>{
-    const chip = e.target.closest('.chip'); if (!chip) return;
-    dragId = chip.id;
-    e.dataTransfer.setData('text/plain', chip.id);
-    e.dataTransfer.effectAllowed = 'move';
-  });
-  function allow(e){ e.preventDefault(); e.currentTarget.classList.add('dropping'); }
-  function leave(e){ e.currentTarget.classList.remove('dropping'); }
-  function dropTo(e){
-    e.preventDefault();
-    const zone = e.currentTarget; zone.classList.remove('dropping');
-    const id = e.dataTransfer.getData('text/plain') || dragId;
-    const chip = document.getElementById(id); if (!chip) return;
-    zone.appendChild(chip); tidy();
-  }
-  [bank,safe,risky].forEach(z=>{
-    z.addEventListener('dragover', allow);
-    z.addEventListener('dragleave', leave);
-    z.addEventListener('drop', dropTo);
-  });
-
-  /* ---------- Pointer/Touch DnD для мобильных/WebView ---------- */
-  let ghost=null, src=null, offX=0, offY=0, curZone=null;
+  // -------- Pointer/Touch DnD с видимым чипом --------
+  let isDragging=false, chip=null, ph=null, startX=0,startY=0,offX=0,offY=0, curZone=null;
 
   function zoneFromPoint(x,y){
-    const zones=[safe,risky,bank]; // приоритет верхних зон
+    const zones=[safe,risky,bank];
     for (const z of zones){
       const r=z.getBoundingClientRect();
       if (x>=r.left && x<=r.right && y>=r.top && y<=r.bottom) return z;
@@ -316,93 +289,124 @@
     return null;
   }
 
-  function startDrag(chip, x, y){
-    if (src) endDrag(); // страховка
-    src = chip;
-    src.classList.add('dragging','hidden-src');
+  function beginDrag(x,y){
+    if (!chip) return;
+    isDragging = true;
+    // placeholder
+    const r = chip.getBoundingClientRect();
+    ph = document.createElement('div');
+    ph.style.width = r.width+'px';
+    ph.style.height = r.height+'px';
+    chip.parentElement.insertBefore(ph, chip);
 
-    const r = src.getBoundingClientRect();
     offX = x - r.left; offY = y - r.top;
 
-    ghost = src.cloneNode(true);
-    ghost.classList.add('ghost');
-    ghost.style.width = r.width+'px';
-    ghost.style.height = r.height+'px';
-    document.body.appendChild(ghost);
-    moveGhost(x,y);
+    // поднять чип над всем и таскать его
+    Object.assign(chip.style, {
+      position:'fixed', left:(x-offX)+'px', top:(y-offY)+'px',
+      width:r.width+'px', height:r.height+'px', zIndex: '10000',
+      pointerEvents:'none'
+    });
+    chip.classList.add('dragging');
 
+    // убрать скроллы/жесты на время
     document.body.style.userSelect = 'none';
+    document.body.style.touchAction = 'none';
+    try{ tg?.disableVerticalSwipes?.(); }catch(_){}
   }
 
-  function moveGhost(x,y){
-    if (!ghost) return;
-    ghost.style.transform = `translate(${x - offX}px, ${y - offY}px)`;
+  function moveDrag(x,y){
+    if (!isDragging || !chip) return;
+    chip.style.left = (x-offX)+'px';
+    chip.style.top  = (y-offY)+'px';
 
-    // подсветка активной зоны
     const z = zoneFromPoint(x,y);
     if (curZone && curZone!==z) curZone.classList.remove('dropping');
-    if (z && curZone!==z){ z.classList.add('dropping'); }
+    if (z && curZone!==z) z.classList.add('dropping');
     curZone = z || null;
   }
 
-  function endDrag(x,y){
-    if (!src) return;
-    if (curZone){ curZone.appendChild(src); }
-    src.classList.remove('dragging','hidden-src');
+  function finishDrag(){
+    if (!chip) return;
 
-    if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
-    ghost=null; curZone?.classList.remove('dropping'); curZone=null; src=null;
+    if (isDragging){
+      // drop в зону или вернуть на место
+      if (curZone){ curZone.appendChild(chip); }
+      else if (ph && ph.parentNode){ ph.parentNode.insertBefore(chip, ph); }
+
+      // очистить визуальные стили
+      chip.classList.remove('dragging');
+      Object.assign(chip.style, {
+        position:'', left:'', top:'', width:'', height:'', zIndex:'', pointerEvents:''
+      });
+      curZone?.classList.remove('dropping');
+    }
+    // убрать placeholder
+    if (ph && ph.parentNode) ph.parentNode.removeChild(ph);
+    ph=null; chip=null; isDragging=false; curZone=null;
+
+    // вернуть жесты/скролл
     document.body.style.userSelect = '';
+    document.body.style.touchAction = '';
+    try{ tg?.enableVerticalSwipes?.(); }catch(_){}
 
     tidy();
   }
 
-  // Pointer Events (если есть)
+  // Порог, чтобы тап не превращался в драг
+  const THRESH = 6;
+  let downX=0, downY=0, dragArmed=false, pointerId=null;
+
   if (window.PointerEvent){
     document.addEventListener('pointerdown', (e)=>{
-      const chip = e.target.closest('.chip'); if (!chip) return;
+      const c = e.target.closest('.chip'); if (!c) return;
+      pointerId = e.pointerId;
+      c.setPointerCapture?.(pointerId);
+      chip = c; dragArmed=true; downX=startX=e.clientX; downY=startY=e.clientY;
       e.preventDefault();
-      chip.setPointerCapture?.(e.pointerId);
-      startDrag(chip, e.clientX, e.clientY);
     });
     document.addEventListener('pointermove', (e)=>{
-      if (!ghost) return;
-      e.preventDefault();
-      moveGhost(e.clientX, e.clientY);
+      if (!chip) return;
+      const dx = e.clientX - downX, dy = e.clientY - downY;
+      if (dragArmed && (dx*dx + dy*dy) > THRESH*THRESH){
+        dragArmed=false; beginDrag(e.clientX, e.clientY);
+      }
+      if (isDragging){ e.preventDefault(); moveDrag(e.clientX, e.clientY); }
     }, {passive:false});
     document.addEventListener('pointerup', (e)=>{
-      if (!ghost && !src) return;
-      e.preventDefault();
-      endDrag(e.clientX, e.clientY);
+      if (!chip) return;
+      if (isDragging){ e.preventDefault(); finishDrag(); return; }
+
+      // не было драга — это тап → циклинг
+      const order=[bank,safe,risky];
+      const parent = chip.parentElement; const idx = order.indexOf(parent);
+      const next = order[(idx+1)%order.length]; next.appendChild(chip);
+      chip=null; dragArmed=false; tidy();
     });
-    document.addEventListener('pointercancel', ()=> endDrag());
+    document.addEventListener('pointercancel', ()=>{ if (chip) finishDrag(); });
   } else {
-    // Touch fallback
+    // Touch fallback (старые WebView)
     document.addEventListener('touchstart', (e)=>{
-      const chip = e.target.closest('.chip'); if (!chip) return;
-      const t = e.touches[0]; startDrag(chip, t.clientX, t.clientY);
+      const c = e.target.closest('.chip'); if (!c) return;
+      const t = e.touches[0]; chip=c; dragArmed=true; downX=startX=t.clientX; downY=startY=t.clientY;
     }, {passive:true});
     document.addEventListener('touchmove', (e)=>{
-      if (!ghost) return;
-      const t = e.touches[0]; moveGhost(t.clientX, t.clientY);
-      e.preventDefault();
+      if (!chip) return;
+      const t = e.touches[0]; const dx=t.clientX-downX, dy=t.clientY-downY;
+      if (dragArmed && (dx*dx + dy*dy) > THRESH*THRESH){ dragArmed=false; beginDrag(t.clientX, t.clientY); }
+      if (isDragging){ moveDrag(t.clientX, t.clientY); e.preventDefault(); }
     }, {passive:false});
     document.addEventListener('touchend', (e)=>{
-      if (!ghost && !src) return;
-      const t = e.changedTouches[0] || e.touches[0];
-      endDrag(t?.clientX || 0, t?.clientY || 0);
+      if (!chip) return;
+      if (isDragging){ finishDrag(); return; }
+      // тап-циклинг
+      const order=[bank,safe,risky];
+      const parent = chip.parentElement; const idx = order.indexOf(parent);
+      const next = order[(idx+1)%order.length]; next.appendChild(chip);
+      chip=null; dragArmed=false; tidy();
     });
-    document.addEventListener('touchcancel', ()=> endDrag());
+    document.addEventListener('touchcancel', ()=>{ if (chip) finishDrag(); });
   }
-
-  /* ---------- Клик-циклинг (оставляем) ---------- */
-  const order = [bank, safe, risky];
-  document.addEventListener('click', (e)=>{
-    const chip = e.target.closest('.chip');
-    if (!chip || ghost) return; // во время drag не циклим
-    const parent = chip.parentElement; const idx = order.indexOf(parent);
-    const next = order[(idx+1)%order.length]; next.appendChild(chip); tidy();
-  });
 
   /* ---------- Служебное ---------- */
   function tidy(){
