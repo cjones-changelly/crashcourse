@@ -16,7 +16,7 @@
   body{
     margin:0;background:var(--bg);color:var(--text);
     font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-    overscroll-behavior-y: contain; /* меньше «пулл-ту-клоуз» */
+    overscroll-behavior-y: contain;
   }
   a{color:inherit;text-decoration:none}
 
@@ -185,10 +185,10 @@
       <!-- SLIDE 3: QUIZ -->
       <section class="slide">
         <div class="wrap">
-          <div class="eyebrow">Lesson 3</div>
-          <h2 class="title">Safe or risky?</h2>
+          <!-- УБРАНО: <div class="eyebrow">Lesson 3</div> -->
+          <h3 class="subTitle">Safe or risky?</h3>
           <p class="lead">Can you tell the difference between smart security moves and beginner mistakes?
-            <span style="color:#9dc8ff;font-weight:700">Drag each item</span> into one of these two boxes:</p>
+            <strong>Drag each item</strong> into one of these two boxes:</p>
 
           <!-- Start pool -->
           <section id="bank" class="bank" aria-label="Items to sort"></section>
@@ -255,7 +255,6 @@
     function update(){
       track.style.transform = `translateX(${-i*100}%)`;
       dots.forEach((d,idx)=>d.classList.toggle('active', idx===i));
-      // показать/скрыть стрелки по требованию: 1й экран — только >, 2й — < и >, 3й — только <
       btnL.style.display = (i>0) ? 'grid' : 'none';
       btnR.style.display = (i<slides.length-1) ? 'grid' : 'none';
       try{ window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); }catch(_){}
@@ -276,13 +275,10 @@
     btnL.addEventListener('click', ()=> go(i-1));
     btnR.addEventListener('click', ()=> go(i+1));
 
-    // Клавиатура (ок)
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
     });
-
-    // ВАЖНО: свайпы по тачу убрали, чтобы не мешали drag&drop
 
     update();
   })();
@@ -317,7 +313,7 @@
     el.textContent = it.txt;
     el.id = it.id;
     el.dataset.answer = it.answer;
-    el.draggable = false; // везде pointer/touch
+    el.draggable = false;
     bank.appendChild(el);
   }
 
@@ -347,7 +343,7 @@
     ph.style.height = r.height+'px';
     chip.parentElement.insertBefore(ph, chip);
 
-    chip.style.opacity = '.2'; // исходник остаётся виден
+    chip.style.opacity = '.2';
 
     ghost = chip.cloneNode(true);
     ghost.removeAttribute('id');
@@ -409,7 +405,7 @@
   function autoScrollStep(){
     if (!isDragging) return;
     const margin = 80;
-    const maxSpeed = 22; // px per frame
+    const maxSpeed = 22;
     let dy = 0;
 
     if (curY < margin){
@@ -419,13 +415,7 @@
     }
 
     if (dy !== 0){
-      const before = window.scrollY;
       window.scrollBy(0, dy);
-      // скорректировать позицию призрака визуально остаётся фиксированной — ок
-      const after = window.scrollY;
-      if (after !== before){
-        // можно чуть потрясти хаптикой при краю
-      }
     }
     rafId = requestAnimationFrame(autoScrollStep);
   }
@@ -456,7 +446,6 @@
     document.addEventListener('pointerup', (e)=>{
       if (!chip) return;
       if (isDragging){ e.preventDefault(); finishDrag(); return; }
-      // тап-циклинг
       const order=[bank,safe,risky];
       const parent = chip.parentElement; const idx = order.indexOf(parent);
       const next = order[(idx+1)%order.length]; next.appendChild(chip);
