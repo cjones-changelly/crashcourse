@@ -38,16 +38,28 @@
     .stage{ display:flex; justify-content:center }
     .frame{ width:680px; max-width:100% }
 
-    .flip-wrap{ perspective:1200px; position:relative; height:500px }
-    .flip{ position:absolute; inset:0; transform-style:preserve-3d; transition:transform .6s cubic-bezier(.2,.7,.2,1) }
+    .flip-wrap{
+      perspective:1200px; position:relative; height:500px; overflow:hidden;
+      -webkit-perspective:1200px;
+    }
+    .flip{
+      position:absolute; inset:0; transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+      transition:transform .6s cubic-bezier(.2,.7,.2,1);
+      transform-origin:center center; -webkit-transform-origin:center center;
+      width:100%; height:100%;
+    }
     .flipped .flip{ transform:rotateY(180deg) }
-    .face{ backface-visibility:hidden; position:absolute; inset:0; display:flex }
+    .face{
+      backface-visibility:hidden; -webkit-backface-visibility:hidden;
+      position:absolute; inset:0; display:flex; width:100%; height:100%;
+    }
     .back{ transform:rotateY(180deg) }
 
     .card{
       background:var(--card); border-radius:24px; display:flex; flex-direction:column;
       border:2px solid var(--outline); box-shadow:0 12px 28px rgba(0,0,0,.4);
-      padding:16px 16px 64px;
+      padding:16px 16px 64px; width:100%; height:100%;
+      position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden;
     }
     .card-top{
       border-radius:18px; overflow:hidden; height:200px;
@@ -57,7 +69,6 @@
 
     .card-body{ padding:14px 10px; text-align:center }
     .card-title{ font-size:24px; font-weight:800; margin:6px 0 8px }
-    /* Единый стиль для подзаголовков на обеих сторонах */
     .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); margin:0 0 6px }
     .card-desc{ font-size:14px; color:var(--muted); margin:0 }
 
@@ -99,9 +110,9 @@
 <body>
   <header class="bar">
     <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">
-      <!-- стрелка как на скрине 3 -->
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 18l-6-6 6-6" stroke="currentColor"/>
+      <!-- та же стрелка, развернутая вправо -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path>
       </svg>
     </a>
     <img class="logo" src="assets/logo-changelly.png" alt="Changelly">
@@ -118,9 +129,7 @@
             <!-- FRONT -->
             <section class="face front">
               <article class="card">
-                <div class="card-top">
-                  <img id="imgFront" alt="Card image">
-                </div>
+                <div class="card-top"><img id="imgFront" alt="Card image"></div>
                 <div class="card-body">
                   <div id="titleFront" class="card-title">—</div>
                   <p class="card-subttl">What’s happening:</p>
@@ -138,12 +147,10 @@
               </article>
             </section>
 
-            <!-- BACK — стили те же, что и на лицевой -->
+            <!-- BACK -->
             <section class="face back">
               <article class="card">
-                <div class="card-top">
-                  <img id="imgBack" alt="Card image">
-                </div>
+                <div class="card-top"><img id="imgBack" alt="Card image"></div>
                 <div class="card-body">
                   <div id="titleBack" class="card-title">—</div>
                   <p class="card-subttl">Your move:</p>
@@ -178,7 +185,7 @@
     </div>
   </main>
 
-  <!-- прогресс/гейтинг как в lesson1 -->
+  <!-- прогресс/гейтинг -->
   <script>
   (function(){
     const LESSON_ID = 'l4';
@@ -261,7 +268,7 @@
   function render(){
     const c = cards[idx];
     frontImg.src = bestSrc(c.img);  backImg.src  = bestSrc(c.img);
-    tF.textContent = c.title;       tB.textContent = c.title;   // одинаковый тайтл
+    tF.textContent = c.title;       tB.textContent = c.title;
     dF.textContent = c.front;       dB.textContent = c.back;
 
     deck.classList.remove('flipped');
