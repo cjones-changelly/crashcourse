@@ -16,7 +16,7 @@
   body{
     margin:0;background:var(--bg);color:var(--text);
     font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-    overscroll-behavior-y: contain; /* уменьшаем «пулл-ту-клоуз» */
+    overscroll-behavior-y: contain; /* меньше «пулл-ту-клоуз» в WebView */
   }
   a{color:inherit;text-decoration:none}
 
@@ -87,13 +87,25 @@
     transition:transform .06s ease, border-color .15s ease, background .15s ease, opacity .06s ease;
   }
   .chip:active{cursor:grabbing}
-  .chip.dragging{
-    opacity:1; transform:scale(1.02);
-  }
+  .chip.dragging{opacity:1; transform:scale(1.02)}
+  .ph{display:inline-block; border-radius:12px; background:transparent}
+
   .dropping{outline:2px dashed rgba(177,255,140,.45); outline-offset:-6px}
 
   .banner{margin:14px auto 10px;max-width:860px;padding:12px 14px;border-radius:14px;border:1px solid #3a4457;background:#101722;color:#cfd7e3;text-align:center}
   .banner.ok{background:rgba(177,255,140,.12);border-color:rgba(177,255,140,.4);color:#eaffd9}
+
+  /* Подсветка результатов — заметнее */
+  .chip.correct{
+    border-color:rgba(177,255,140,.75);
+    background:rgba(177,255,140,.12);
+    box-shadow:0 0 0 2px rgba(177,255,140,.25);
+  }
+  .chip.wrong{
+    border-color:var(--danger);
+    background:rgba(255,107,107,.10);
+    box-shadow:0 0 0 2px rgba(255,107,107,.25);
+  }
 
   /* Нав-точки */
   .nav{position:absolute;left:0;right:0;bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
@@ -273,15 +285,15 @@
     el.textContent = it.txt;
     el.id = it.id;
     el.dataset.answer = it.answer;
-    el.draggable = false; // избегаем HTML5 DnD, используем pointer/touch везде
+    el.draggable = false; // используем pointer/touch везде
     bank.appendChild(el);
   }
 
-  // -------- Pointer/Touch DnD с видимым чипом --------
-  let isDragging=false, chip=null, ph=null, startX=0,startY=0,offX=0,offY=0, curZone=null;
+  // -------- Pointer/Touch DnD с призраком и плейсхолдером --------
+  let isDragging=false, chip=null, ph=null, ghost=null, startX=0,startY=0,offX=0,offY=0, curZone=null;
 
   function zoneFromPoint(x,y){
-    const zones=[safe,risky,bank];
+    const zones=[safe,risky,bank]; // приоритет целевых
     for (const z of zones){
       const r=z.getBoundingClientRect();
       if (x>=r.left && x<=r.right && y>=r.top && y<=r.bottom) return z;
@@ -292,33 +304,41 @@
   function beginDrag(x,y){
     if (!chip) return;
     isDragging = true;
-    // placeholder
+
+    // плейсхолдер размера чипа
     const r = chip.getBoundingClientRect();
     ph = document.createElement('div');
+    ph.className = 'ph';
     ph.style.width = r.width+'px';
     ph.style.height = r.height+'px';
     chip.parentElement.insertBefore(ph, chip);
 
-    offX = x - r.left; offY = y - r.top;
+    // исходный чип остаётся на месте, но почти прозрачный
+    chip.style.opacity = '.05';
 
-    // поднять чип над всем и таскать его
-    Object.assign(chip.style, {
-      position:'fixed', left:(x-offX)+'px', top:(y-offY)+'px',
-      width:r.width+'px', height:r.height+'px', zIndex: '10000',
+    // «призрак» — клон в body, поверх всего (не клипается)
+    ghost = chip.cloneNode(true);
+    ghost.removeAttribute('id');
+    Object.assign(ghost.style, {
+      position:'fixed', left:(r.left)+'px', top:(r.top)+'px',
+      width:r.width+'px', height:r.height+'px', zIndex:'10000',
       pointerEvents:'none'
     });
-    chip.classList.add('dragging');
+    ghost.classList.add('dragging');
+    document.body.appendChild(ghost);
 
-    // убрать скроллы/жесты на время
+    offX = x - r.left; offY = y - r.top;
+
+    // отключаем скролл/жесты
     document.body.style.userSelect = 'none';
     document.body.style.touchAction = 'none';
     try{ tg?.disableVerticalSwipes?.(); }catch(_){}
   }
 
   function moveDrag(x,y){
-    if (!isDragging || !chip) return;
-    chip.style.left = (x-offX)+'px';
-    chip.style.top  = (y-offY)+'px';
+    if (!isDragging || !ghost) return;
+    ghost.style.left = (x-offX)+'px';
+    ghost.style.top  = (y-offY)+'px';
 
     const z = zoneFromPoint(x,y);
     if (curZone && curZone!==z) curZone.classList.remove('dropping');
@@ -329,21 +349,19 @@
   function finishDrag(){
     if (!chip) return;
 
-    if (isDragging){
-      // drop в зону или вернуть на место
-      if (curZone){ curZone.appendChild(chip); }
-      else if (ph && ph.parentNode){ ph.parentNode.insertBefore(chip, ph); }
+    // дроп: в зону или назад к плейсхолдеру
+    if (curZone){ curZone.appendChild(chip); }
+    else if (ph && ph.parentNode){ ph.parentNode.insertBefore(chip, ph); }
 
-      // очистить визуальные стили
-      chip.classList.remove('dragging');
-      Object.assign(chip.style, {
-        position:'', left:'', top:'', width:'', height:'', zIndex:'', pointerEvents:''
-      });
-      curZone?.classList.remove('dropping');
-    }
-    // убрать placeholder
+    // очистка визуальных эффектов
+    chip.style.opacity = '';
+    if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+    ghost=null;
+    curZone?.classList.remove('dropping'); curZone=null;
+
+    // убрать плейсхолдер
     if (ph && ph.parentNode) ph.parentNode.removeChild(ph);
-    ph=null; chip=null; isDragging=false; curZone=null;
+    ph=null; chip=null; isDragging=false;
 
     // вернуть жесты/скролл
     document.body.style.userSelect = '';
@@ -353,7 +371,7 @@
     tidy();
   }
 
-  // Порог, чтобы тап не превращался в драг
+  // Порог, чтобы тап ≠ драг
   const THRESH = 6;
   let downX=0, downY=0, dragArmed=false, pointerId=null;
 
@@ -385,7 +403,7 @@
     });
     document.addEventListener('pointercancel', ()=>{ if (chip) finishDrag(); });
   } else {
-    // Touch fallback (старые WebView)
+    // Touch fallback
     document.addEventListener('touchstart', (e)=>{
       const c = e.target.closest('.chip'); if (!c) return;
       const t = e.touches[0]; chip=c; dragArmed=true; downX=startX=t.clientX; downY=startY=t.clientY;
@@ -417,7 +435,7 @@
   }
   function allPlaced(){ return bank.querySelectorAll('.chip').length===0; }
 
-  // Проверка: подсветка только когда всё разложено
+  // Проверка: подсветка только когда всё разложено (и теперь очень заметна)
   function check(){
     if (!allPlaced()){
       banner.className='banner';
@@ -432,9 +450,9 @@
 
     let wrong=0;
     [[safe,'safe'], [risky,'risky']].forEach(([col,expected])=>{
-      col.querySelectorAll('.chip').forEach(chip=>{
-        if (chip.dataset.answer===expected){ chip.classList.add('correct'); }
-        else { chip.classList.add('wrong'); wrong++; }
+      col.querySelectorAll('.chip').forEach(ch=>{
+        if (ch.dataset.answer===expected){ ch.classList.add('correct'); }
+        else { ch.classList.add('wrong'); wrong++; }
       });
     });
 
