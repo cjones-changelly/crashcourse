@@ -77,16 +77,25 @@
   .hint{color:var(--muted);font-size:13px;margin:0 0 12px}
 
   .chip{
-    user-select:none;-webkit-user-drag:element;
+    user-select:none;-webkit-user-drag:element; touch-action:none;
     display:inline-flex;align-items:center;justify-content:center;
     padding:10px 14px;border-radius:12px;background:#111824;border:1px solid #243044;
     color:var(--text);font-weight:600;cursor:grab;box-shadow:0 2px 8px rgba(0,0,0,.25);
     transition:transform .1s ease, border-color .15s ease, background .15s ease;
   }
   .chip:active{cursor:grabbing;transform:scale(.98)}
+  .chip.dragging{opacity:.85}
+  .chip.hidden-src{visibility:hidden}
   .chip.wrong{border-color:var(--danger); box-shadow:0 0 0 2px rgba(255,107,107,.25)}
   .chip.correct{border-color:rgba(177,255,140,.55)}
   .dropping{outline:2px dashed rgba(177,255,140,.45); outline-offset:-6px}
+
+  .ghost{
+    position:fixed; left:0; top:0; z-index:9999; pointer-events:none;
+    transform:translate(-9999px,-9999px); /* off-screen until positioned */
+    border-radius:12px; background:#111824; border:1px solid #243044;
+    box-shadow:0 8px 24px rgba(0,0,0,.45); opacity:.95;
+  }
 
   .banner{margin:14px auto 10px;max-width:860px;padding:12px 14px;border-radius:14px;border:1px solid #3a4457;background:#101722;color:#cfd7e3;text-align:center}
   .banner.ok{background:rgba(177,255,140,.12);border-color:rgba(177,255,140,.4);color:#eaffd9}
@@ -211,8 +220,7 @@
     }
     function go(n){
       i = Math.max(0, Math.min(slides.length-1, n));
-      scrollTop();
-      update();
+      scrollTop(); update();
     }
 
     document.querySelectorAll('.go-next').forEach(btn=>{
@@ -268,12 +276,12 @@
     el.className = 'chip';
     el.textContent = it.txt;
     el.id = it.id;
-    el.draggable = true;
+    el.draggable = true; // для десктопа
     el.dataset.answer = it.answer;
     bank.appendChild(el);
   }
 
-  // DnD
+  /* ---------- HTML5 DnD для десктопа ---------- */
   let dragId = null;
   document.addEventListener('dragstart', (e)=>{
     const chip = e.target.closest('.chip'); if (!chip) return;
@@ -296,14 +304,107 @@
     z.addEventListener('drop', dropTo);
   });
 
-  // Tap-cycling: pool -> safe -> risky -> pool
+  /* ---------- Pointer/Touch DnD для мобильных/WebView ---------- */
+  let ghost=null, src=null, offX=0, offY=0, curZone=null;
+
+  function zoneFromPoint(x,y){
+    const zones=[safe,risky,bank]; // приоритет верхних зон
+    for (const z of zones){
+      const r=z.getBoundingClientRect();
+      if (x>=r.left && x<=r.right && y>=r.top && y<=r.bottom) return z;
+    }
+    return null;
+  }
+
+  function startDrag(chip, x, y){
+    if (src) endDrag(); // страховка
+    src = chip;
+    src.classList.add('dragging','hidden-src');
+
+    const r = src.getBoundingClientRect();
+    offX = x - r.left; offY = y - r.top;
+
+    ghost = src.cloneNode(true);
+    ghost.classList.add('ghost');
+    ghost.style.width = r.width+'px';
+    ghost.style.height = r.height+'px';
+    document.body.appendChild(ghost);
+    moveGhost(x,y);
+
+    document.body.style.userSelect = 'none';
+  }
+
+  function moveGhost(x,y){
+    if (!ghost) return;
+    ghost.style.transform = `translate(${x - offX}px, ${y - offY}px)`;
+
+    // подсветка активной зоны
+    const z = zoneFromPoint(x,y);
+    if (curZone && curZone!==z) curZone.classList.remove('dropping');
+    if (z && curZone!==z){ z.classList.add('dropping'); }
+    curZone = z || null;
+  }
+
+  function endDrag(x,y){
+    if (!src) return;
+    if (curZone){ curZone.appendChild(src); }
+    src.classList.remove('dragging','hidden-src');
+
+    if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+    ghost=null; curZone?.classList.remove('dropping'); curZone=null; src=null;
+    document.body.style.userSelect = '';
+
+    tidy();
+  }
+
+  // Pointer Events (если есть)
+  if (window.PointerEvent){
+    document.addEventListener('pointerdown', (e)=>{
+      const chip = e.target.closest('.chip'); if (!chip) return;
+      e.preventDefault();
+      chip.setPointerCapture?.(e.pointerId);
+      startDrag(chip, e.clientX, e.clientY);
+    });
+    document.addEventListener('pointermove', (e)=>{
+      if (!ghost) return;
+      e.preventDefault();
+      moveGhost(e.clientX, e.clientY);
+    }, {passive:false});
+    document.addEventListener('pointerup', (e)=>{
+      if (!ghost && !src) return;
+      e.preventDefault();
+      endDrag(e.clientX, e.clientY);
+    });
+    document.addEventListener('pointercancel', ()=> endDrag());
+  } else {
+    // Touch fallback
+    document.addEventListener('touchstart', (e)=>{
+      const chip = e.target.closest('.chip'); if (!chip) return;
+      const t = e.touches[0]; startDrag(chip, t.clientX, t.clientY);
+    }, {passive:true});
+    document.addEventListener('touchmove', (e)=>{
+      if (!ghost) return;
+      const t = e.touches[0]; moveGhost(t.clientX, t.clientY);
+      e.preventDefault();
+    }, {passive:false});
+    document.addEventListener('touchend', (e)=>{
+      if (!ghost && !src) return;
+      const t = e.changedTouches[0] || e.touches[0];
+      endDrag(t?.clientX || 0, t?.clientY || 0);
+    });
+    document.addEventListener('touchcancel', ()=> endDrag());
+  }
+
+  /* ---------- Клик-циклинг (оставляем) ---------- */
   const order = [bank, safe, risky];
   document.addEventListener('click', (e)=>{
-    const chip = e.target.closest('.chip'); if (!chip) return;
+    const chip = e.target.closest('.chip');
+    if (!chip || ghost) return; // во время drag не циклим
     const parent = chip.parentElement; const idx = order.indexOf(parent);
     const next = order[(idx+1)%order.length]; next.appendChild(chip); tidy();
   });
 
+  /* ---------- Служебное ---------- */
   function tidy(){
     banner.style.display='none';
     nextBtn.style.display='none';
