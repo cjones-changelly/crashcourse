@@ -18,21 +18,19 @@
     }
     a{color:inherit; text-decoration:none}
 
-    /* Header (как в lesson1/2) */
+    /* Header (НЕ sticky) */
     .bar{
-      position:sticky; top:0; z-index:10;
       display:flex; align-items:center; justify-content:space-between;
       padding:12px 16px;
-      background:linear-gradient(180deg,rgba(15,17,21,.95),rgba(15,17,21,.7) 60%,rgba(15,17,21,0));
-      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg,rgba(15,17,21,1),rgba(15,17,21,.7) 60%,rgba(15,17,21,0));
     }
-    .back{ color:var(--text); text-decoration:none; font-size:24px; line-height:1 }
+    .back{ color:var(--text); text-decoration:none; font-size:26px; line-height:1 }
     .logo{ height:44px; width:auto; object-fit:contain; display:block }
     @media (max-width:480px){ .logo{ height:36px } }
 
     .wrap{ max-width:780px; margin:0 auto; padding: 10px 16px 40px }
 
-    /* Eyebrow + Title — точно как в lesson1 */
+    /* Eyebrow + Title — как в lesson1 */
     .eyebrow{ margin-top:8px; text-align:center; color:var(--muted); font-weight:600 }
     .title{
       margin:6px auto 18px; text-align:center; max-width:680px;
@@ -57,13 +55,12 @@
     .card-top{
       border-radius:18px; overflow:hidden; height:200px;
       display:flex; align-items:center; justify-content:center;
-      /* без обводки; картинка заполняет и слегка кропается */
     }
-    .card-top img{ width:100%; height:100%; object-fit:cover; display:block }
+    .card-top img{ width:100%; height:100%; object-fit:cover; display:block } /* без обводки, лёгкий кроп */
 
     .card-body{ padding:14px 10px; text-align:center }
     .card-title{ font-size:24px; font-weight:800; margin:6px 0 8px }
-    .card-subttl{ font-weight:700; color:var(--muted); margin:0 0 6px }
+    .card-subttl{ font-weight:700; color:var(--muted); margin:0 0 6px } /* общий стиль для обоих подзаголовков */
     .card-desc{ font-size:14px; color:var(--muted); margin:0 }
 
     /* Flip inside card */
@@ -76,7 +73,7 @@
     .flip-btn svg{ width:22px; height:22px; display:block }
     .flip-btn:active{ transform:translateX(-50%) scale(.98) }
 
-    /* Gallery nav под карточкой, по центру */
+    /* Gallery nav */
     .gallery-nav{ display:flex; justify-content:center; align-items:center; gap:14px; margin:12px auto 0 }
     .arrow{
       width:44px; height:44px; border-radius:999px; border:1px solid var(--line);
@@ -85,7 +82,7 @@
     .arrow:disabled{ opacity:.35; cursor:not-allowed }
     .index{ color:var(--muted); font-size:13px; text-align:center }
 
-    /* CTA (как в lesson1) */
+    /* CTA как в lesson1 */
     .cta{ display:flex; justify-content:center; margin-top:18px }
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -103,7 +100,7 @@
 </head>
 <body>
   <header class="bar">
-    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">←</a>
+    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">‹</a>
     <img class="logo" src="assets/logo-changelly.png" alt="Changelly">
   </header>
 
@@ -146,7 +143,7 @@
                 </div>
                 <div class="card-body">
                   <div id="titleBack" class="card-title">—</div>
-                  <p class="card-subttl">Your move:</p>
+                  <p class="card-subttl">Your move:</p> <!-- тот же класс -->
                   <p id="descBack" class="card-desc">—</p>
                 </div>
                 <button id="btnFlip2" class="flip-btn" aria-label="Flip card back">
@@ -172,13 +169,13 @@
       </div>
     </div>
 
-    <!-- CTA снизу по центру — как в lesson1 -->
+    <!-- CTA как в lesson1 -->
     <div class="cta">
       <a href="lesson5.html" class="btn" onclick="pickleNext(); return false;">Level up →</a>
     </div>
   </main>
 
-  <!-- прогресс/гейтинг — тот же шаблон, что в lesson1 -->
+  <!-- прогресс/гейтинг -->
   <script>
   (function(){
     const LESSON_ID = 'l4';
@@ -211,34 +208,27 @@
     window.pickleBack = function(){ location.href = 'index.html'; };
   })();
 
-  // ===== Данные колоды: один и тот же title на обеих сторонах =====
+  // ===== данные карточек =====
   const cards = [
-    {img:'assets/l4-card-1.png',
-     title:'Price is pumping',
+    {img:'assets/l4-card-1.png', title:'Price is pumping',
      front:"Sudden spike in price, everyone’s tweeting about it",
      back:"Check why it’s pumping. Hype without substance often dumps just as fast"},
-    {img:'assets/l4-card-2.png',
-     title:'Big green candle',
+    {img:'assets/l4-card-2.png', title:'Big green candle',
      front:"Massive candle, maybe triggered by news or influencer post",
      back:"Already holding? Take partial profits. Not in yet? Add to watchlist. Don’t FOMO"},
-    {img:'assets/l4-card-3.png',
-     title:'Dip incoming',
+    {img:'assets/l4-card-3.png', title:'Dip incoming',
      front:"Price is falling fast. People are panicking on X",
      back:"Zoom out. Is the whole market down or just this coin? If nothing fundamental changed then it could be a buy opportunity"},
-    {img:'assets/l4-card-4.png',
-     title:'Market is boring',
+    {img:'assets/l4-card-4.png', title:'Market is boring',
      front:"Sideways chop, no major news",
      back:"This is when smart money accumulates. Great time to DCA or research new gems"},
-    {img:'assets/l4-card-5.png',
-     title:'Everything is red',
+    {img:'assets/l4-card-5.png', title:'Everything is red',
      front:"BTC, ETH, alts: all dropping",
      back:"Usually macro FUD (The Fed, regulations, etc.) Don’t sell in fear. Hold or DCA small if you believe long-term"},
-    {img:'assets/l4-card-6.png',
-     title:'Coin got hacked or rugged',
+    {img:'assets/l4-card-6.png', title:'Coin got hacked or rugged',
      front:"News of smart contract exploit, rug pull, or delisting",
      back:"Exit fast. Don’t wait. Fundamentals just changed, this is not just a dip"},
-    {img:'assets/l4-card-7.png',
-     title:'Whale watching',
+    {img:'assets/l4-card-7.png', title:'Whale watching',
      front:"Big wallets are buying/selling",
      back:"Use tools like Arkham or Nansen to spot trends. Don’t blindly follow, find the reasons why"},
   ];
@@ -253,7 +243,6 @@
 
   let idx = 0;
   const deck = document.getElementById('deck');
-  const flipRoot = deck.querySelector('.flip');
   const frontImg = deck.querySelector('#imgFront');
   const backImg  = deck.querySelector('#imgBack');
   const tF = deck.querySelector('#titleFront');
@@ -268,30 +257,21 @@
 
   function render(){
     const c = cards[idx];
-    frontImg.src = bestSrc(c.img);
-    backImg.src  = bestSrc(c.img);
-    tF.textContent = c.title;     // одинаковый тайтл
-    tB.textContent = c.title;     // одинаковый тайтл
-    dF.textContent = c.front;
-    dB.textContent = c.back;
+    frontImg.src = bestSrc(c.img);  backImg.src  = bestSrc(c.img);
+    tF.textContent = c.title;       tB.textContent = c.title;   // одинаковый тайтл
+    dF.textContent = c.front;       dB.textContent = c.back;
 
     deck.classList.remove('flipped');
-    prev.disabled = idx===0;
-    next.disabled = idx===cards.length-1;
+    prev.disabled = idx===0; next.disabled = idx===cards.length-1;
     indexEl.textContent = `Card ${idx+1}/${cards.length}`;
   }
   render();
 
   prev.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); }});
   next.addEventListener('click', ()=>{ if(idx<cards.length-1){ idx++; render(); }});
-
   function flip(){ deck.classList.toggle('flipped'); }
-  btnFlip1.addEventListener('click', flip);
-  btnFlip2.addEventListener('click', flip);
-  deck.addEventListener('click', (e)=>{
-    if(e.target.closest('.flip-btn')) return;
-    flip();
-  }, {passive:true});
+  btnFlip1.addEventListener('click', flip); btnFlip2.addEventListener('click', flip);
+  deck.addEventListener('click', (e)=>{ if(e.target.closest('.flip-btn')) return; flip(); }, {passive:true});
   </script>
 </body>
 </html>
