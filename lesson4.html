@@ -27,33 +27,35 @@
     /* Card area */
     .stage{display:flex;justify-content:center}
     .frame{width:680px;max-width:100%}
-    .flip-wrap{perspective:1200px;position:relative;height:560px}
+    .flip-wrap{perspective:1200px;position:relative;height:500px}   /* ниже */
     .flip{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
     .flipped .flip{transform:rotateY(180deg)}
     .face{backface-visibility:hidden;position:absolute;inset:0;display:flex}
     .back{transform:rotateY(180deg)}
 
     .card{background:var(--card);border-radius:28px;display:flex;flex-direction:column;
-      border:2px solid var(--outline);box-shadow:0 8px 28px rgba(0,0,0,.35);padding:18px 18px 80px; /* room for Flip */}
-    .card-top{border-radius:20px;border:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;height:230px;background:#f0d99a08}
+      border:2px solid var(--outline);box-shadow:0 8px 28px rgba(0,0,0,.35);padding:18px 18px 64px} /* меньше */
+    .card-top{border-radius:20px;border:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;height:200px;background:#f0d99a08} /* ниже */
     .card-top img{max-width:100%;max-height:100%;display:block}
     .card-body{padding:16px;text-align:center}
     .card-title{font-size:24px;font-weight:800;margin:8px 0 6px}
     .card-subttl{font-weight:700;color:var(--muted);margin:0 0 6px 0}
     .card-desc{font-size:14px;color:var(--muted);margin:0}
 
-    /* Flip button inside card bottom */
+    /* Flip button inside card (raised + bigger icon) */
     .flip-btn{position:absolute;left:50%;transform:translateX(-50%);
-      bottom:18px;height:40px;padding:0 18px;border-radius:999px;border:none;font-weight:800;
-      background:#fff;color:#0a0a0a;cursor:pointer}
+      bottom:36px; /* поднял выше */
+      height:42px;padding:0 18px;border-radius:999px;border:none;font-weight:800;
+      background:#fff;color:#0a0a0a;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+    .flip-btn svg{width:22px;height:22px;display:block} /* крупнее значок */
     .flip-btn:active{transform:translateX(-50%) scale(.98)}
 
     /* Gallery nav under the card (centered) */
-    .gallery-nav{display:flex;justify-content:center;align-items:center;gap:14px;margin:16px auto 0}
+    .gallery-nav{display:flex;justify-content:center;align-items:center;gap:14px;margin:12px auto 0}
     .arrow{width:44px;height:44px;border-radius:999px;border:1px solid var(--line);background:transparent;
       color:var(--text);cursor:pointer;font-size:20px;line-height:44px}
     .arrow:disabled{opacity:.35;cursor:not-allowed}
-    .index{color:var(--muted);font-size:13px;text-align:center;margin-top:6px}
+    .index{color:var(--muted);font-size:13px;text-align:center}
 
     /* Bottom CTA centered */
     .footer{position:fixed;left:0;right:0;bottom:18px;display:flex;justify-content:center;pointer-events:none}
@@ -62,8 +64,8 @@
 
     img,button{user-select:none}
     @media (max-width:420px){
-      .flip-wrap{height:520px}
-      .card-top{height:200px}
+      .flip-wrap{height:460px}
+      .card-top{height:180px}
     }
   </style>
 </head>
@@ -98,7 +100,15 @@
                   <p class="card-subttl">What’s happening:</p>
                   <p id="descFront" class="card-desc">—</p>
                 </div>
-                <button id="btnFlip1" class="flip-btn" aria-label="Flip card">Flip ⟳</button>
+                <button id="btnFlip1" class="flip-btn" aria-label="Flip card">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
+                    <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
+                  </svg>
+                  Flip
+                </button>
               </article>
             </section>
             <!-- BACK -->
@@ -109,10 +119,18 @@
                 </div>
                 <div class="card-body">
                   <div id="titleBack" class="card-title">—</div>
-                  <p class="card-subttl">What it means:</p>
+                  <p class="card-subttl">Your move:</p>
                   <p id="descBack" class="card-desc">—</p>
                 </div>
-                <button id="btnFlip2" class="flip-btn" aria-label="Flip card back">Flip ⟳</button>
+                <button id="btnFlip2" class="flip-btn" aria-label="Flip card back">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
+                    <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
+                  </svg>
+                  Flip
+                </button>
               </article>
             </section>
           </div>
@@ -165,20 +183,41 @@
 
     // ===== Deck data (images identical on both sides) =====
     const cards = [
-      {img:'assets/l4-card-1.png', titleF:'Price is pumping', descF:"Sudden spike in price, everyone’s tweeting about it",
-       titleB:'What it means', descB:"Likely hype-driven move. Expect volatility. Small entries only, set stops."},
-      {img:'assets/l4-card-2.png', titleF:'Slow & steady uptrend', descF:"Higher highs and higher lows",
-       titleB:'What it means', descB:"Trend is your friend. DCA or buy pullbacks; avoid chasing green candles."},
-      {img:'assets/l4-card-3.png', titleF:'Sideways chop', descF:"Price stuck in a range; volume low",
-       titleB:'What it means', descB:"Wait for breakout. Consider range trading only if you know risk."},
-      {img:'assets/l4-card-4.png', titleF:'Sell-off / dump', descF:"Sharp red move on rising volume",
-       titleB:'What it means', descB:"Don’t catch falling knives. If buying, do it in small, spaced bids."},
-      {img:'assets/l4-card-5.png', titleF:'Retest after breakout', descF:"Price breaks range then comes back to test it",
-       titleB:'What it means', descB:"Healthy if level holds. Entry near retest with invalidation just below."},
-      {img:'assets/l4-card-6.png', titleF:'Bearish divergence', descF:"Price up, momentum down",
-       titleB:'What it means', descB:"Weakening push. Take profits or tighten stops."},
-      {img:'assets/l4-card-7.png', titleF:'Capitulation wick', descF:"Long wick down then quick recovery",
-       titleB:'What it means', descB:"Panic flush possibly over. Consider staged buys; volatility remains."},
+      {img:'assets/l4-card-1.png',
+       titleF:'Price is pumping',
+       descF:"Sudden spike in price, everyone’s tweeting about it",
+       titleB:'Your move',
+       descB:"Check why it’s pumping. Hype without substance often dumps just as fast"},
+      {img:'assets/l4-card-2.png',
+       titleF:'Big green candle',
+       descF:"Massive candle, maybe triggered by news or influencer post",
+       titleB:'Your move',
+       descB:"Already holding? Take partial profits. Not in yet? Add to watchlist. Don’t FOMO"},
+      {img:'assets/l4-card-3.png',
+       titleF:'Dip incoming',
+       descF:"Price is falling fast. People are panicking on X",
+       titleB:'Your move',
+       descB:"Zoom out. Is the whole market down or just this coin? If nothing fundamental changed then it could be a buy opportunity"},
+      {img:'assets/l4-card-4.png',
+       titleF:'Market is boring',
+       descF:"Sideways chop, no major news",
+       titleB:'Your move',
+       descB:"This is when smart money accumulates. Great time to DCA or research new gems"},
+      {img:'assets/l4-card-5.png',
+       titleF:'Everything is red',
+       descF:"BTC, ETH, alts: all dropping",
+       titleB:'Your move',
+       descB:"Usually macro FUD (The Fed, regulations, etc.) Don’t sell in fear. Hold or DCA small if you believe long-term"},
+      {img:'assets/l4-card-6.png',
+       titleF:'Coin got hacked or rugged',
+       descF:"News of smart contract exploit, rug pull, or delisting",
+       titleB:'Your move',
+       descB:"Exit fast. Don’t wait. Fundamentals just changed, this is not just a dip"},
+      {img:'assets/l4-card-7.png',
+       titleF:'Whale watching',
+       descF:"Big wallets are buying/selling",
+       titleB:'Your move',
+       descB:"Use tools like Arkham or Nansen to spot trends. Don’t blindly follow, find the reasons why"},
     ];
 
     // DPR helper (1x/2x/3x)
@@ -193,7 +232,6 @@
     // ===== Render / controls =====
     let idx = 0;
     const deck = document.getElementById('deck');
-    const flipRoot = deck.querySelector('.flip');
     const frontImg = deck.querySelector('#imgFront');
     const backImg  = deck.querySelector('#imgBack');
     const tF = deck.querySelector('#titleFront');
@@ -229,7 +267,6 @@
     btnFlip1.addEventListener('click', flip);
     btnFlip2.addEventListener('click', flip);
 
-    // Flip on tap anywhere inside the card (кроме самой кнопки)
     deck.addEventListener('click', (e)=>{
       if(e.target.closest('.flip-btn')) return;
       flip();
