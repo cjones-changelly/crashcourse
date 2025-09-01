@@ -302,41 +302,44 @@
   }
   function allPlaced(){ return bank.querySelectorAll('.chip').length===0; }
 
-  function check(){
-    let wrong=0, correct=0;
-    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('wrong','correct'));
-    [[safe,'safe'], [risky,'risky']].forEach(([col,expected])=>{
-      col.querySelectorAll('.chip').forEach(chip=>{
-        if (chip.dataset.answer===expected){ chip.classList.add('correct'); correct++; }
-        else { chip.classList.add('wrong'); wrong++; }
-      });
+ function check(){
+  // 1) Если не всё разложено — только подсказка и выходим
+  if (bank.querySelectorAll('.chip').length > 0){
+    banner.className = 'banner';
+    banner.textContent = 'Place every item into one of the boxes first.';
+    banner.style.display = 'block';
+    try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); } catch(_){}
+    banner.scrollIntoView({behavior:'smooth', block:'start'});
+    return;
+  }
+
+  // 2) Всё разложено — очищаем прошлую подсветку и проверяем
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('wrong','correct'));
+
+  let wrong = 0;
+  [[safe,'safe'], [risky,'risky']].forEach(([col, expected])=>{
+    col.querySelectorAll('.chip').forEach(chip=>{
+      if (chip.dataset.answer === expected) chip.classList.add('correct');
+      else { chip.classList.add('wrong'); wrong++; }
     });
-    wrong += bank.querySelectorAll('.chip').length;
+  });
 
-    if (!allPlaced()){
-      banner.className='banner';
-      banner.textContent='Place every item into one of the boxes first.';
-      banner.style.display='block';
-      try{ window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); }catch(_){}
-      banner.scrollIntoView({behavior:'smooth', block:'start'});
-      return;
-    }
+  if (wrong === 0){
+    banner.className = 'banner ok';
+    banner.textContent = 'Perfect! You nailed it — every item is in the right place.';
+    banner.style.display = 'block';
+    nextBtn.style.display = 'inline-flex';
+    checkBtn.style.display = 'none';
+    try { window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred('success'); } catch(_){}
+  } else {
+    banner.className = 'banner';
+    banner.textContent = 'Not quite — the red ones are in the wrong box. Adjust and check again.';
+    banner.style.display = 'block';
+    try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('medium'); } catch(_){}
+  }
+  banner.scrollIntoView({behavior:'smooth', block:'start'});
+}
 
-    if (wrong===0){
-      banner.className='banner ok';
-      banner.textContent='Perfect! You nailed it — every item is in the right place.';
-      banner.style.display='block';
-      nextBtn.style.display='inline-flex';
-      checkBtn.style.display='none';
-      try{ window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred('success'); }catch(_){}
-      banner.scrollIntoView({behavior:'smooth', block:'start'});
-    } else {
-      banner.className='banner';
-      banner.textContent='Not quite — the red ones are in the wrong box. Adjust and check again.';
-      banner.style.display='block';
-      try{ window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('medium'); }catch(_){}
-      banner.scrollIntoView({behavior:'smooth', block:'start'});
-    }
   }
   checkBtn.addEventListener('click', check);
   nextBtn.addEventListener('click', ()=>{ if (typeof window.pickleNext==='function') window.pickleNext(); });
