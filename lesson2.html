@@ -46,6 +46,7 @@
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
+  /* Promo card */
   .finalCard{position:relative;background:var(--brand);color:var(--ink);border-radius:24px;padding:22px 18px 0;overflow:hidden}
   .finalCard h4{margin:6px 0 8px;font-size:28px;line-height:1.15;font-weight:800;letter-spacing:.2px}
   .finalCard p{margin:0 0 14px;color:rgba(11,14,17,.85)}
@@ -66,17 +67,14 @@
   .pick{
     display:flex;align-items:center;gap:12px;justify-content:flex-start;
     padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
-    color:var(--text); /* принудительно белый */
-    font-size:17px; font-weight:700; /* просто болдом */
-    cursor:pointer;
+    color:var(--text); font-size:17px; font-weight:700; cursor:pointer;
     transition:transform .06s ease,border-color .12s ease;
-    outline:none; -webkit-tap-highlight-color:transparent; /* убираем синий хайлайт */
+    outline:none; -webkit-tap-highlight-color:transparent;
   }
   .pick:hover{transform:translateY(-1px)}
   .pick .ico-flag{width:28px;height:28px;display:block;flex:0 0 28px}
   .pick.active{border-color:var(--brand)}
   .pick.wrong{border-color:var(--danger)}
-  /* после выбора не глушим текст слишком сильно */
   .pick:disabled{opacity:1}
   .pick:disabled span{opacity:.9}
   .pick:focus{outline:none}
@@ -156,12 +154,35 @@
           <section class="finalCard">
             <h4>Found a Gem? Stay on It!</h4>
             <p>Get the Changelly app to set custom alerts and get instant notifications on price moves and news</p>
+
             <a href="#" class="storeBig" aria-label="Download Changelly">Download Changelly</a>
+
             <div class="artStack" aria-hidden="true">
-              <img class="tile" src="assets/l2-eth-tile.png" alt="">
-              <img class="phones" src="assets/l2-phones.png" alt="">
+              <!-- improved quality: tile -->
+              <img
+                class="tile"
+                src="assets/l2-eth-tile.png"
+                srcset="
+                  assets/l2-eth-tile.png 1x,
+                  assets/l2-eth-tile@2x.png 2x,
+                  assets/l2-eth-tile@3x.png 3x
+                "
+                sizes="(max-width:420px) 82vw, 300px"
+                alt="">
+              <!-- improved quality: phones -->
+              <img
+                class="phones"
+                src="assets/l2-phones.png"
+                srcset="
+                  assets/l2-phones.png 1x,
+                  assets/l2-phones@2x.png 2x,
+                  assets/l2-phones@3x.png 3x
+                "
+                sizes="(max-width:420px) 96vw, 420px"
+                loading="lazy" decoding="async" alt="">
             </div>
           </section>
+
           <div class="cta"><a href="#" class="btn" data-goto="3">Got it!</a></div>
         </div>
       </section>
@@ -313,7 +334,7 @@
       const q = questions[i];
 
       [btnGreen, btnRed].forEach(b=>{
-        b.disabled = true;                          // остаётся кликабл-видимый
+        b.disabled = true;
         b.classList.toggle('active', b.dataset.choice===val);
         if (b.dataset.choice !== q.correct) b.classList.add('wrong');
       });
@@ -331,7 +352,6 @@
     btnGreen.addEventListener('click', ()=>choose('green'));
     btnRed.addEventListener('click', ()=>choose('red'));
     btnNext.addEventListener('click', ()=> setQuestion(Math.min(i+1, questions.length-1)));
-
     levelUp.addEventListener('click', (e)=>{
       if (typeof window.pickleNext==='function'){ e.preventDefault(); window.pickleNext(); }
     });
