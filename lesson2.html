@@ -18,58 +18,38 @@
        overscroll-behavior-y: contain}
   a{color:inherit;text-decoration:none}
 
-  /* Header — не липкая */
-  .bar{
-    position:relative; top:auto; z-index:auto;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 16px; background:var(--bg);
-  }
+  .bar{position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg)}
   .back{font-size:24px;line-height:1}
   .logo{height:44px;width:auto;object-fit:contain;display:block}
   @media (max-width:480px){.logo{height:36px}}
 
-  /* Slides */
   .viewport{overflow:hidden;position:relative}
   .track{display:flex;transition:transform .28s ease;will-change:transform}
-  .slide{flex:0 0 100%;min-height:calc(100dvh - 72px);
-         padding:14px 16px 64px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+  .slide{flex:0 0 100%;min-height:calc(100dvh - 72px);padding:14px 16px 64px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
   .wrap{width:100%;max-width:760px;margin:0 auto}
 
-  /* Titles */
   .eyebrow{margin-top:8px;text-align:center;color:var(--muted);font-weight:600}
-  .title{margin:6px auto 18px;text-align:center;max-width:720px;
-         font-family:Georgia,serif;font-style:italic;font-size:26px;line-height:1.25;font-weight:600}
+  .title{margin:6px auto 18px;text-align:center;max-width:720px;font-family:Georgia,serif;font-style:italic;font-size:26px;line-height:1.25;font-weight:600}
 
-  /* Intro grid */
   .intro{display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:start}
   .intro .art{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .intro .art img{display:block;width:100%;height:auto}
   .intro p{margin:0 0 10px}
   @media (max-width:640px){.intro{grid-template-columns:1fr}.intro .art{order:-1;max-width:240px;justify-self:center}}
 
-  /* Checklist */
   .h3{font-family:Georgia,serif;font-style:italic;font-size:22px;text-align:center;margin:8px 0}
   .mid-note{margin:6px auto 6px;text-align:center;color:var(--muted);max-width:640px}
   .rule{height:1px;background:var(--line);margin:10px auto;max-width:640px}
   .checks{display:grid;gap:14px;margin-top:8px}
-  .item{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:flex-start;
-        padding:12px;border:1px solid var(--line);border-radius:12px;background:#0d1219}
+  .item{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0d1219}
   .flag{width:42px;height:auto;display:block}
   .item h4{margin:0 0 6px;font-size:15px}
   .item p{margin:0;color:var(--muted)}
 
-  /* Promo card */
-  .finalCard{position:relative;background:var(--brand);color:var(--ink);
-             border-radius:24px;padding:22px 18px 0;overflow:hidden}
+  .finalCard{position:relative;background:var(--brand);color:var(--ink);border-radius:24px;padding:22px 18px 0;overflow:hidden}
   .finalCard h4{margin:6px 0 8px;font-size:28px;line-height:1.15;font-weight:800;letter-spacing:.2px}
   .finalCard p{margin:0 0 14px;color:rgba(11,14,17,.85)}
-  .storeBig{
-    display:flex;align-items:center;justify-content:center;
-    height:var(--btn-h); padding:0 28px;
-    border-radius:12px; background:#0b0e11; color:#fff;
-    text-decoration:none; font-weight:800; font-size:var(--btn-fs); line-height:1;
-    box-shadow:0 8px 18px rgba(0,0,0,.25); margin:6px 0 12px;
-  }
+  .storeBig{display:flex;align-items:center;justify-content:center;height:var(--btn-h);padding:0 28px;border-radius:12px;background:#0b0e11;color:#fff;text-decoration:none;font-weight:800;font-size:var(--btn-fs);line-height:1;box-shadow:0 8px 18px rgba(0,0,0,.25);margin:6px 0 12px}
   .artStack{position:relative;height:250px;margin-top:4px}
   .artStack .tile{position:absolute;left:16px;top:8px;width:min(78%,300px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));z-index:2}
   .artStack .phones{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(92%,420px);filter:drop-shadow(0 12px 28px rgba(0,0,0,.25))}
@@ -86,16 +66,23 @@
   .pick{
     display:flex;align-items:center;gap:12px;justify-content:flex-start;
     padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
-    font-size:17px; font-weight:500; cursor:pointer; /* вернули прежний стиль текста */
+    color:var(--text); /* принудительно белый */
+    font-size:17px; font-weight:700; /* просто болдом */
+    cursor:pointer;
     transition:transform .06s ease,border-color .12s ease;
+    outline:none; -webkit-tap-highlight-color:transparent; /* убираем синий хайлайт */
   }
   .pick:hover{transform:translateY(-1px)}
+  .pick .ico-flag{width:28px;height:28px;display:block;flex:0 0 28px}
   .pick.active{border-color:var(--brand)}
   .pick.wrong{border-color:var(--danger)}
-  .pick .ico-flag{width:28px;height:28px;display:block;flex:0 0 28px}
+  /* после выбора не глушим текст слишком сильно */
+  .pick:disabled{opacity:1}
+  .pick:disabled span{opacity:.9}
+  .pick:focus{outline:none}
+  .pick:focus-visible{outline:none}
 
-  .reveal{margin:14px auto 8px;max-width:720px;background:#0d1219;border:1px solid var(--line);
-          border-radius:14px;padding:14px;display:none}
+  .reveal{margin:14px auto 8px;max-width:720px;background:#0d1219;border:1px solid var(--line);border-radius:14px;padding:14px;display:none}
   .reveal.show{display:flex;gap:12px;align-items:flex-start}
   .reveal .yn{font-family:Georgia,serif;font-style:italic;font-size:22px;min-width:56px}
   .reveal .why{color:var(--muted)}
@@ -105,35 +92,16 @@
 
   @media (max-width:720px){.choices{grid-template-columns:1fr}}
 
-  /* Shared CTA */
   .cta{display:flex;justify-content:center;margin:16px 0 4px}
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    height:var(--btn-h); padding:0 28px;
-    border:0; border-radius:999px;
-    background:var(--brand); color:#07110c;
-    font-size:var(--btn-fs); font-weight:800; line-height:1;
-    box-shadow:0 6px 14px rgba(177,255,140,.25);
-    cursor:pointer;
-  }
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--btn-h);padding:0 28px;border:0;border-radius:999px;background:var(--brand);color:#07110c;font-size:var(--btn-fs);font-weight:800;line-height:1;box-shadow:0 6px 14px rgba(177,255,140,.25);cursor:pointer}
 
-  /* Dots */
   .nav{position:absolute;left:0;right:0;bottom:40px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
   .dot.active{background:var(--brand);opacity:1}
 
-  /* Bottom arrows (like lesson3) */
   .nav-arrows{position:fixed;left:0;right:0;bottom:8px;z-index:5;pointer-events:none}
-  .nav-btn{
-    pointer-events:auto;
-    position:absolute; bottom:8px;
-    width:38px; height:38px; border-radius:999px;
-    border:1px solid #2a3547; background:#0f1622a8; color:#dfe7f5;
-    display:grid; place-items:center; font-size:18px; font-weight:700;
-    box-shadow:0 6px 14px rgba(0,0,0,.25);
-    backdrop-filter: blur(6px);
-  }
+  .nav-btn{pointer-events:auto;position:absolute;bottom:8px;width:38px;height:38px;border-radius:999px;border:1px solid #2a3547;background:#0f1622a8;color:#dfe7f5;display:grid;place-items:center;font-size:18px;font-weight:700;box-shadow:0 6px 14px rgba(0,0,0,.25);backdrop-filter:blur(6px)}
   .nav-btn:hover{transform:translateY(-1px)}
   .nav-btn:active{transform:translateY(0)}
   .nav-left{left:10px}
@@ -149,12 +117,11 @@
   <div class="viewport" id="vp">
     <div class="track" id="track">
 
-      <!-- SLIDE 1: Intro -->
+      <!-- SLIDE 1 -->
       <section class="slide">
         <div class="wrap">
           <div class="eyebrow">Lesson 2</div>
           <h1 class="title">How to spot a gem before it 10x's</h1>
-
           <div class="intro">
             <div class="art"><img src="assets/l2-hero-graph.png" alt="chart and coins"></div>
             <div>
@@ -162,12 +129,11 @@
               <p>This lesson will give you a simple, repeatable checklist to spot high-potential coins before they pump, using smart signals that real investors watch for</p>
             </div>
           </div>
-
           <div class="cta"><button class="btn go-next">Next</button></div>
         </div>
       </section>
 
-      <!-- SLIDE 2: Checklist (1–5) -->
+      <!-- SLIDE 2 -->
       <section class="slide">
         <div class="wrap">
           <h3 class="h3">5 green flags checklist</h3>
@@ -180,12 +146,11 @@
             <div class="item"><img class="flag" src="assets/l2-flag-4.png" alt="4"><div><h4>Is it still early?</h4><p>Check the market cap. A coin that’s already huge (like $20B+) won’t 10x easily. A smaller cap means more upside, but more risk, too</p></div></div>
             <div class="item"><img class="flag" src="assets/l2-flag-5.png" alt="5"><div><h4>How does the token actually work?</h4><p>Look for limited supply, actual reasons to use the token, and if it was launched fair (meaning it’s not fully owned by insiders)</p></div></div>
           </div>
-
           <div class="cta"><button class="btn go-next">Next</button></div>
         </div>
       </section>
 
-      <!-- SLIDE 3: Promo + CTA to quiz -->
+      <!-- SLIDE 3 -->
       <section class="slide">
         <div class="wrap">
           <section class="finalCard">
@@ -197,14 +162,11 @@
               <img class="phones" src="assets/l2-phones.png" alt="">
             </div>
           </section>
-
-          <div class="cta">
-            <a href="#" class="btn" data-goto="3">Got it!</a>
-          </div>
+          <div class="cta"><a href="#" class="btn" data-goto="3">Got it!</a></div>
         </div>
       </section>
 
-      <!-- SLIDE 4: QUIZ (single page, 5 Qs) -->
+      <!-- SLIDE 4: QUIZ -->
       <section class="slide">
         <div class="wrap">
           <div class="quiz-head">
@@ -229,9 +191,7 @@
 
           <div class="reveal" id="reveal">
             <div class="yn" id="yn">—</div>
-            <div class="why">
-              <span id="why-main">—</span>
-            </div>
+            <div class="why"><span id="why-main">—</span></div>
           </div>
 
           <div class="next-wrap">
@@ -251,7 +211,6 @@
   </div>
 
 <script>
-  // --------- Слайдер: без свайпов; стрелочки внизу ----------
   (function(){
     const track = document.getElementById('track');
     const slides = Array.from(track.children);
@@ -267,10 +226,7 @@
     });
     const dots = Array.from(dotsBox.children);
 
-    function scrollTop(){
-      const el = document.scrollingElement || document.documentElement || document.body;
-      el.scrollTop = 0;
-    }
+    function scrollTop(){ (document.scrollingElement||document.documentElement||document.body).scrollTop = 0; }
     function update(){
       track.style.transform = `translateX(${-i*100}%)`;
       dots.forEach((d,idx)=>d.classList.toggle('active', idx===i));
@@ -278,12 +234,8 @@
       btnR.style.display = (i<slides.length-1) ? 'grid' : 'none';
       try{ window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); }catch(_){}
     }
-    function go(n){
-      i = Math.max(0, Math.min(slides.length-1, n));
-      scrollTop(); update();
-    }
+    function go(n){ i = Math.max(0, Math.min(slides.length-1, n)); scrollTop(); update(); }
 
-    // кнопки Next внутри слайдов
     document.querySelectorAll('.go-next').forEach(btn=>{
       btn.addEventListener('click', e=>{
         const slide = e.target.closest('.slide');
@@ -291,8 +243,6 @@
         go(idx+1);
       });
     });
-
-    // переход по data-goto (из промо-карты в квиз)
     document.querySelectorAll('[data-goto]').forEach(a=>{
       a.addEventListener('click', e=>{
         e.preventDefault();
@@ -300,22 +250,17 @@
         if (!Number.isNaN(idx)) go(idx);
       });
     });
-
     btnL.addEventListener('click', ()=> go(i-1));
     btnR.addEventListener('click', ()=> go(i+1));
-
-    // Клавиатура — оставим
     window.addEventListener('keydown', e=>{
       if (e.key==='ArrowRight') go(i+1);
       if (e.key==='ArrowLeft') go(i-1);
     });
-
     update();
   })();
 </script>
 
 <script>
-  // --------- QUIZ (1 страница, 5 вопросов) ----------
   (function(){
     const tg = window.Telegram?.WebApp;
     const qCounter = document.getElementById('qCounter');
@@ -347,10 +292,7 @@
     ];
     let i = 0, picked = null;
 
-    function scrollTop(){
-      const el = document.scrollingElement || document.documentElement || document.body;
-      el.scrollTop = 0;
-    }
+    function scrollTop(){ (document.scrollingElement||document.documentElement||document.body).scrollTop = 0; }
 
     function setQuestion(idx){
       i = idx; picked = null;
@@ -371,7 +313,7 @@
       const q = questions[i];
 
       [btnGreen, btnRed].forEach(b=>{
-        b.disabled = true;
+        b.disabled = true;                          // остаётся кликабл-видимый
         b.classList.toggle('active', b.dataset.choice===val);
         if (b.dataset.choice !== q.correct) b.classList.add('wrong');
       });
@@ -388,12 +330,8 @@
 
     btnGreen.addEventListener('click', ()=>choose('green'));
     btnRed.addEventListener('click', ()=>choose('red'));
+    btnNext.addEventListener('click', ()=> setQuestion(Math.min(i+1, questions.length-1)));
 
-    btnNext.addEventListener('click', ()=>{
-      setQuestion(Math.min(i+1, questions.length-1));
-    });
-
-    // завершение → lesson3
     levelUp.addEventListener('click', (e)=>{
       if (typeof window.pickleNext==='function'){ e.preventDefault(); window.pickleNext(); }
     });
@@ -402,14 +340,12 @@
   })();
 </script>
 
-<!-- прогресс/гейтинг для урока 2 -->
 <script>
 (function(){
   const LESSON_ID = 'l2';
   const order = ['l1','l2','l3','l4','l5'];
   const idToIdx = Object.fromEntries(order.map((id,i)=>[id,i]));
   const tg = window.Telegram?.WebApp;
-
   const fileFor = id => `lesson${id.replace('l','')}.html`;
   const lastId = localStorage.getItem('pickle_progress') || 'l1';
   const hasEmail = !!localStorage.getItem('pickle_email');
@@ -417,21 +353,17 @@
   if (!hasEmail) { location.replace('index.html#join'); return; }
   if (idToIdx[LESSON_ID] > idToIdx[lastId]) {
     try{ tg?.HapticFeedback?.impactOccurred('light'); }catch(_){}
-    location.replace(fileFor(lastId));
-    return;
+    location.replace(fileFor(lastId)); return;
   }
 
-  // переход к следующему уроку
   window.pickleNext = function(){
     const curIdx = idToIdx[LESSON_ID];
     const savedIdx = idToIdx[localStorage.getItem('pickle_progress') || 'l1'];
     const nextId = order[Math.min(curIdx + 1, order.length - 1)];
-
     if (curIdx >= savedIdx) {
       localStorage.setItem('pickle_progress', nextId);
       try{ tg?.HapticFeedback?.notificationOccurred('success'); }catch(_){}
     }
-
     if (curIdx + 1 < order.length) location.href = fileFor(nextId);
     else location.href = 'index.html#breakdown';
   };
