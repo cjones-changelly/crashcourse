@@ -20,8 +20,7 @@
 
     /* Header (not sticky) */
     .bar{display:flex; align-items:center; justify-content:space-between; padding:12px 16px}
-    .back{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px}
-    .back svg{width:26px; height:26px; stroke:var(--text)}
+    .back{ color:var(--text); text-decoration:none; font-size:26px; line-height:1 }
     .logo{ height:44px; width:auto; object-fit:contain; display:block }
     @media (max-width:480px){ .logo{ height:36px } }
 
@@ -38,28 +37,18 @@
     .stage{ display:flex; justify-content:center }
     .frame{ width:680px; max-width:100% }
 
-    .flip-wrap{
-      perspective:1200px; position:relative; height:500px; overflow:hidden;
-      -webkit-perspective:1200px;
-    }
-    .flip{
-      position:absolute; inset:0; transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
-      transition:transform .6s cubic-bezier(.2,.7,.2,1);
-      transform-origin:center center; -webkit-transform-origin:center center;
-      width:100%; height:100%;
-    }
-    .flipped .flip{ transform:rotateY(180deg) }
-    .face{
-      backface-visibility:hidden; -webkit-backface-visibility:hidden;
-      position:absolute; inset:0; display:flex; width:100%; height:100%;
-    }
-    .back{ transform:rotateY(180deg) }
+    /* SIMPLE FADE FLIP (без 3D) */
+    .flip-wrap{ position:relative; height:500px; overflow:hidden }
+    .face{ position:absolute; inset:0; display:flex; width:100%; height:100%; transition:opacity .28s ease; }
+    .front{ opacity:1; pointer-events:auto }
+    .back { opacity:0; pointer-events:none }
+    .flipped .front{ opacity:0; pointer-events:none }
+    .flipped .back { opacity:1; pointer-events:auto }
 
     .card{
       background:var(--card); border-radius:24px; display:flex; flex-direction:column;
       border:2px solid var(--outline); box-shadow:0 12px 28px rgba(0,0,0,.4);
-      padding:16px 16px 64px; width:100%; height:100%;
-      position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+      padding:16px 16px 64px; width:100%; height:100%; position:relative;
     }
     .card-top{
       border-radius:18px; overflow:hidden; height:200px;
@@ -72,14 +61,14 @@
     .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); margin:0 0 6px }
     .card-desc{ font-size:14px; color:var(--muted); margin:0 }
 
-    /* Flip inside card */
+    /* Flip button (иконка всегда чёрная) */
     .flip-btn{
       position:absolute; left:50%; transform:translateX(-50%); bottom:36px;
       height:42px; padding:0 18px; border-radius:999px; border:0; cursor:pointer;
       display:inline-flex; align-items:center; gap:8px; font-weight:800;
       background:#fff; color:#0a0a0a;
     }
-    .flip-btn svg{ width:22px; height:22px; display:block }
+    .flip-btn svg{ width:22px; height:22px; display:block; color:#0a0a0a }
     .flip-btn:active{ transform:translateX(-50%) scale(.98) }
 
     /* Gallery nav */
@@ -109,12 +98,7 @@
 </head>
 <body>
   <header class="bar">
-    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">
-      <!-- та же стрелка, развернутая вправо -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M9 6l6 6-6 6"></path>
-      </svg>
-    </a>
+    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">←</a>
     <img class="logo" src="assets/logo-changelly.png" alt="Changelly">
   </header>
 
@@ -125,49 +109,47 @@
     <div class="stage">
       <div class="frame">
         <div class="flip-wrap" id="deck">
-          <div class="flip">
-            <!-- FRONT -->
-            <section class="face front">
-              <article class="card">
-                <div class="card-top"><img id="imgFront" alt="Card image"></div>
-                <div class="card-body">
-                  <div id="titleFront" class="card-title">—</div>
-                  <p class="card-subttl">What’s happening:</p>
-                  <p id="descFront" class="card-desc">—</p>
-                </div>
-                <button id="btnFlip1" class="flip-btn" aria-label="Flip card">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="23 4 23 10 17 10"></polyline>
-                    <polyline points="1 20 1 14 7 14"></polyline>
-                    <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
-                    <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
-                  </svg>
-                  Flip
-                </button>
-              </article>
-            </section>
+          <!-- FRONT -->
+          <section class="face front">
+            <article class="card">
+              <div class="card-top"><img id="imgFront" alt="Card image"></div>
+              <div class="card-body">
+                <div id="titleFront" class="card-title">—</div>
+                <p class="card-subttl">What’s happening:</p>
+                <p id="descFront" class="card-desc">—</p>
+              </div>
+              <button id="btnFlip1" class="flip-btn" aria-label="Flip card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <polyline points="1 20 1 14 7 14"></polyline>
+                  <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
+                  <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
+                </svg>
+                Flip
+              </button>
+            </article>
+          </section>
 
-            <!-- BACK -->
-            <section class="face back">
-              <article class="card">
-                <div class="card-top"><img id="imgBack" alt="Card image"></div>
-                <div class="card-body">
-                  <div id="titleBack" class="card-title">—</div>
-                  <p class="card-subttl">Your move:</p>
-                  <p id="descBack" class="card-desc">—</p>
-                </div>
-                <button id="btnFlip2" class="flip-btn" aria-label="Flip card back">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="23 4 23 10 17 10"></polyline>
-                    <polyline points="1 20 1 14 7 14"></polyline>
-                    <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
-                    <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
-                  </svg>
-                  Flip
-                </button>
-              </article>
-            </section>
-          </div>
+          <!-- BACK -->
+          <section class="face back">
+            <article class="card">
+              <div class="card-top"><img id="imgBack" alt="Card image"></div>
+              <div class="card-body">
+                <div id="titleBack" class="card-title">—</div>
+                <p class="card-subttl">Your move:</p>
+                <p id="descBack" class="card-desc">—</p>
+              </div>
+              <button id="btnFlip2" class="flip-btn" aria-label="Flip card back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <polyline points="1 20 1 14 7 14"></polyline>
+                  <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
+                  <path d="M20.49 15A9 9 0 016.36 18.36L1 14"></path>
+                </svg>
+                Flip
+              </button>
+            </article>
+          </section>
         </div>
 
         <!-- навигация под карточкой -->
@@ -207,7 +189,6 @@
       const curIdx = idToIdx[LESSON_ID];
       const savedIdx = idToIdx[localStorage.getItem('pickle_progress') || 'l1'];
       const nextId = order[Math.min(curIdx + 1, order.length - 1)];
-
       if (curIdx >= savedIdx) {
         localStorage.setItem('pickle_progress', nextId);
         try{ tg?.HapticFeedback?.notificationOccurred('success'); }catch(_){}
@@ -255,10 +236,10 @@
   const deck = document.getElementById('deck');
   const frontImg = deck.querySelector('#imgFront');
   const backImg  = deck.querySelector('#imgBack');
-  const tF = deck.querySelector('#titleFront');
-  const tB = deck.querySelector('#titleBack');
-  const dF = deck.querySelector('#descFront');
-  const dB = deck.querySelector('#descBack');
+  const tF = document.getElementById('titleFront');
+  const tB = document.getElementById('titleBack');
+  const dF = document.getElementById('descFront');
+  const dB = document.getElementById('descBack');
   const prev = document.getElementById('prev');
   const next = document.getElementById('next');
   const indexEl = document.getElementById('index');
@@ -267,11 +248,12 @@
 
   function render(){
     const c = cards[idx];
-    frontImg.src = bestSrc(c.img);  backImg.src  = bestSrc(c.img);
-    tF.textContent = c.title;       tB.textContent = c.title;
-    dF.textContent = c.front;       dB.textContent = c.back;
+    const src = bestSrc(c.img);
+    frontImg.src = src; backImg.src = src;
+    tF.textContent = c.title; tB.textContent = c.title;
+    dF.textContent = c.front; dB.textContent = c.back;
 
-    deck.classList.remove('flipped');
+    document.querySelector('.flip-wrap').classList.remove('flipped');
     prev.disabled = idx===0; next.disabled = idx===cards.length-1;
     indexEl.textContent = `Card ${idx+1}/${cards.length}`;
   }
@@ -279,9 +261,16 @@
 
   prev.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); }});
   next.addEventListener('click', ()=>{ if(idx<cards.length-1){ idx++; render(); }});
-  function flip(){ deck.classList.toggle('flipped'); }
-  btnFlip1.addEventListener('click', flip); btnFlip2.addEventListener('click', flip);
-  deck.addEventListener('click', (e)=>{ if(e.target.closest('.flip-btn')) return; flip(); }, {passive:true});
+
+  function flip(){ document.querySelector('.flip-wrap').classList.toggle('flipped'); }
+  btnFlip1.addEventListener('click', flip);
+  btnFlip2.addEventListener('click', flip);
+
+  // нажатием по карточке тоже флип (кроме самой кнопки)
+  document.getElementById('deck').addEventListener('click', (e)=>{
+    if(e.target.closest('.flip-btn')) return;
+    flip();
+  }, {passive:true});
   </script>
 </body>
 </html>
