@@ -2,89 +2,115 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Lesson 4 — Crypto Secrets with Pickle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <title>Lesson 4 — Buy, hold, or run?</title>
   <style>
     :root{
-      --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2; --accent:#B1FF8C;
-      --line:#242936; --outline:rgba(177,255,140,.35);
-      --btn-h:52px; --radius:22px;
+      --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
+      --brand:#B1FF8C; --line:#242936; --outline:rgba(177,255,140,.35);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    a{color:inherit; text-decoration:none}
 
-    .wrap{max-width:980px;margin:0 auto;padding:24px 16px 120px}
-    header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-    header img.logo{width:28px;height:28px}
-    header .brand{font-weight:700}
-    header .spacer{flex:1}
-    .lesson-title{margin:8px 0 4px 0;text-align:center;font-size:18px;color:var(--muted)}
-    .lesson-h1{margin:0 0 8px 0;text-align:center;font-size:28px;font-weight:700}
-    .lesson-sub{max-width:720px;margin:0 auto 24px auto;text-align:center;color:var(--muted);font-size:14px}
+    /* Header (как в lesson1/2) */
+    .bar{
+      position:sticky; top:0; z-index:10;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 16px;
+      background:linear-gradient(180deg,rgba(15,17,21,.95),rgba(15,17,21,.7) 60%,rgba(15,17,21,0));
+      backdrop-filter:blur(8px);
+    }
+    .back{ color:var(--text); text-decoration:none; font-size:24px; line-height:1 }
+    .logo{ height:44px; width:auto; object-fit:contain; display:block }
+    @media (max-width:480px){ .logo{ height:36px } }
 
-    /* Card area */
-    .stage{display:flex;justify-content:center}
-    .frame{width:680px;max-width:100%}
-    .flip-wrap{perspective:1200px;position:relative;height:500px}   /* ниже */
-    .flip{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
-    .flipped .flip{transform:rotateY(180deg)}
-    .face{backface-visibility:hidden;position:absolute;inset:0;display:flex}
-    .back{transform:rotateY(180deg)}
+    .wrap{ max-width:780px; margin:0 auto; padding: 10px 16px 40px }
 
-    .card{background:var(--card);border-radius:28px;display:flex;flex-direction:column;
-      border:2px solid var(--outline);box-shadow:0 8px 28px rgba(0,0,0,.35);padding:18px 18px 64px} /* меньше */
-    .card-top{border-radius:20px;border:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;height:200px;background:#f0d99a08} /* ниже */
-    .card-top img{max-width:100%;max-height:100%;display:block}
-    .card-body{padding:16px;text-align:center}
-    .card-title{font-size:24px;font-weight:800;margin:8px 0 6px}
-    .card-subttl{font-weight:700;color:var(--muted);margin:0 0 6px 0}
-    .card-desc{font-size:14px;color:var(--muted);margin:0}
+    /* Eyebrow + Title — точно как в lesson1 */
+    .eyebrow{ margin-top:8px; text-align:center; color:var(--muted); font-weight:600 }
+    .title{
+      margin:6px auto 18px; text-align:center; max-width:680px;
+      font-family:Georgia,serif; font-style:italic; font-size:26px; line-height:1.25; font-weight:600;
+    }
 
-    /* Flip button inside card (raised + bigger icon) */
-    .flip-btn{position:absolute;left:50%;transform:translateX(-50%);
-      bottom:36px; /* поднял выше */
-      height:42px;padding:0 18px;border-radius:999px;border:none;font-weight:800;
-      background:#fff;color:#0a0a0a;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
-    .flip-btn svg{width:22px;height:22px;display:block} /* крупнее значок */
-    .flip-btn:active{transform:translateX(-50%) scale(.98)}
+    /* Card stage */
+    .stage{ display:flex; justify-content:center }
+    .frame{ width:680px; max-width:100% }
 
-    /* Gallery nav under the card (centered) */
-    .gallery-nav{display:flex;justify-content:center;align-items:center;gap:14px;margin:12px auto 0}
-    .arrow{width:44px;height:44px;border-radius:999px;border:1px solid var(--line);background:transparent;
-      color:var(--text);cursor:pointer;font-size:20px;line-height:44px}
-    .arrow:disabled{opacity:.35;cursor:not-allowed}
-    .index{color:var(--muted);font-size:13px;text-align:center}
+    .flip-wrap{ perspective:1200px; position:relative; height:500px }
+    .flip{ position:absolute; inset:0; transform-style:preserve-3d; transition:transform .6s cubic-bezier(.2,.7,.2,1) }
+    .flipped .flip{ transform:rotateY(180deg) }
+    .face{ backface-visibility:hidden; position:absolute; inset:0; display:flex }
+    .back{ transform:rotateY(180deg) }
 
-    /* Bottom CTA centered */
-    .footer{position:fixed;left:0;right:0;bottom:18px;display:flex;justify-content:center;pointer-events:none}
-    .pill{min-height:var(--btn-h);border-radius:999px;background:var(--accent);color:#0a0a0a;
-      font-weight:800;border:none;padding:0 20px;cursor:pointer;pointer-events:auto}
+    .card{
+      background:var(--card); border-radius:24px; display:flex; flex-direction:column;
+      border:2px solid var(--outline); box-shadow:0 12px 28px rgba(0,0,0,.4);
+      padding:16px 16px 64px;
+    }
+    .card-top{
+      border-radius:18px; overflow:hidden; height:200px;
+      display:flex; align-items:center; justify-content:center;
+      /* без обводки; картинка заполняет и слегка кропается */
+    }
+    .card-top img{ width:100%; height:100%; object-fit:cover; display:block }
 
-    img,button{user-select:none}
+    .card-body{ padding:14px 10px; text-align:center }
+    .card-title{ font-size:24px; font-weight:800; margin:6px 0 8px }
+    .card-subttl{ font-weight:700; color:var(--muted); margin:0 0 6px }
+    .card-desc{ font-size:14px; color:var(--muted); margin:0 }
+
+    /* Flip inside card */
+    .flip-btn{
+      position:absolute; left:50%; transform:translateX(-50%); bottom:36px;
+      height:42px; padding:0 18px; border-radius:999px; border:0; cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px; font-weight:800;
+      background:#fff; color:#0a0a0a;
+    }
+    .flip-btn svg{ width:22px; height:22px; display:block }
+    .flip-btn:active{ transform:translateX(-50%) scale(.98) }
+
+    /* Gallery nav под карточкой, по центру */
+    .gallery-nav{ display:flex; justify-content:center; align-items:center; gap:14px; margin:12px auto 0 }
+    .arrow{
+      width:44px; height:44px; border-radius:999px; border:1px solid var(--line);
+      background:transparent; color:var(--text); cursor:pointer; font-size:20px; line-height:44px
+    }
+    .arrow:disabled{ opacity:.35; cursor:not-allowed }
+    .index{ color:var(--muted); font-size:13px; text-align:center }
+
+    /* CTA (как в lesson1) */
+    .cta{ display:flex; justify-content:center; margin-top:18px }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:16px 28px; border:0; border-radius:999px;
+      background:var(--brand); color:#07110c; font-weight:700;
+      box-shadow:0 6px 14px rgba(177,255,140,.25);
+    }
+
     @media (max-width:420px){
-      .flip-wrap{height:460px}
-      .card-top{height:180px}
+      .flip-wrap{ height:460px }
+      .card-top{ height:180px }
     }
   </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <img class="logo" src="assets/logo-changelly.png" alt="Changelly" />
-      <div class="brand">Changelly</div>
-      <div class="spacer"></div>
-      <div id="welcome" style="color:var(--muted);font-size:14px"></div>
-    </header>
+  <header class="bar">
+    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">←</a>
+    <img class="logo" src="assets/logo-changelly.png" alt="Changelly">
+  </header>
 
-    <div class="lesson-title">Lesson 4</div>
-    <h1 class="lesson-h1">Buy, hold, or run?<br/>Reading the market without the jargon</h1>
-    <p class="lesson-sub">
-      Flip through simple mood cards. Each shows what's happening on the market — and what a beginner-friendly action could be.
-    </p>
+  <main class="wrap">
+    <div class="eyebrow">Lesson 4</div>
+    <h1 class="title">Buy, hold, or run?<br/>Reading the market without the jargon</h1>
 
-    <!-- Card -->
     <div class="stage">
       <div class="frame">
         <div class="flip-wrap" id="deck">
@@ -93,7 +119,7 @@
             <section class="face front">
               <article class="card">
                 <div class="card-top">
-                  <img id="imgFront" src="" alt="Card image"/>
+                  <img id="imgFront" alt="Card image">
                 </div>
                 <div class="card-body">
                   <div id="titleFront" class="card-title">—</div>
@@ -111,11 +137,12 @@
                 </button>
               </article>
             </section>
+
             <!-- BACK -->
             <section class="face back">
               <article class="card">
                 <div class="card-top">
-                  <img id="imgBack" src="" alt="Card image"/>
+                  <img id="imgBack" alt="Card image">
                 </div>
                 <div class="card-body">
                   <div id="titleBack" class="card-title">—</div>
@@ -136,7 +163,7 @@
           </div>
         </div>
 
-        <!-- Centered gallery controls under the card -->
+        <!-- навигация под карточкой -->
         <div class="gallery-nav">
           <button id="prev" class="arrow" aria-label="Previous">‹</button>
           <div id="index" class="index">Card 1/7</div>
@@ -144,133 +171,127 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Bottom centered CTA -->
-  <div class="footer">
-    <button id="cta" class="pill" onclick="window.pickleNext()">Level up →</button>
-  </div>
+    <!-- CTA снизу по центру — как в lesson1 -->
+    <div class="cta">
+      <a href="lesson5.html" class="btn" onclick="pickleNext(); return false;">Level up →</a>
+    </div>
+  </main>
 
+  <!-- прогресс/гейтинг — тот же шаблон, что в lesson1 -->
   <script>
-    // ===== Gate (email + progress) =====
-    (function gate(){
-      const email = localStorage.getItem('pickle_email');
-      if(!email){ location.href = 'index.html#join'; return; }
-      const name = localStorage.getItem('pickle_name') || '';
-      const short = name ? name.split(' ')[0] : '';
-      document.getElementById('welcome').textContent = short ? `👋 Welcome back, ${short}!` : '';
+  (function(){
+    const LESSON_ID = 'l4';
+    const order = ['l1','l2','l3','l4','l5'];
+    const idToIdx = Object.fromEntries(order.map((id,i)=>[id,i]));
+    const tg = window.Telegram?.WebApp;
 
-      const progress = localStorage.getItem('pickle_progress') || '';
-      const last = (progress.match(/l\d/g) || []).pop() || 'l1';
-      const order = ['l1','l2','l3','l4','l5'];
-      const lastIdx = order.indexOf(last);
-      const myIdx = order.indexOf('l4');
-      if(lastIdx < myIdx-1){
-        location.href = order[lastIdx].replace('l','lesson') + '.html';
-        return;
-      }
-    })();
+    const fileFor = id => `lesson${id.replace('l','')}.html`;
+    const lastId = localStorage.getItem('pickle_progress') || 'l1';
+    const hasEmail = !!localStorage.getItem('pickle_email');
 
-    // ===== Next lesson =====
+    if (!hasEmail) { location.replace('index.html#join'); return; }
+    if (idToIdx[LESSON_ID] > idToIdx[lastId]) {
+      try{ tg?.HapticFeedback?.impactOccurred('light'); }catch(_){}
+      location.replace(fileFor(lastId)); return;
+    }
+
     window.pickleNext = function(){
-      const progress = localStorage.getItem('pickle_progress') || '';
-      if(!/l4/.test(progress)){
-        const upd = progress ? (progress + ' l4') : 'l4';
-        localStorage.setItem('pickle_progress', upd.trim());
+      const curIdx = idToIdx[LESSON_ID];
+      const savedIdx = idToIdx[localStorage.getItem('pickle_progress') || 'l1'];
+      const nextId = order[Math.min(curIdx + 1, order.length - 1)];
+
+      if (curIdx >= savedIdx) {
+        localStorage.setItem('pickle_progress', nextId);
+        try{ tg?.HapticFeedback?.notificationOccurred('success'); }catch(_){}
       }
-      location.href = 'lesson5.html';
+      if (curIdx + 1 < order.length) location.href = fileFor(nextId);
+      else location.href = 'index.html#breakdown';
     };
+    window.pickleBack = function(){ location.href = 'index.html'; };
+  })();
 
-    // ===== Deck data (images identical on both sides) =====
-    const cards = [
-      {img:'assets/l4-card-1.png',
-       titleF:'Price is pumping',
-       descF:"Sudden spike in price, everyone’s tweeting about it",
-       titleB:'Your move',
-       descB:"Check why it’s pumping. Hype without substance often dumps just as fast"},
-      {img:'assets/l4-card-2.png',
-       titleF:'Big green candle',
-       descF:"Massive candle, maybe triggered by news or influencer post",
-       titleB:'Your move',
-       descB:"Already holding? Take partial profits. Not in yet? Add to watchlist. Don’t FOMO"},
-      {img:'assets/l4-card-3.png',
-       titleF:'Dip incoming',
-       descF:"Price is falling fast. People are panicking on X",
-       titleB:'Your move',
-       descB:"Zoom out. Is the whole market down or just this coin? If nothing fundamental changed then it could be a buy opportunity"},
-      {img:'assets/l4-card-4.png',
-       titleF:'Market is boring',
-       descF:"Sideways chop, no major news",
-       titleB:'Your move',
-       descB:"This is when smart money accumulates. Great time to DCA or research new gems"},
-      {img:'assets/l4-card-5.png',
-       titleF:'Everything is red',
-       descF:"BTC, ETH, alts: all dropping",
-       titleB:'Your move',
-       descB:"Usually macro FUD (The Fed, regulations, etc.) Don’t sell in fear. Hold or DCA small if you believe long-term"},
-      {img:'assets/l4-card-6.png',
-       titleF:'Coin got hacked or rugged',
-       descF:"News of smart contract exploit, rug pull, or delisting",
-       titleB:'Your move',
-       descB:"Exit fast. Don’t wait. Fundamentals just changed, this is not just a dip"},
-      {img:'assets/l4-card-7.png',
-       titleF:'Whale watching',
-       descF:"Big wallets are buying/selling",
-       titleB:'Your move',
-       descB:"Use tools like Arkham or Nansen to spot trends. Don’t blindly follow, find the reasons why"},
-    ];
+  // ===== Данные колоды: один и тот же title на обеих сторонах =====
+  const cards = [
+    {img:'assets/l4-card-1.png',
+     title:'Price is pumping',
+     front:"Sudden spike in price, everyone’s tweeting about it",
+     back:"Check why it’s pumping. Hype without substance often dumps just as fast"},
+    {img:'assets/l4-card-2.png',
+     title:'Big green candle',
+     front:"Massive candle, maybe triggered by news or influencer post",
+     back:"Already holding? Take partial profits. Not in yet? Add to watchlist. Don’t FOMO"},
+    {img:'assets/l4-card-3.png',
+     title:'Dip incoming',
+     front:"Price is falling fast. People are panicking on X",
+     back:"Zoom out. Is the whole market down or just this coin? If nothing fundamental changed then it could be a buy opportunity"},
+    {img:'assets/l4-card-4.png',
+     title:'Market is boring',
+     front:"Sideways chop, no major news",
+     back:"This is when smart money accumulates. Great time to DCA or research new gems"},
+    {img:'assets/l4-card-5.png',
+     title:'Everything is red',
+     front:"BTC, ETH, alts: all dropping",
+     back:"Usually macro FUD (The Fed, regulations, etc.) Don’t sell in fear. Hold or DCA small if you believe long-term"},
+    {img:'assets/l4-card-6.png',
+     title:'Coin got hacked or rugged',
+     front:"News of smart contract exploit, rug pull, or delisting",
+     back:"Exit fast. Don’t wait. Fundamentals just changed, this is not just a dip"},
+    {img:'assets/l4-card-7.png',
+     title:'Whale watching',
+     front:"Big wallets are buying/selling",
+     back:"Use tools like Arkham or Nansen to spot trends. Don’t blindly follow, find the reasons why"},
+  ];
 
-    // DPR helper (1x/2x/3x)
-    function bestSrc(path){
-      const dpr = Math.min(3, Math.max(1, Math.round(window.devicePixelRatio || 1)));
-      if(dpr===1) return path;
-      const ext = path.split('.').pop();
-      const base = path.slice(0, -(ext.length+1));
-      return `${base}@${dpr}x.${ext}`;
-    }
+  function bestSrc(path){
+    const dpr = Math.min(3, Math.max(1, Math.round(window.devicePixelRatio || 1)));
+    if(dpr===1) return path;
+    const ext = path.split('.').pop();
+    const base = path.slice(0, -(ext.length+1));
+    return `${base}@${dpr}x.${ext}`;
+  }
 
-    // ===== Render / controls =====
-    let idx = 0;
-    const deck = document.getElementById('deck');
-    const frontImg = deck.querySelector('#imgFront');
-    const backImg  = deck.querySelector('#imgBack');
-    const tF = deck.querySelector('#titleFront');
-    const dF = deck.querySelector('#descFront');
-    const tB = deck.querySelector('#titleBack');
-    const dB = deck.querySelector('#descBack');
-    const prev = document.getElementById('prev');
-    const next = document.getElementById('next');
-    const indexEl = document.getElementById('index');
-    const btnFlip1 = document.getElementById('btnFlip1');
-    const btnFlip2 = document.getElementById('btnFlip2');
+  let idx = 0;
+  const deck = document.getElementById('deck');
+  const flipRoot = deck.querySelector('.flip');
+  const frontImg = deck.querySelector('#imgFront');
+  const backImg  = deck.querySelector('#imgBack');
+  const tF = deck.querySelector('#titleFront');
+  const tB = deck.querySelector('#titleBack');
+  const dF = deck.querySelector('#descFront');
+  const dB = deck.querySelector('#descBack');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const indexEl = document.getElementById('index');
+  const btnFlip1 = document.getElementById('btnFlip1');
+  const btnFlip2 = document.getElementById('btnFlip2');
 
-    function render(){
-      const c = cards[idx];
-      frontImg.src = bestSrc(c.img);
-      backImg.src  = bestSrc(c.img);
-      tF.textContent = c.titleF;
-      dF.textContent = c.descF;
-      tB.textContent = c.titleB;
-      dB.textContent = c.descB;
+  function render(){
+    const c = cards[idx];
+    frontImg.src = bestSrc(c.img);
+    backImg.src  = bestSrc(c.img);
+    tF.textContent = c.title;     // одинаковый тайтл
+    tB.textContent = c.title;     // одинаковый тайтл
+    dF.textContent = c.front;
+    dB.textContent = c.back;
 
-      deck.classList.remove('flipped');
-      prev.disabled = idx===0;
-      next.disabled = idx===cards.length-1;
-      indexEl.textContent = `Card ${idx+1}/${cards.length}`;
-    }
-    render();
+    deck.classList.remove('flipped');
+    prev.disabled = idx===0;
+    next.disabled = idx===cards.length-1;
+    indexEl.textContent = `Card ${idx+1}/${cards.length}`;
+  }
+  render();
 
-    prev.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); }});
-    next.addEventListener('click', ()=>{ if(idx<cards.length-1){ idx++; render(); }});
+  prev.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); }});
+  next.addEventListener('click', ()=>{ if(idx<cards.length-1){ idx++; render(); }});
 
-    function flip(){ deck.classList.toggle('flipped'); }
-    btnFlip1.addEventListener('click', flip);
-    btnFlip2.addEventListener('click', flip);
-
-    deck.addEventListener('click', (e)=>{
-      if(e.target.closest('.flip-btn')) return;
-      flip();
-    }, {passive:true});
+  function flip(){ deck.classList.toggle('flipped'); }
+  btnFlip1.addEventListener('click', flip);
+  btnFlip2.addEventListener('click', flip);
+  deck.addEventListener('click', (e)=>{
+    if(e.target.closest('.flip-btn')) return;
+    flip();
+  }, {passive:true});
   </script>
 </body>
 </html>
