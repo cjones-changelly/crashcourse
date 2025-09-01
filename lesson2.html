@@ -86,7 +86,7 @@
   .pick{
     display:flex;align-items:center;gap:12px;justify-content:flex-start;
     padding:14px 16px;border-radius:14px;background:#0d1219;border:2px solid var(--line);
-    font-size:17px; font-weight:600; cursor:pointer;
+    font-size:17px; font-weight:500; cursor:pointer; /* вернули прежний стиль текста */
     transition:transform .06s ease,border-color .12s ease;
   }
   .pick:hover{transform:translateY(-1px)}
@@ -395,7 +395,6 @@
 
     // завершение → lesson3
     levelUp.addEventListener('click', (e)=>{
-      // прогресс обновляем через pickleNext если доступен
       if (typeof window.pickleNext==='function'){ e.preventDefault(); window.pickleNext(); }
     });
 
