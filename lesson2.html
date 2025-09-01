@@ -53,9 +53,9 @@
   .storeBig{display:flex;align-items:center;justify-content:center;height:var(--btn-h);padding:0 28px;border-radius:12px;background:#0b0e11;color:#fff;text-decoration:none;font-weight:800;font-size:var(--btn-fs);line-height:1;box-shadow:0 8px 18px rgba(0,0,0,.25);margin:6px 0 12px}
 
   .artStack{position:relative;height:250px;margin-top:22px}
-  .artStack .tile{position:absolute;left:16px;top:8px;width:min(78%,300px);/* УБРАЛИ ТЕНЬ */filter:none}
-  .artStack .phones{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(92%,420px);/* УБРАЛИ ТЕНЬ */filter:none}
-  @media (max-width:420px){.artStack{height:230px}.artStack .tile{width:min(82%,280px);left:12px;top:6px}.artStack .phones{width:min(96%,390px)}}
+  /* оставляем стили — используем класс .phones для единой композиции */
+  .artStack .phones{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(92%,420px);filter:none}
+  @media (max-width:420px){.artStack{height:230px}.artStack .phones{width:min(96%,390px)}}
 
   /* QUIZ */
   .quiz-head{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px}
@@ -159,16 +159,13 @@
             <a id="dlLink" href="https://changelly.com" class="storeBig" rel="noopener">Download Changelly</a>
 
             <div class="artStack" aria-hidden="true">
-              <img
-                class="tile"
-                src="assets/l2-eth-tile.png"
-                srcset="assets/l2-eth-tile.png 1x, assets/l2-eth-tile@2x.png 2x, assets/l2-eth-tile@3x.png 3x"
-                sizes="(max-width:420px) 82vw, 300px" alt="">
+              <!-- ЕДИНАЯ КОМПОЗИТНАЯ КАРТИНКА -->
               <img
                 class="phones"
-                src="assets/l2-phones.png"
-                srcset="assets/l2-phones.png 1x, assets/l2-phones@2x.png 2x, assets/l2-phones@3x.png 3x"
-                sizes="(max-width:420px) 96vw, 420px" loading="lazy" decoding="async" alt="">
+                src="assets/l2-composite.png"
+                srcset="assets/l2-composite.png 1x, assets/l2-composite@2x.png 2x, assets/l2-composite@3x.png 3x"
+                sizes="(max-width:420px) 96vw, 420px"
+                alt="Changelly app phones and price alert">
             </div>
           </section>
 
@@ -271,7 +268,6 @@
 </script>
 
 <script>
-  // правильное открытие ссылки в Telegram WebApp
   (function(){
     const tg = window.Telegram?.WebApp;
     const link = document.getElementById('dlLink');
