@@ -8,6 +8,13 @@
     :root{
       --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
       --brand:#B1FF8C; --line:#242936; --outline:rgba(177,255,140,.35);
+
+      /* единые типографские параметры для обеих сторон */
+      --lh-title:1.22;
+      --lh-sub:1.35;
+      --lh-desc:1.50;
+      --pad-top:16px;   /* одинаковый отступ сверху после картинки */
+      --flip-dur:.58s;  /* флип немного медленнее */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -18,7 +25,7 @@
     }
     a{color:inherit; text-decoration:none}
 
-    /* Header как в lesson1, но без sticky */
+    /* Header (как в lesson1, не sticky) */
     .bar{display:flex; align-items:center; justify-content:space-between; padding:12px 16px}
     .back{ color:var(--text); text-decoration:none; font-size:24px; line-height:1; user-select:none }
     .logo{ height:44px; width:auto; object-fit:contain; display:block }
@@ -37,14 +44,14 @@
     .stage{ display:flex; justify-content:center }
     .frame{ width:680px; max-width:100% }
 
-    /* 3D flip без зеркала (вращаем СТОРОНЫ, а не контейнер) */
+    /* 3D flip без зеркала (вращаем стороны) */
     .flip-wrap{ position:relative; height:500px; overflow:hidden; perspective:1000px; -webkit-perspective:1000px }
     .pair{ position:absolute; inset:0 }
     .face{
       position:absolute; inset:0; width:100%; height:100%;
       transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
       backface-visibility:hidden; -webkit-backface-visibility:hidden;
-      transition:transform .45s cubic-bezier(.2,.7,.2,1);
+      transition:transform var(--flip-dur) cubic-bezier(.2,.7,.2,1);
     }
     .front{ transform:rotateY(0deg) }
     .back { transform:rotateY(-180deg) }
@@ -63,10 +70,10 @@
     .card-top img{ width:100%; height:100%; object-fit:cover; display:block }
 
     /* ЕДИНЫЕ стили контента для обеих сторон */
-    .card-body{ padding:16px 10px 0; text-align:center }
-    .card-title{ font-size:24px; font-weight:800; line-height:1.22; margin:8px 0 8px }
-    .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); margin:0 0 6px }
-    .card-desc{ font-size:14px; line-height:1.5; color:var(--muted); margin:0 }
+    .card-body{ padding:var(--pad-top) 10px 0; text-align:center }
+    .card-title{ font-size:24px; font-weight:800; line-height:var(--lh-title); margin:8px 0 8px }
+    .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); line-height:var(--lh-sub); margin:0 0 6px }
+    .card-desc{ font-size:14px; color:var(--muted); line-height:var(--lh-desc); margin:0 }
 
     /* Flip button */
     .flip-btn{
@@ -105,7 +112,8 @@
 </head>
 <body>
   <header class="bar">
-    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack();return false;">←</a>
+    <!-- ровно та стрелка, что в остальных уроках -->
+    <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">←</a>
     <img class="logo" src="assets/logo-changelly.png" alt="Changelly">
   </header>
 
@@ -175,7 +183,7 @@
     </div>
   </main>
 
-  <!-- прогресс/гейтинг — копия из lesson1 -->
+  <!-- прогресс/гейтинг -->
   <script>
   (function(){
     const LESSON_ID = 'l4';
