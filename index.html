@@ -55,9 +55,9 @@
     .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
 
     /* >>> ONLY the CTA start button tweaks <<< */
-    #cta-start{ white-space:nowrap; } /* держим надпись в одну строку */
+    #cta-start{ white-space:nowrap; }
     @media (max-width:960px){
-      #cta-start{ grid-column:1 / -1; width:100%; } /* делаем шире на мобилках */
+      #cta-start{ grid-column:1 / -1; width:100%; }
     }
 
     /* Features */
@@ -120,7 +120,12 @@
   <div class="wrap">
     <!-- Header -->
     <div class="topbar">
-      <div class="brand-logo"><img src="assets/logo-changelly.png" alt="Changelly"></div>
+      <div class="brand-logo">
+        <img
+          src="assets/logo-changelly.png"
+          srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
+          alt="Changelly">
+      </div>
 
       <!-- Обычные кнопки шапки (для тех, кто ещё не оставил e-mail) -->
       <div class="actions" id="actions-default">
@@ -148,7 +153,12 @@
         </div>
         <p class="muted" style="margin-top:8px">Finish the Course – Unlock a $100 Bonus</p>
       </div>
-      <div><img alt="Pickle hero" src="assets/hero-pickle.png" /></div>
+      <div>
+        <img
+          alt="Pickle hero"
+          src="assets/hero-pickle.png"
+          srcset="assets/hero-pickle.png 1x, assets/hero-pickle@2x.png 2x, assets/hero-pickle@3x.png 3x" />
+      </div>
     </section>
 
     <!-- Features -->
@@ -167,7 +177,14 @@
       <div class="card">
         <h3 style="margin:0 0 8px">Meet Your Instructor: Pickle</h3>
         <p class="muted">He’s green. He’s sour. He’s into safety. He’s guided tons of beginners through their first crypto steps without pain or jargon.</p>
-        <div style="margin-top:10px"><img src="assets/instructor-pickle.png" alt="Instructor Pickle" style="width:100%; border-radius:12px; border:1px solid var(--line)" loading="lazy" decoding="async"></div>
+        <div style="margin-top:10px">
+          <img
+            src="assets/instructor-pickle.png"
+            srcset="assets/instructor-pickle.png 1x, assets/instructor-pickle@2x.png 2x, assets/instructor-pickle@3x.png 3x"
+            alt="Instructor Pickle"
+            style="width:100%; border-radius:12px; border:1px solid var(--line)"
+            loading="lazy" decoding="async">
+        </div>
       </div>
       <div class="cta" id="join">
         <h3 style="margin:0 0 8px">Join Pickle’s crash course</h3>
@@ -345,8 +362,17 @@
       const card = document.createElement('a');
       card.className = 'lesson';
       card.href = l.url; card.dataset.id = l.id;
+
+      const img1x = l.img;
+      const img2x = l.img.replace('.png','@2x.png');
+      const img3x = l.img.replace('.png','@3x.png');
+
       card.innerHTML = `
-        <div class="thumb"><img src="${l.img}" alt="${l.title}" loading="lazy" decoding="async"></div>
+        <div class="thumb">
+          <img src="${img1x}"
+               srcset="${img1x} 1x, ${img2x} 2x, ${img3x} 3x"
+               alt="${l.title}" loading="lazy" decoding="async">
+        </div>
         <h5>${l.title}</h5>
         <div class="meta"><span>${l.mins} min</span><span class="arrow">→</span></div>`;
       $list.appendChild(card);
@@ -367,9 +393,7 @@
 
       if (targetIdx > maxIdx){
         e.preventDefault();
-        nudgeContinue(); // вернём к кнопке Continue и слегка "потрясём" её
-      } else {
-        // Разрешаем открывать достигнутые уроки. НЕ обновляем прогресс тут.
+        nudgeContinue();
       }
     });
   </script>
