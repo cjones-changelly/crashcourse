@@ -90,6 +90,14 @@
   .chip.dragging{opacity:1; transform:scale(1.04)}
   .ph{display:inline-block; border-radius:12px; background:transparent}
 
+  /* ✨ Подсветка выбранного чипа (новое) */
+  .chip.pressed{
+    border-color: rgba(177,255,140,.85);
+    background: rgba(177,255,140,.14);
+    box-shadow: 0 0 0 2px rgba(177,255,140,.28), 0 6px 14px rgba(0,0,0,.35);
+    transform: scale(1.03);
+  }
+
   .ghost{
     position:fixed; left:0; top:0; z-index:10000; pointer-events:none;
     border:2px solid var(--brand);
@@ -143,11 +151,11 @@
 <body>
   <header class="bar">
     <a href="index.html" class="back" aria-label="Back" onclick="pickleBack();return false;">←</a>
-<img
-  class="logo"
-  src="assets/logo-changelly.png"
-  srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
-  alt="Changelly">
+    <img
+      class="logo"
+      src="assets/logo-changelly.png"
+      srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
+      alt="Changelly">
   </header>
 
   <div class="viewport" id="vp">
@@ -189,7 +197,6 @@
       <!-- SLIDE 3: QUIZ -->
       <section class="slide">
         <div class="wrap">
-          <!-- УБРАНО: <div class="eyebrow">Lesson 3</div> -->
           <h3 class="subTitle">Safe or risky?</h3>
           <p class="lead">Can you tell the difference between smart security moves and beginner mistakes?
             <strong>Drag each item</strong> into one of these two boxes:</p>
@@ -236,7 +243,7 @@
   </div>
 
 <script>
-  // --------- Слайдер (без свайпов; стрелочки внизу) ----------
+  // --------- Слайдер ----------
   (function(){
     const track = document.getElementById('track');
     const slides = Array.from(track.children);
@@ -347,7 +354,7 @@
     ph.style.height = r.height+'px';
     chip.parentElement.insertBefore(ph, chip);
 
-    chip.style.opacity = '.2';
+    chip.style.opacity = '.2'; // оставляем pressed-класс для понятности
 
     ghost = chip.cloneNode(true);
     ghost.removeAttribute('id');
@@ -379,6 +386,10 @@
     curZone = z || null;
   }
 
+  function clearPressed(){
+    document.querySelectorAll('.chip.pressed').forEach(el=>el.classList.remove('pressed'));
+  }
+
   function finishDrag(){
     if (!chip) return;
 
@@ -388,6 +399,7 @@
     else if (ph && ph.parentNode){ ph.parentNode.insertBefore(chip, ph); }
 
     chip.style.opacity = '';
+    clearPressed();               /* снять подсветку */
     curZone?.classList.remove('dropping');
     curZone=null;
 
@@ -436,6 +448,7 @@
       const c = e.target.closest('.chip'); if (!c) return;
       pointerId = e.pointerId;
       c.setPointerCapture?.(pointerId);
+      c.classList.add('pressed');         /* ✨ подсветка */
       chip = c; dragArmed=true; downX=e.clientX; downY=e.clientY;
       e.preventDefault();
     });
@@ -453,6 +466,7 @@
       const order=[bank,safe,risky];
       const parent = chip.parentElement; const idx = order.indexOf(parent);
       const next = order[(idx+1)%order.length]; next.appendChild(chip);
+      clearPressed();                       /* снять после «тап-переноса» */
       chip=null; dragArmed=false; tidy();
     });
     document.addEventListener('pointercancel', ()=>{ if (chip) finishDrag(); });
@@ -460,7 +474,8 @@
     // Touch fallback
     document.addEventListener('touchstart', (e)=>{
       const c = e.target.closest('.chip'); if (!c) return;
-      const t = e.touches[0]; chip=c; dragArmed=true; downX=t.clientX; downY=t.clientY;
+      const t = e.touches[0]; c.classList.add('pressed'); /* ✨ */
+      chip=c; dragArmed=true; downX=t.clientX; downY=t.clientY;
     }, {passive:true});
     document.addEventListener('touchmove', (e)=>{
       if (!chip) return;
@@ -474,8 +489,9 @@
       const order=[bank,safe,risky];
       const parent = chip.parentElement; const idx = order.indexOf(parent);
       const next = order[(idx+1)%order.length]; next.appendChild(chip);
+      clearPressed();
       chip=null; dragArmed=false; tidy();
-    });
+    }, {passive:true});
     document.addEventListener('touchcancel', ()=>{ if (chip) finishDrag(); });
   }
 
