@@ -30,7 +30,7 @@
     .btn{display:inline-flex; align-items:center; justify-content:center; height:var(--btn-h); padding:var(--btn-pad);
       border:1px solid var(--line); border-radius:999px; font-weight:700; font-size:var(--btn-fs); line-height:1;
       cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
-      background:#1a2230; color:var(--text); white-space:nowrap; } /* ← не переносим текст */
+      background:#1a2230; color:var(--text)}
     .btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(0)}
     .btn.solid{background:var(--brand); color:#07110c; border-color:transparent; box-shadow:0 6px 14px rgba(177,255,140,.25)}
     .btn.ghost{background:transparent}
@@ -53,6 +53,12 @@
     .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
       background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
     .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
+
+    /* >>> ONLY the CTA start button tweaks <<< */
+    #cta-start{ white-space:nowrap; } /* держим надпись в одну строку */
+    @media (max-width:960px){
+      #cta-start{ grid-column:1 / -1; width:100%; } /* делаем шире на мобилках */
+    }
 
     /* Features */
     .features{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 8px}
@@ -102,10 +108,11 @@
     }
     .shake { animation: shake .5s ease; }
 
-    /* --- Mobile fix: make CTA start button single-line and wider --- */
     @media (max-width:960px){
-      /* растянем только первую кнопку на всю ширину блока CTA */
-      #cta-start{ grid-column:1 / -1; width:100%; }
+      .hero{grid-template-columns:1fr}
+      .lessons{grid-template-columns:repeat(2,1fr)}
+      .features{grid-template-columns:1fr}
+      .two{grid-template-columns:1fr}
     }
   </style>
 </head>
