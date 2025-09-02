@@ -8,12 +8,8 @@
     :root{
       --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
       --brand:#B1FF8C; --line:#242936; --outline:rgba(177,255,140,.35);
-
-      --lh-title:1.22;
-      --lh-sub:1.35;
-      --lh-desc:1.50;
-      --pad-top:16px;
-      --flip-dur:.58s;
+      --lh-title:1.22; --lh-sub:1.35; --lh-desc:1.50;
+      --pad-top:16px; --flip-dur:.58s;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -26,27 +22,29 @@
 
     /* Header */
     .bar{display:flex; align-items:center; justify-content:space-between; padding:12px 16px}
-    .back{
+    .bar a.back{
       color:var(--text); text-decoration:none; font-size:24px; line-height:1; user-select:none;
-      /* фиксация внешнего вида стрелки */
       direction:ltr; transform:none !important; -webkit-transform:none !important;
       position:relative; display:inline-block; width:28px; height:28px;
     }
-    .back::before{ content:"\2190"; position:absolute; inset:0; display:grid; place-items:center; }
+    .bar a.back::before{ content:"\2190"; position:absolute; inset:0; display:grid; place-items:center; }
     .logo{ height:44px; width:auto; object-fit:contain; display:block }
     @media (max-width:480px){ .logo{ height:36px } }
 
     .wrap{ max-width:780px; margin:0 auto; padding:10px 16px 40px }
 
+    /* Eyebrow + Title */
     .eyebrow{ margin-top:8px; text-align:center; color:var(--muted); font-weight:600 }
     .title{
       margin:6px auto 18px; text-align:center; max-width:680px;
       font-family:Georgia,serif; font-style:italic; font-size:26px; line-height:1.25; font-weight:600;
     }
 
+    /* Card stage */
     .stage{ display:flex; justify-content:center }
     .frame{ width:680px; max-width:100% }
 
+    /* 3D flip */
     .flip-wrap{ position:relative; height:500px; overflow:hidden; perspective:1000px; -webkit-perspective:1000px }
     .pair{ position:absolute; inset:0 }
     .face{
@@ -56,9 +54,9 @@
       transition:transform var(--flip-dur) cubic-bezier(.2,.7,.2,1);
     }
     .front{ transform:rotateY(0deg) }
-    .back { transform:rotateY(-180deg) }
+    .face.back { transform:rotateY(-180deg) }
     .flipped .front{ transform:rotateY(180deg) }
-    .flipped .back { transform:rotateY(0deg) }
+    .flipped .face.back { transform:rotateY(0deg) }
 
     .card{
       background:var(--card); border-radius:24px; display:flex; flex-direction:column;
@@ -71,11 +69,13 @@
     }
     .card-top img{ width:100%; height:100%; object-fit:cover; display:block }
 
+    /* Контент */
     .card-body{ padding:var(--pad-top) 10px 0; text-align:center }
     .card-title{ font-size:24px; font-weight:800; line-height:var(--lh-title); margin:8px 0 8px }
     .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); line-height:var(--lh-sub); margin:0 0 6px }
     .card-desc{ font-size:14px; color:var(--muted); line-height:var(--lh-desc); margin:0 }
 
+    /* Flip button */
     .flip-btn{
       position:absolute; left:50%; transform:translateX(-50%); bottom:36px;
       height:42px; padding:0 18px; border-radius:999px; border:0; cursor:pointer;
@@ -85,6 +85,7 @@
     .flip-btn svg{ width:22px; height:22px; display:block; color:#0a0a0a }
     .flip-btn:active{ transform:translateX(-50%) scale(.98) }
 
+    /* Gallery nav */
     .gallery-nav{ display:flex; justify-content:center; align-items:center; gap:14px; margin:12px auto 0 }
     .arrow{
       width:44px; height:44px; border-radius:999px; border:1px solid var(--line);
@@ -93,6 +94,7 @@
     .arrow:disabled{ opacity:.35; cursor:not-allowed }
     .index{ color:var(--muted); font-size:13px; text-align:center }
 
+    /* CTA */
     .cta{ display:flex; justify-content:center; margin-top:18px }
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -169,6 +171,7 @@
           </div>
         </div>
 
+        <!-- навигация под карточкой -->
         <div class="gallery-nav">
           <button id="prev" class="arrow" aria-label="Previous">‹</button>
           <div id="index" class="index">Card 1/7</div>
@@ -177,11 +180,13 @@
       </div>
     </div>
 
+    <!-- CTA -->
     <div class="cta">
       <a href="lesson5.html" class="btn" onclick="pickleNext(); return false;">Level up</a>
     </div>
   </main>
 
+  <!-- прогресс/гейтинг -->
   <script>
   (function(){
     const LESSON_ID = 'l4';
@@ -213,6 +218,7 @@
     window.pickleBack = function(){ location.href = 'index.html'; };
   })();
 
+  // ===== данные карточек =====
   const cards = [
     {img:'assets/l4-card-1.png', title:'Price is pumping',
      front:"Sudden spike in price, everyone’s tweeting about it",
