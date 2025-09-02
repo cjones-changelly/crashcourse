@@ -46,6 +46,12 @@
       border-radius:16px; display:flex; align-items:center; justify-content:center;
       margin:16px 0 28px; box-shadow:0 12px 28px rgba(0,0,0,.4);
       border:1px solid var(--line);
+      overflow:hidden;
+    }
+    /* видео заполняет «окошко» */
+    .player video{
+      width:100%; height:100%;
+      display:block; object-fit:cover;
     }
     .play{
       background:none; border:none; cursor:pointer;
@@ -66,11 +72,11 @@
 <body>
   <header class="bar">
     <a href="index.html" class="back" aria-label="Back" onclick="pickleBack(); return false;">←</a>
-<img
-  class="logo"
-  src="assets/logo-changelly.png"
-  srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
-  alt="Changelly">
+    <img
+      class="logo"
+      src="assets/logo-changelly.png"
+      srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
+      alt="Changelly">
   </header>
 
   <main class="wrap">
@@ -78,13 +84,58 @@
     <h1 class="title">Why you're still early<br>(and what to do about it)</h1>
 
     <div class="player" role="region" aria-label="Lesson video">
-      <button class="play" aria-label="Play">▶</button>
+      <!-- ВИДЕО -->
+      <video id="lesson1Video"
+             controls
+             playsinline
+             webkit-playsinline
+             preload="metadata"
+             poster="assets/lesson1-poster.png"></video>
     </div>
 
     <div class="cta">
       <a href="lesson2.html" class="btn" onclick="pickleNext(); return false;">Done!</a>
     </div>
   </main>
+
+  <!-- hls.js для Android/Chrome; dash.js как резерв для DASH -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+  <script>
+    (function(){
+      const v = document.getElementById('lesson1Video');
+
+      // Постер @2x/@3x по DPR
+      (function setPosterByDPR(){
+        const dpr = Math.min(3, Math.max(1, Math.round(window.devicePixelRatio || 1)));
+        const base = 'assets/lesson1-poster';
+        const suffix = dpr > 1 ? '@' + dpr + 'x' : '';
+        v.setAttribute('poster', base + suffix + '.png');
+      })();
+
+      const SRC_HLS  = 'https://customer-xmva784s4fdt6l1s.cloudflarestream.com/680cdaa0a479c0162c213aa8c3bc4149/manifest/video.m3u8';
+      const SRC_DASH = 'https://customer-xmva784s4fdt6l1s.cloudflarestream.com/680cdaa0a479c0162c213aa8c3bc4149/manifest/video.mpd';
+
+      // iOS/WKWebView — нативный HLS
+      if (v.canPlayType('application/vnd.apple.mpegurl')) {
+        v.src = SRC_HLS;
+      }
+      // Android/Chrome — через hls.js
+      else if (window.Hls && Hls.isSupported()) {
+        const hls = new Hls({lowLatencyMode:true});
+        hls.loadSource(SRC_HLS);
+        hls.attachMedia(v);
+      }
+      // Резерв — DASH через dash.js
+      else if (window.dashjs) {
+        const player = dashjs.MediaPlayer().create();
+        player.initialize(v, SRC_DASH, false);
+      } else {
+        // Последний резерв — всё равно попробуем HLS
+        v.src = SRC_HLS;
+      }
+    })();
+  </script>
 
   <!-- прогресс/гейтинг -->
   <script>
