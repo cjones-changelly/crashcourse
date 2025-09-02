@@ -30,7 +30,7 @@
     .btn{display:inline-flex; align-items:center; justify-content:center; height:var(--btn-h); padding:var(--btn-pad);
       border:1px solid var(--line); border-radius:999px; font-weight:700; font-size:var(--btn-fs); line-height:1;
       cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
-      background:#1a2230; color:var(--text)}
+      background:#1a2230; color:var(--text); white-space:nowrap; } /* ← не переносим текст */
     .btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(0)}
     .btn.solid{background:var(--brand); color:#07110c; border-color:transparent; box-shadow:0 6px 14px rgba(177,255,140,.25)}
     .btn.ghost{background:transparent}
@@ -102,11 +102,10 @@
     }
     .shake { animation: shake .5s ease; }
 
+    /* --- Mobile fix: make CTA start button single-line and wider --- */
     @media (max-width:960px){
-      .hero{grid-template-columns:1fr}
-      .lessons{grid-template-columns:repeat(2,1fr)}
-      .features{grid-template-columns:1fr}
-      .two{grid-template-columns:1fr}
+      /* растянем только первую кнопку на всю ширину блока CTA */
+      #cta-start{ grid-column:1 / -1; width:100%; }
     }
   </style>
 </head>
