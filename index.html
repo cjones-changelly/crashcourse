@@ -49,14 +49,12 @@
     .h-title em{font-style:normal; color:var(--brand); text-shadow:0 0 18px rgba(177,255,140,.35)}
     .h-sub{color:var(--muted); margin-bottom:14px}
     .hero img{width:100%; border-radius:18px; border:none; display:block}
-    .pill{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:700;
-      background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
     .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
 
     /* CTA start button: одна строка и шире на мобилках */
     #cta-start{ white-space:nowrap; }
     @media (max-width:960px){
-      #cta-start{ grid-column:1 / -1; width:100%; }
+      #cta-start, #cta-continue{ grid-column:1 / -1; width:100%; }
     }
 
     /* Features */
@@ -186,11 +184,13 @@
           alt="Changelly">
       </div>
 
+      <!-- Обычные кнопки шапки (для тех, кто ещё не оставил e-mail) -->
       <div class="actions" id="actions-default">
         <a href="#join" class="btn solid" id="btn-start-link">Get started</a>
         <button id="btn-breakdown" class="btn ghost">Course breakdown</button>
       </div>
 
+      <!-- Приветственный бар (только если e-mail уже сохранён) -->
       <div class="welcome hidden" id="welcome-bar">
         <div class="welcome-text" id="welcome-text">👋 Hey, friend!</div>
         <button class="btn solid" id="welcome-continue">Continue</button>
