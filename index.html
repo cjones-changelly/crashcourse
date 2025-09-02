@@ -136,22 +136,22 @@
     @media (max-width:420px){ .cta{ padding-bottom:200px; } }
     /* === конец мини-оверрайда === */
 
-    /* Диагональное красное зачёркивание цены только в кнопке hero */
+/* Диагональное красное зачёркивание без градиента */
 #cta-start s{
   position: relative;
-  text-decoration: none;   /* выключаем стандартный strike */
+  text-decoration: none;
   color: inherit;
   display: inline-block;
 }
 #cta-start s::after{
   content:"";
   position: absolute;
-  left: -10%;              /* немного выходить за края текста */
+  left: -10%;
   right: -10%;
   top: 50%;
-  height: 3px;             /* толщина линии — меняй по вкусу */
-  background: linear-gradient(90deg,#ff3b57,#ff8a9a);
-  transform: translateY(-50%) rotate(16deg); /* диагональ */
+  height: 3px;                 /* толщина линии */
+  background: #ff3b57;         /* ярко-красный */
+  transform: translateY(-50%) rotate(16deg);
   border-radius: 3px;
   pointer-events: none;
 }
