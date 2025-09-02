@@ -130,13 +130,13 @@
     }
 
     /* === Mini-override: приклеить огурца к низу и центрировать === */
-    .cta{ position:relative; padding-bottom:180px; }
+    .cta{ position:relative; padding-bottom:280px; }
     .cta-ill{
       position:absolute; left:50%; bottom:0; transform:translateX(-50%);
       margin:0; width:min(420px,72%); justify-content:center; pointer-events:none;
     }
     .cta-ill img{ width:100%; max-width:none; height:auto; display:block }
-    @media (max-width:420px){ .cta{ padding-bottom:160px; } }
+    @media (max-width:420px){ .cta{ padding-bottom:220px; } }
     /* === конец мини-оверрайда === */
 
     /* Диагональное красное зачёркивание в hero-кнопке */
@@ -154,7 +154,7 @@
       top: 50%;
       height: 3px;
       background: #ff3b57;
-      transform: translateY(-50%) rotate(-16deg);
+      transform: translateY(-50%) rotate(16deg);
       border-radius: 3px;
       pointer-events: none;
     }
