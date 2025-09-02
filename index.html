@@ -293,11 +293,7 @@
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.expand(); tg.ready();
-      const tp = tg.themeParams || {};
-      const root = document.documentElement;
-      const set = (k,v)=>{ if (v) root.style.setProperty(k,v); };
-      set('--bg', tp.bg_color); set('--text', tp.text_color);
-      set('--card', tp.secondary_bg_color); set('--line', tp.section_separator_color);
+      // Принудительно тёмная тема: НЕ переопределяем CSS-переменные из themeParams
     }
 
     // ===== helpers =====
