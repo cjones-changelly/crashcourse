@@ -8,8 +8,14 @@
 <style>
   :root{
     --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
-    --brand:#B1FF8C; --ink:#0b0e11; --line:#242936; --danger:#ff5f6d;
+    --brand:#B1FF8C; --ink:#0b0e11; --line:#242936;
     --btn-h:52px; --btn-fs:16px;
+
+    /* типографика карточек — как в lesson4 */
+    --lh-title:1.22;
+    --lh-sub:1.35;
+    --lh-desc:1.50;
+    --pad-top:16px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -33,26 +39,39 @@
 
   .lead{color:var(--muted);text-align:center;max-width:700px;margin:0 auto 10px}
 
-  /* list of cards (slide 2) */
   .h3{font-family:Georgia,serif;font-style:italic;font-size:22px;text-align:center;margin:8px 0}
   .mid-note{margin:4px auto 12px;text-align:center;color:var(--muted);max-width:640px}
 
-  .coinList{display:grid;gap:12px}
-  .coinCard{background:#0d1219;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  .coinArt{padding:10px 10px 0}
-  /* рамку убрали, контейнер только для кропа */
-  .coinArt .frame{border:none;background:transparent;border-radius:12px;overflow:hidden;height:148px}
-  .coinArt img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
-
-  .coinBody{padding:10px 12px 12px}
-  .coinBody h4{margin:4px 0 6px;text-align:center}
-  .coinBody p{margin:0;color:var(--muted);font-size:14px}
-  .why{margin:8px 0 0;font-weight:700}
-  .getRow{display:flex;justify-content:center;margin-top:10px}
-  .getBtn{
-    display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:999px;
-    background:var(--card);border:1px solid var(--line);color:var(--text);font-weight:800
+  /* === КАРТОЧКИ КАК В LESSON4 === */
+  .cards{display:grid;gap:12px}
+  .card{
+    background:var(--card); border-radius:24px; display:flex; flex-direction:column;
+    border:2px solid rgba(177,255,140,.35); box-shadow:0 12px 28px rgba(0,0,0,.4);
+    padding:16px 16px 80px; /* запас под кнопку */
+    position:relative; overflow:hidden;
   }
+  .card-top{
+    border-radius:18px; overflow:hidden; height:200px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card-top img{ width:100%; height:100%; object-fit:cover; display:block }
+  .card-body{ padding:var(--pad-top) 10px 0; text-align:center }
+  .card-title{ font-size:24px; font-weight:800; line-height:var(--lh-title); margin:8px 0 8px }
+  .card-subttl{ font-size:15px; font-weight:700; color:var(--muted); line-height:var(--lh-sub); margin:0 0 6px }
+  .card-desc{ font-size:14px; color:var(--muted); line-height:var(--lh-desc); margin:0 }
+
+  .action-btn{
+    position:absolute; left:50%; transform:translateX(-50%); bottom:26px;
+    height:42px; padding:0 18px; border-radius:999px; border:0; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px; font-weight:800;
+    background:#fff; color:#0a0a0a; box-shadow:0 8px 18px rgba(0,0,0,.25);
+  }
+  .action-btn:active{ transform:translateX(-50%) scale(.98) }
+
+  @media (max-width:420px){
+    .card-top{ height:180px }
+  }
+  /* === /КАРТОЧКИ === */
 
   .cta{display:flex;justify-content:center;margin:16px 0 4px}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--btn-h);padding:0 28px;border:0;border-radius:999px;background:var(--brand);color:#07110c;font-size:var(--btn-fs);font-weight:800;line-height:1;box-shadow:0 6px 14px rgba(177,255,140,.25);cursor:pointer}
@@ -99,81 +118,65 @@
           <h3 class="h3">Your $100 crypto starter portfolio</h3>
           <p class="mid-note">Imagine you have $100 to invest. Here’s a simple way to split it like a pro.</p>
 
-          <div class="coinList">
+          <div class="cards">
             <!-- BTC -->
-            <article class="coinCard">
-              <div class="coinArt">
-                <div class="frame">
-                  <img
-                    src="assets/l5-btc.png"
-                    srcset="assets/l5-btc.png 1x, assets/l5-btc@2x.png 2x, assets/l5-btc@3x.png 3x"
-                    alt="Bitcoin coin">
-                </div>
+            <article class="card">
+              <div class="card-top">
+                <img src="assets/l5-btc.png"
+                     srcset="assets/l5-btc.png 1x, assets/l5-btc@2x.png 2x, assets/l5-btc@3x.png 3x"
+                     alt="Bitcoin coin">
               </div>
-              <div class="coinBody">
-                <h4>Bitcoin — $40</h4>
-                <p>Bitcoin is the OG: it’s the most stable, the most trusted. It won’t 10x overnight, but it won’t vanish, either.</p>
-                <p class="why">Why?</p>
-                <p>It’s your anchor when things get choppy.</p>
-                <div class="getRow"><a href="https://changelly.com" class="getBtn ext">Get BTC →</a></div>
+              <div class="card-body">
+                <div class="card-title">Bitcoin — $40</div>
+                <p class="card-subttl">Why?</p>
+                <p class="card-desc">Bitcoin is the OG: it’s the most stable, the most trusted. It won’t 10x overnight, but it won’t vanish, either. It’s your anchor when things get choppy.</p>
               </div>
+              <a href="https://changelly.com" class="action-btn ext">Get BTC →</a>
             </article>
 
             <!-- ETH -->
-            <article class="coinCard">
-              <div class="coinArt">
-                <div class="frame">
-                  <img
-                    src="assets/l5-eth.png"
-                    srcset="assets/l5-eth.png 1x, assets/l5-eth@2x.png 2x, assets/l5-eth@3x.png 3x"
-                    alt="Ethereum coin">
-                </div>
+            <article class="card">
+              <div class="card-top">
+                <img src="assets/l5-eth.png"
+                     srcset="assets/l5-eth.png 1x, assets/l5-eth@2x.png 2x, assets/l5-eth@3x.png 3x"
+                     alt="Ethereum coin">
               </div>
-              <div class="coinBody">
-                <h4>Ethereum — $30</h4>
-                <p>Ethereum runs smart contracts and powers DeFi, NFTs, and more.</p>
-                <p class="why">Why?</p>
-                <p>It’s like investing in the internet of crypto.</p>
-                <div class="getRow"><a href="https://changelly.com" class="getBtn ext">Get ETH →</a></div>
+              <div class="card-body">
+                <div class="card-title">Ethereum — $30</div>
+                <p class="card-subttl">Why?</p>
+                <p class="card-desc">Ethereum runs smart contracts and powers DeFi, NFTs, and more. It’s like investing in the internet of crypto.</p>
               </div>
+              <a href="https://changelly.com" class="action-btn ext">Get ETH →</a>
             </article>
 
             <!-- Altcoins -->
-            <article class="coinCard">
-              <div class="coinArt">
-                <div class="frame">
-                  <img
-                    src="assets/l5-alts.png"
-                    srcset="assets/l5-alts.png 1x, assets/l5-alts@2x.png 2x, assets/l5-alts@3x.png 3x"
-                    alt="Altcoins group">
-                </div>
+            <article class="card">
+              <div class="card-top">
+                <img src="assets/l5-alts.png"
+                     srcset="assets/l5-alts.png 1x, assets/l5-alts@2x.png 2x, assets/l5-alts@3x.png 3x"
+                     alt="Altcoins group">
               </div>
-              <div class="coinBody">
-                <h4>Altcoins — $20</h4>
-                <p>Altcoins are the wildcards: small projects with big potential (or big flops).</p>
-                <p class="why">Why?</p>
-                <p>Small bet, big upside. Just please, don’t overdo it.</p>
-                <div class="getRow"><a href="https://changelly.com" class="getBtn ext">Explore altcoins →</a></div>
+              <div class="card-body">
+                <div class="card-title">Altcoins — $20</div>
+                <p class="card-subttl">Why?</p>
+                <p class="card-desc">Altcoins are the wildcards: small projects with big potential (or big flops). Small bet, big upside. Just please, don’t overdo it.</p>
               </div>
+              <a href="https://changelly.com" class="action-btn ext">Explore altcoins →</a>
             </article>
 
             <!-- Stables -->
-            <article class="coinCard">
-              <div class="coinArt">
-                <div class="frame">
-                  <img
-                    src="assets/l5-stables.png"
-                    srcset="assets/l5-stables.png 1x, assets/l5-stables@2x.png 2x, assets/l5-stables@3x.png 3x"
-                    alt="Stablecoin">
-                </div>
+            <article class="card">
+              <div class="card-top">
+                <img src="assets/l5-stables.png"
+                     srcset="assets/l5-stables.png 1x, assets/l5-stables@2x.png 2x, assets/l5-stables@3x.png 3x"
+                     alt="Stablecoin">
               </div>
-              <div class="coinBody">
-                <h4>Stablecoins — $10</h4>
-                <p>These are pegged to the US dollar, so they don’t swing wildly.</p>
-                <p class="why">Why?</p>
-                <p>Gives you flexibility if the market dips, and lets you “buy the dip”.</p>
-                <div class="getRow"><a href="https://changelly.com" class="getBtn ext">Get USDT →</a></div>
+              <div class="card-body">
+                <div class="card-title">Stablecoins — $10</div>
+                <p class="card-subttl">Why?</p>
+                <p class="card-desc">These are pegged to the US dollar, so they don’t swing wildly. Gives you flexibility if the market dips, and lets you “buy the dip”.</p>
               </div>
+              <a href="https://changelly.com" class="action-btn ext">Get USDT →</a>
             </article>
           </div>
 
