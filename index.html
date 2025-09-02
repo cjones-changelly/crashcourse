@@ -18,7 +18,6 @@
     a{color:inherit; text-decoration:none}
     .wrap{max-width:980px; margin:0 auto; padding:18px 16px 80px}
 
-    /* helpers */
     .hidden{display:none !important}
 
     /* Header */
@@ -35,7 +34,7 @@
     .btn.solid{background:var(--brand); color:#07110c; border-color:transparent; box-shadow:0 6px 14px rgba(177,255,140,.25)}
     .btn.ghost{background:transparent}
 
-    /* Welcome bar (для тех, у кого сохранён e-mail) */
+    /* Welcome bar */
     .welcome{display:flex; align-items:center; gap:12px}
     .welcome-text{font-weight:800; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52vw}
     @media (max-width:520px){ .welcome-text{max-width:46vw} }
@@ -54,7 +53,7 @@
       background:rgba(177,255,140,.15); color:var(--brand); border:1px dashed rgba(177,255,140,.45); margin-bottom:10px}
     .hero-cta{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
 
-    /* >>> ONLY the CTA start button tweaks <<< */
+    /* CTA start button: одна строка и шире на мобилках */
     #cta-start{ white-space:nowrap; }
     @media (max-width:960px){
       #cta-start{ grid-column:1 / -1; width:100%; }
@@ -80,7 +79,7 @@
     .lesson .meta{display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:12px}
     .lesson .meta .arrow{font-weight:700; color:var(--brand)}
 
-    /* Instructor & CTA */
+    /* Two-column zone: Instructor + CTA */
     .two{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
     .cta{background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(177,255,140,.18));
       border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:var(--shadow)}
@@ -92,13 +91,25 @@
     .input.invalid{border-color:#ff5f6d; box-shadow:0 0 0 3px rgba(255,95,109,.15)}
     .help-error{color:#ff9aa3; font-size:13px; margin-top:-4px}
 
+    /* NEW: testimonials under instructor */
+    .quotes{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+    .quote{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:10px; box-shadow:var(--shadow)}
+    .quote .head{display:flex; align-items:center; gap:8px; font-weight:800}
+    .quote .head img{width:18px; height:18px; display:block}
+    .quote p{margin:6px 0 0; font-size:13px; color:var(--muted)}
+    @media (max-width:380px){ .quotes{ grid-template-columns:1fr } }
+
+    /* NEW: illustration inside CTA under form */
+    .cta-ill{ margin-top:12px; display:flex; justify-content:flex-end }
+    .cta-ill img{ width:60%; max-width:260px; height:auto; display:block }
+    
     /* FAQ */
     .faq{margin-top:18px}
     details{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px}
     summary{cursor:pointer; font-weight:700}
     details p{margin:8px 0 0; color:var(--muted)}
 
-    /* Attention animation for Continue */
+    /* Continue nudge */
     @keyframes shake {
       0%,100% { transform: translateX(0); }
       20% { transform: translateX(-3px); }
@@ -127,13 +138,11 @@
           alt="Changelly">
       </div>
 
-      <!-- Обычные кнопки шапки (для тех, кто ещё не оставил e-mail) -->
       <div class="actions" id="actions-default">
         <a href="#join" class="btn solid" id="btn-start-link">Get started</a>
         <button id="btn-breakdown" class="btn ghost">Course breakdown</button>
       </div>
 
-      <!-- Приветственный бар (только если e-mail уже сохранён) -->
       <div class="welcome hidden" id="welcome-bar">
         <div class="welcome-text" id="welcome-text">👋 Hey, friend!</div>
         <button class="btn solid" id="welcome-continue">Continue</button>
@@ -185,14 +194,39 @@
             style="width:100%; border-radius:12px; border:1px solid var(--line)"
             loading="lazy" decoding="async">
         </div>
+
+        <!-- NEW: testimonials -->
+        <div class="quotes">
+          <div class="quote">
+            <div class="head"><img alt="" src="assets/icon-quote.png" srcset="assets/icon-quote.png 1x, assets/icon-quote@2x.png 2x, assets/icon-quote@3x.png 3x"><span>Luis</span></div>
+            <p>I signed up out of curiosity and stayed because it felt like a game</p>
+          </div>
+          <div class="quote">
+            <div class="head"><img alt="" src="assets/icon-quote.png" srcset="assets/icon-quote.png 1x, assets/icon-quote@2x.png 2x, assets/icon-quote@3x.png 3x"><span>Jack</span></div>
+            <p>Clear, funny, and not condescending. After lesson 3 I finally moved my coins to a self-custody wallet</p>
+          </div>
+          <div class="quote">
+            <div class="head"><img alt="" src="assets/icon-quote.png" srcset="assets/icon-quote.png 1x, assets/icon-quote@2x.png 2x, assets/icon-quote@3x.png 3x"><span>Jane</span></div>
+            <p>I usually zone out with online courses, but this one kept me hooked. The quizzes + little surprises — chef’s kiss</p>
+          </div>
+          <div class="quote">
+            <div class="head"><img alt="" src="assets/icon-quote.png" srcset="assets/icon-quote.png 1x, assets/icon-quote@2x.png 2x, assets/icon-quote@3x.png 3x"><span>Mary</span></div>
+            <p>I used to think crypto was just hype and scams. This course made it feel safe to explore</p>
+          </div>
+        </div>
       </div>
+
       <div class="cta" id="join">
         <h3 style="margin:0 0 8px">Join Pickle’s crash course</h3>
         <p class="muted" style="margin-top:0">By submitting your email, you consent to receive our newsletter and marketing updates in accordance with our Privacy Policy. You may opt out at any time.</p>
         <div class="stack">
           <input id="email" class="input" placeholder="Your email" inputmode="email" autocomplete="email" required />
           <button class="btn solid" id="btn-email">Save & start</button>
-          <!-- (удалено "Sign in with Telegram") -->
+        </div>
+        <!-- NEW: illustration under the form -->
+        <div class="cta-ill">
+          <img alt="" src="assets/cta-pickle-coin.png"
+               srcset="assets/cta-pickle-coin.png 1x, assets/cta-pickle-coin@2x.png 2x, assets/cta-pickle-coin@3x.png 3x">
         </div>
       </div>
     </div>
@@ -218,7 +252,6 @@
       set('--card', tp.secondary_bg_color); set('--line', tp.section_separator_color);
     }
 
-    // ===== helpers =====
     function getLastLessonUrl(){
       const last = localStorage.getItem('pickle_progress') || 'l1';
       const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
@@ -241,13 +274,11 @@
       }
     }
 
-    // ===== Header: default actions vs welcome bar =====
     const actionsDefault = document.getElementById('actions-default');
     const welcomeBar = document.getElementById('welcome-bar');
     const welcomeText = document.getElementById('welcome-text');
     const welcomeContinue = document.getElementById('welcome-continue');
 
-    // Навигация
     const btnBreakdown = document.getElementById('btn-breakdown');
     btnBreakdown.onclick = () => {
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
@@ -262,25 +293,21 @@
     const headerStart = document.getElementById('btn-start-link');
     headerStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
 
-    // Hero CTA
     const ctaStart = document.getElementById('cta-start');
     const ctaContinue = document.getElementById('cta-continue');
     ctaStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
     ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
     welcomeContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
 
-    // Join block
     const joinBlock = document.getElementById('join');
 
     function refreshUI(){
       const hasEmail = !!localStorage.getItem('pickle_email');
 
-      // header: actions vs welcome
       actionsDefault.classList.toggle('hidden', hasEmail);
       welcomeBar.classList.toggle('hidden', !hasEmail);
       if (hasEmail) welcomeText.textContent = `👋 Hey, ${getUserName()}!`;
 
-      // hero buttons
       if (hasEmail){
         ctaStart.classList.add('hidden');
         ctaContinue.classList.remove('hidden');
@@ -292,13 +319,11 @@
         ctaContinue.classList.add('ghost');
         ctaStart.classList.remove('hidden');
       }
-
-      // join block visibility
       joinBlock.classList.toggle('hidden', hasEmail);
     }
     refreshUI();
 
-    // ===== Email → /api/subscribe =====
+    // Email → /api/subscribe
     const emailInput = document.getElementById('email');
     const btnEmail = document.getElementById('btn-email');
 
@@ -336,7 +361,6 @@
         if (!ok) throw new Error('subscribe failed');
 
         localStorage.setItem('pickle_email', v);
-        // если пользователь только что подписался — старт с первого урока:
         if (!localStorage.getItem('pickle_progress')) localStorage.setItem('pickle_progress', 'l1');
 
         refreshUI();
@@ -348,7 +372,7 @@
       }
     });
 
-    // ===== Lessons list + gating =====
+    // Lessons list + gating (с ретина srcset)
     const lessons = [
       { id:'l1', title:'Why you’re still early (and what to do about it)', mins:4, img:'assets/lesson-1.png', url:'lesson1.html' },
       { id:'l2', title:'How to spot a gem before it 10x’s', mins:5, img:'assets/lesson-2.png', url:'lesson2.html' },
@@ -363,9 +387,7 @@
       card.className = 'lesson';
       card.href = l.url; card.dataset.id = l.id;
 
-      const img1x = l.img;
-      const img2x = l.img.replace('.png','@2x.png');
-      const img3x = l.img.replace('.png','@3x.png');
+      const img1x = l.img, img2x = l.img.replace('.png','@2x.png'), img3x = l.img.replace('.png','@3x.png');
 
       card.innerHTML = `
         <div class="thumb">
@@ -386,7 +408,6 @@
         scrollToJoin();
         return;
       }
-      // с e-mail: пускаем только до достигнутого урока
       const currentId = localStorage.getItem('pickle_progress') || 'l1';
       const maxIdx = idToIndex[currentId] ?? 0;
       const targetIdx = idToIndex[a.dataset.id] ?? 0;
