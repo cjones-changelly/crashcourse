@@ -299,8 +299,13 @@
       set('--card', tp.secondary_bg_color); set('--line', tp.section_separator_color);
     }
 
+    // ===== helpers =====
     function getLastLessonUrl(){
+      // NEW: если дошли до l5 или уже посещали финал — продолжаем на final.html
+      const seenFinal = localStorage.getItem('pickle_final') === '1';
       const last = localStorage.getItem('pickle_progress') || 'l1';
+      if (seenFinal || last === 'l5') return 'final.html';
+
       const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
       return map[last] || 'lesson1.html';
     }
@@ -321,11 +326,13 @@
       }
     }
 
+    // ===== Header: default actions vs welcome bar =====
     const actionsDefault = document.getElementById('actions-default');
     const welcomeBar = document.getElementById('welcome-bar');
     const welcomeText = document.getElementById('welcome-text');
     const welcomeContinue = document.getElementById('welcome-continue');
 
+    // Навигация
     const btnBreakdown = document.getElementById('btn-breakdown');
     btnBreakdown.onclick = () => {
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
@@ -340,21 +347,25 @@
     const headerStart = document.getElementById('btn-start-link');
     headerStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
 
+    // Hero CTA
     const ctaStart = document.getElementById('cta-start');
     const ctaContinue = document.getElementById('cta-continue');
     ctaStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
     ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
     welcomeContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
 
+    // Join block
     const joinBlock = document.getElementById('join');
 
     function refreshUI(){
       const hasEmail = !!localStorage.getItem('pickle_email');
 
+      // header: actions vs welcome
       actionsDefault.classList.toggle('hidden', hasEmail);
       welcomeBar.classList.toggle('hidden', !hasEmail);
       if (hasEmail) welcomeText.textContent = `👋 Hey, ${getUserName()}!`;
 
+      // hero buttons
       if (hasEmail){
         ctaStart.classList.add('hidden');
         ctaContinue.classList.remove('hidden');
@@ -366,11 +377,13 @@
         ctaContinue.classList.add('ghost');
         ctaStart.classList.remove('hidden');
       }
+
+      // join block visibility
       joinBlock.classList.toggle('hidden', hasEmail);
     }
     refreshUI();
 
-    // Email → /api/subscribe
+    // ===== Email → /api/subscribe =====
     const emailInput = document.getElementById('email');
     const btnEmail = document.getElementById('btn-email');
 
@@ -408,6 +421,7 @@
         if (!ok) throw new Error('subscribe failed');
 
         localStorage.setItem('pickle_email', v);
+        // если пользователь только что подписался — старт с первого урока:
         if (!localStorage.getItem('pickle_progress')) localStorage.setItem('pickle_progress', 'l1');
 
         refreshUI();
@@ -419,7 +433,7 @@
       }
     });
 
-    // Lessons list + gating (с ретина srcset)
+    // ===== Lessons list + gating =====
     const lessons = [
       { id:'l1', title:'Why you’re still early (and what to do about it)', mins:4, img:'assets/lesson-1.png', url:'lesson1.html' },
       { id:'l2', title:'How to spot a gem before it 10x’s', mins:5, img:'assets/lesson-2.png', url:'lesson2.html' },
@@ -455,13 +469,16 @@
         scrollToJoin();
         return;
       }
+      // с e-mail: пускаем только до достигнутого урока
       const currentId = localStorage.getItem('pickle_progress') || 'l1';
       const maxIdx = idToIndex[currentId] ?? 0;
       const targetIdx = idToIndex[a.dataset.id] ?? 0;
 
       if (targetIdx > maxIdx){
         e.preventDefault();
-        nudgeContinue();
+        nudgeContinue(); // вернём к кнопке Continue и слегка "потрясём" её
+      } else {
+        // Разрешаем открывать достигнутые уроки. НЕ обновляем прогресс тут.
       }
     });
   </script>
