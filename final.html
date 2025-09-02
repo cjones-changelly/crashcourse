@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Final — You made it!</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
+    --brand:#B1FF8C; --ink:#0b0e11; --line:#242936;
+    --btn-h:52px; --btn-fs:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif}
+  a{color:inherit;text-decoration:none}
+
+  /* Header (как в уроках) */
+  .bar{position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg)}
+  .back{font-size:24px;line-height:1}
+  .logo{height:44px;width:auto;object-fit:contain;display:block}
+  @media (max-width:480px){.logo{height:36px}}
+
+  .wrap{width:100%;max-width:760px;margin:0 auto;padding:14px 16px 40px}
+
+  /* заголовки как в уроках */
+  .eyebrow{margin-top:8px;text-align:center;color:var(--muted);font-weight:600}
+  .title{margin:6px auto 12px;text-align:center;max-width:720px;
+         font-family:Georgia,serif;font-style:italic;font-size:26px;line-height:1.25;font-weight:600}
+  .lead{color:var(--muted);text-align:center;max-width:700px;margin:0 auto 12px}
+  .center{display:flex;justify-content:center}
+
+  /* крупная картинка огурца сверху */
+  .hero-art{border-radius:22px;overflow:hidden;background:var(--card);border:1px solid var(--line);
+            display:flex;justify-content:center;align-items:center}
+  .hero-art img{display:block;width:100%;height:auto}
+
+  /* Download card (похожа на promo из L2) */
+  .dlCard{
+    margin:14px 0;background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(177,255,140,.18));
+    border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:0 8px 30px rgba(0,0,0,.25)
+  }
+  .dlCard h3{margin:2px 0 10px;text-align:center;font-size:22px}
+  .storeBig{
+    display:flex;align-items:center;justify-content:center;height:var(--btn-h);padding:0 28px;border-radius:12px;
+    background:#0b0e11;color:#fff;text-decoration:none;font-weight:800;font-size:var(--btn-fs);line-height:1;
+    box-shadow:0 8px 18px rgba(0,0,0,.25);margin:6px auto 12px
+  }
+  .dlArt{display:flex;justify-content:center}
+  .dlArt img{width:min(340px,90%);height:auto;display:block}
+
+  /* шаги 1–6 */
+  .steps{display:grid;gap:12px;margin-top:10px}
+  .panel{background:#0d1219;border:1px solid var(--line);border-radius:16px;padding:12px}
+  .shot{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0b0e11;margin-bottom:10px}
+  .shot img{display:block;width:100%;height:auto;object-fit:cover}
+  .panel h4{margin:4px 0 4px;text-align:center}
+  .panel p{margin:0;color:var(--muted);text-align:center}
+
+  /* финальная CTA */
+  .cta{display:flex;justify-content:center;margin:18px 0 4px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--btn-h);padding:0 28px;border:0;border-radius:999px;background:var(--brand);color:#07110c;font-size:var(--btn-fs);font-weight:800;line-height:1;box-shadow:0 6px 14px rgba(177,255,140,.25);cursor:pointer}
+</style>
+</head>
+<body>
+  <header class="bar">
+    <a href="index.html" class="back" aria-label="Back">←</a>
+    <img src="assets/logo-changelly.png" alt="Changelly" class="logo">
+  </header>
+
+  <main class="wrap">
+    <div class="eyebrow">Final step</div>
+    <h1 class="title">You made it!</h1>
+
+    <div class="hero-art">
+      <img
+        src="assets/final-hero-pickle.png"
+        srcset="assets/final-hero-pickle.png 1x, assets/final-hero-pickle@2x.png 2x, assets/final-hero-pickle@3x.png 3x"
+        alt="Happy Pickle with confetti">
+    </div>
+
+    <p class="lead">
+      You’ve got the basics down and can now go for crypto without the usual confusion.
+      As a little thank-you, there’s a <strong>$100 bonus</strong> waiting for you in the Changelly app to help cover service fees when you start.
+    </p>
+    <p class="lead">Go ahead, download the app, grab your bonus, and take it from here. We’re rooting for you. Catch you inside!</p>
+
+    <section class="dlCard">
+      <h3>Download now!</h3>
+      <a href="https://changelly.com" class="storeBig ext" rel="noopener">Download Changelly App</a>
+      <div class="dlArt" aria-hidden="true">
+        <img
+          src="assets/final-coupon-100.png"
+          srcset="assets/final-coupon-100.png 1x, assets/final-coupon-100@2x.png 2x, assets/final-coupon-100@3x.png 3x"
+          alt="$100 bonus coupon">
+      </div>
+    </section>
+
+    <div class="steps">
+      <article class="panel">
+        <div class="shot">
+          <img src="assets/final-step-1-changelly.png"
+               srcset="assets/final-step-1-changelly.png 1x, assets/final-step-1-changelly@2x.png 2x, assets/final-step-1-changelly@3x.png 3x"
+               alt="Changelly home">
+        </div>
+        <h4>1. Go to Changelly</h4>
+        <p>No account needed to get started, but signing up helps track your orders</p>
+      </article>
+
+      <article class="panel">
+        <div class="shot">
+          <img src="assets/final-step-2-picker.png"
+               srcset="assets/final-step-2-picker.png 1x, assets/final-step-2-picker@2x.png 2x, assets/final-step-2-picker@3x.png 3x"
+               alt="Choose crypto">
+        </div>
+        <h4>2. Choose the crypto you want to buy</h4>
+        <p>Select a coin from the dropdown</p>
+      </article>
+
+      <article class="panel">
+        <div class="shot">
+          <img src="assets/final-step-3-amount.png"
+               srcset="assets/final-step-3-amount.png 1x, assets/final-step-3-amount@2x.png 2x, assets/final-step-3-amount@3x.png 3x"
+               alt="Enter amount">
+        </div>
+        <h4>3. Enter the amount</h4>
+        <p>Type how much you want to spend. You can start as low as $100</p>
+      </article>
+
+      <article class="panel">
+        <div class="shot">
+          <img src="assets/final-step-4-address.png"
+               srcset="assets/final-step-4-address.png 1x, assets/final-step-4-address@2x.png 2x, assets/final-step-4-address@3x.png 3x"
+               alt="Wallet address field">
+        </div>
+        <h4>4. Add your wallet address</h4>
+        <p>Copy your wallet address and paste it carefully. New to wallets? Revisit Lesson 3</p>
+      </article>
+
+      <article class="panel">
+        <div class="shot">
+          <img src="assets/final-step-5-payments.png"
+               srcset="assets/final-step-5-payments.png 1x, assets/final-step-5-payments@2x.png 2x, assets/final-step-5-payments@3x.png 3x"
+               alt="Payment methods">
+        </div>
+        <h4>5. Pick a payment method</h4>
+        <p>Card, bank transfer, or Apple Pay — whatever works for you</p>
+      </article>
+
+      <article class="panel">
+        <div class="shot">
+          <img src="assets/final-step-6-confirm.png"
+               srcset="assets/final-step-6-confirm.png 1x, assets/final-step-6-confirm@2x.png 2x, assets/final-step-6-confirm@3x.png 3x"
+               alt="Confirm screen">
+        </div>
+        <h4>6. Complete the purchase</h4>
+        <p>Follow the steps to verify and confirm. Done!</p>
+      </article>
+    </div>
+
+    <div class="cta">
+      <a href="https://changelly.com" class="btn ext">Use my $100 bonus</a>
+    </div>
+  </main>
+
+<script>
+  (function(){
+    const tg = window.Telegram?.WebApp;
+    if (tg) { tg.expand?.(); tg.ready?.(); }
+    document.querySelectorAll('a.ext').forEach(a=>{
+      a.addEventListener('click', e=>{
+        if (!tg) return;
+        e.preventDefault();
+        tg.openLink(a.href, { try_instant_view:false });
+      });
+    });
+
+    // лёгкий гейт по e-mail как в уроках
+    const hasEmail = !!localStorage.getItem('pickle_email');
+    if (!hasEmail) location.replace('index.html#join');
+  })();
+</script>
+</body>
+</html>
