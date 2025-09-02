@@ -81,28 +81,28 @@
 
     /* Two-column zone: Instructor + CTA */
     .two{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
-    .cta{
-  background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(177,255,140,.18));
-  border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:var(--shadow);
+    .cta{background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(177,255,140,.18));
+      border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:var(--shadow)}
+    .input{width:100%; height:44px; padding:0 14px; border-radius:12px; border:1px solid var(--line);
+      background:#0d131c; color:#e7eaf7; outline:none; font-size:15px}
+    .input::placeholder{color:#708099}
+    .stack{display:grid; gap:10px}
+    .muted{color:var(--muted); font-size:14px}
+    .input.invalid{border-color:#ff5f6d; box-shadow:0 0 0 3px rgba(255,95,109,.15)}
+    .help-error{color:#ff9aa3; font-size:13px; margin-top:-4px}
 
-  /* фиксация иллюстрации: по центру и к нижней границе */
-  position: relative;
-  padding-bottom: 180px; /* место под огурца у низа */
-}
+    /* NEW: testimonials under instructor */
+    .quotes{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+    .quote{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:10px; box-shadow:var(--shadow)}
+    .quote .head{display:flex; align-items:center; gap:8px; font-weight:800}
+    .quote .head img{width:18px; height:18px; display:block}
+    .quote p{margin:6px 0 0; font-size:13px; color:var(--muted)}
+    @media (max-width:380px){ .quotes{ grid-template-columns:1fr } }
 
-/* иллюстрация под формой: центр + низ */
-.cta-ill{
-  position:absolute; left:50%; bottom:0; transform:translateX(-50%);
-  margin:0; width:min(420px,72%); pointer-events:none;
-}
-.cta-ill img{ width:100%; height:auto; display:block }
+    /* NEW: illustration inside CTA under form (исходное положение) */
+    .cta-ill{ margin-top:12px; display:flex; justify-content:flex-end }
+    .cta-ill img{ width:60%; max-width:260px; height:auto; display:block }
 
-/* чуть меньше отступ на очень узких экранах */
-@media (max-width:420px){
-  .cta{ padding-bottom:160px; }
-}
-
-    
     /* FAQ */
     .faq{margin-top:18px}
     details{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px}
@@ -125,6 +125,16 @@
       .features{grid-template-columns:1fr}
       .two{grid-template-columns:1fr}
     }
+
+    /* === Mini-override: приклеить огурца к низу и центрировать === */
+    .cta{ position:relative; padding-bottom:180px; }        /* добавили место под иллюстрацию */
+    .cta-ill{
+      position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+      margin:0; width:min(420px,72%); justify-content:center; pointer-events:none;
+    }
+    .cta-ill img{ width:100%; max-width:none; height:auto; display:block }
+    @media (max-width:420px){ .cta{ padding-bottom:160px; } }
+    /* === конец мини-оверрайда === */
   </style>
 </head>
 <body>
@@ -195,7 +205,7 @@
             loading="lazy" decoding="async">
         </div>
 
-        <!-- NEW: testimonials -->
+        <!-- Testimonials -->
         <div class="quotes">
           <div class="quote">
             <div class="head"><img alt="" src="assets/icon-quote.png" srcset="assets/icon-quote.png 1x, assets/icon-quote@2x.png 2x, assets/icon-quote@3x.png 3x"><span>Luis</span></div>
@@ -223,7 +233,7 @@
           <input id="email" class="input" placeholder="Your email" inputmode="email" autocomplete="email" required />
           <button class="btn solid" id="btn-email">Save & start</button>
         </div>
-        <!-- NEW: illustration under the form -->
+        <!-- Illustration under the form -->
         <div class="cta-ill">
           <img alt="" src="assets/cta-pickle-coin.png"
                srcset="assets/cta-pickle-coin.png 1x, assets/cta-pickle-coin@2x.png 2x, assets/cta-pickle-coin@3x.png 3x">
