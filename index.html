@@ -193,7 +193,8 @@
       <!-- Приветственный бар (только если e-mail уже сохранён) -->
       <div class="welcome hidden" id="welcome-bar">
         <div class="welcome-text" id="welcome-text">👋 Hey, friend!</div>
-        <button class="btn solid" id="welcome-continue">Continue</button>
+        <!-- заменено: вместо Continue — Log out (ghost) -->
+        <button class="btn ghost" id="btn-logout">Log out</button>
       </div>
     </div>
 
@@ -301,7 +302,7 @@
 
     // ===== helpers =====
     function getLastLessonUrl(){
-      // NEW: если дошли до l5 или уже посещали финал — продолжаем на final.html
+      // если дошли до l5 или уже посещали финал — продолжаем на final.html
       const seenFinal = localStorage.getItem('pickle_final') === '1';
       const last = localStorage.getItem('pickle_progress') || 'l1';
       if (seenFinal || last === 'l5') return 'final.html';
@@ -330,7 +331,7 @@
     const actionsDefault = document.getElementById('actions-default');
     const welcomeBar = document.getElementById('welcome-bar');
     const welcomeText = document.getElementById('welcome-text');
-    const welcomeContinue = document.getElementById('welcome-continue');
+    const btnLogout = document.getElementById('btn-logout');
 
     // Навигация
     const btnBreakdown = document.getElementById('btn-breakdown');
@@ -352,7 +353,16 @@
     const ctaContinue = document.getElementById('cta-continue');
     ctaStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
     ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
-    welcomeContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
+
+    // Log out: сброс состояния и UI
+    btnLogout.addEventListener('click', ()=>{
+      try { tg?.HapticFeedback?.impactOccurred('light'); } catch(_){}
+      localStorage.removeItem('pickle_email');
+      localStorage.removeItem('pickle_progress');
+      localStorage.removeItem('pickle_final');
+      refreshUI();
+      document.getElementById('hero').scrollIntoView({behavior:'smooth', block:'start'});
+    });
 
     // Join block
     const joinBlock = document.getElementById('join');
