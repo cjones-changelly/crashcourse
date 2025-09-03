@@ -301,6 +301,11 @@
   </div>
 
   <script>
+    // --- GA4 helper ---
+    function track(event, params){
+      try { gtag('event', event, params || {}); } catch(_) {}
+    }
+
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.expand(); tg.ready();
@@ -343,6 +348,7 @@
     // Навигация
     const btnBreakdown = document.getElementById('btn-breakdown');
     btnBreakdown.onclick = () => {
+      track('breakdown_click');
       document.getElementById('breakdown').scrollIntoView({behavior:'smooth', block:'start'});
     };
     function scrollToJoin(){
@@ -353,16 +359,17 @@
       if (email) setTimeout(()=>{ email.focus({preventScroll:true}); email.select?.(); }, 250);
     }
     const headerStart = document.getElementById('btn-start-link');
-    headerStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
+    headerStart.addEventListener('click', e=>{ e.preventDefault(); track('header_start_click'); scrollToJoin(); });
 
     // Hero CTA
     const ctaStart = document.getElementById('cta-start');
     const ctaContinue = document.getElementById('cta-continue');
-    ctaStart.addEventListener('click', e=>{ e.preventDefault(); scrollToJoin(); });
-    ctaContinue.addEventListener('click', ()=>{ location.href = getLastLessonUrl(); });
+    ctaStart.addEventListener('click', e=>{ e.preventDefault(); track('cta_start_click'); scrollToJoin(); });
+    ctaContinue.addEventListener('click', ()=>{ track('cta_continue_click'); location.href = getLastLessonUrl(); });
 
     // Log out: сброс состояния и UI
     btnLogout.addEventListener('click', ()=>{
+      track('log_out_click');
       try { tg?.HapticFeedback?.impactOccurred('light'); } catch(_){}
       localStorage.removeItem('pickle_email');
       localStorage.removeItem('pickle_progress');
@@ -400,6 +407,12 @@
     }
     refreshUI();
 
+    // Первичное событие открытия (после инициализации UI)
+    track('open_miniapp', {
+      tg_user_id: tg?.initDataUnsafe?.user?.id || '',
+      tg_username: tg?.initDataUnsafe?.user?.username || ''
+    });
+
     // ===== Email → /api/subscribe =====
     const emailInput = document.getElementById('email');
     const btnEmail = document.getElementById('btn-email');
@@ -418,6 +431,7 @@
     });
 
     btnEmail?.addEventListener('click', async () => {
+      track('email_submit_click');
       const v = emailInput.value.trim();
       if (!v){ emailInput.classList.add('invalid'); showHelp('Email is required'); emailInput.focus(); return; }
       if (!validateEmail(v)){ emailInput.classList.add('invalid'); showHelp('Please enter a valid email'); emailInput.focus(); return; }
@@ -437,6 +451,8 @@
         try { const data = await res.json(); if (typeof data?.ok === 'boolean') ok = ok && data.ok; } catch(_){}
         if (!ok) throw new Error('subscribe failed');
 
+        track('email_saved_success', { email_domain: v.split('@').pop() || '' });
+
         localStorage.setItem('pickle_email', v);
         // если пользователь только что подписался — старт с первого урока:
         if (!localStorage.getItem('pickle_progress')) localStorage.setItem('pickle_progress', 'l1');
@@ -444,6 +460,7 @@
         refreshUI();
         location.href = getLastLessonUrl();
       } catch (e){
+        track('email_saved_error');
         showHelp('Could not save email. Please try again.');
       } finally {
         btnEmail.disabled = false; btnEmail.textContent = old;
@@ -480,6 +497,9 @@
 
     $list.addEventListener('click', (e)=>{
       const a = e.target.closest('.lesson'); if (!a) return;
+      // фиксируем клик по карточке (всегда)
+      track('lesson_card_click', { lesson_id: a.dataset.id });
+
       const hasEmail = !!localStorage.getItem('pickle_email');
       if (!hasEmail){
         e.preventDefault();
@@ -501,4 +521,3 @@
   </script>
 </body>
 </html>
-
