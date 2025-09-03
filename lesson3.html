@@ -290,11 +290,20 @@
       const el = document.scrollingElement || document.documentElement || document.body;
       el.scrollTop = 0;
     }
+
+    /* 🔒 Блокируем прокрутку документа на первом слайде,
+       чтобы «дно» было ровно в один экран */
+    function lockScroll(lock){
+      document.documentElement.style.overflowY = lock ? 'hidden' : '';
+      document.body.style.overflowY = lock ? 'hidden' : '';
+    }
+
     function update(){
       track.style.transform = `translateX(${-i*100}%)`;
       dots.forEach((d,idx)=>d.classList.toggle('active', idx===i));
       btnL.style.display = (i>0) ? 'grid' : 'none';
       btnR.style.display = (i<slides.length-1) ? 'grid' : 'none';
+      lockScroll(i===0);           // ← важная строка
       try{ window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); }catch(_){}
     }
     function go(n){
