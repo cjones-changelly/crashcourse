@@ -16,7 +16,7 @@
   body{
     margin:0;background:var(--bg);color:var(--text);
     font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-    overscroll-behavior-y: none;
+    overscroll-behavior-y: none; /* было contain — полностью убираем вертикальный оверсролл */
   }
   a{color:inherit;text-decoration:none}
 
@@ -61,21 +61,21 @@
   .subNote{margin:6px auto 6px;text-align:center;color:var(--muted);max-width:640px}
   .list{display:grid;gap:10px;margin-top:10px}
   .row{
-    display:grid;grid-template-columns:44px 1fr;
+    display:grid;grid-template-columns:44px 1fr; /* было 34px — больше под увеличенную иконку */
     gap:10px;align-items:center;
     padding:10px 12px;background:#0d1219;border:1px solid var(--line);border-radius:12px
   }
   .tick{
     width:34px;height:34px;border-radius:7px;
-    background:transparent;
-    border:none;
+    background:transparent; /* убрана подложка */
+    border:none;            /* убрана обводка */
     display:grid;place-items:center;overflow:hidden;
   }
-  .tick-ico{width:28px;height:28px;display:block}
+  .tick-ico{width:28px;height:28px;display:block} /* было 18x18 — стала крупнее */
 
   /* --- Квиз (экран 3) --- */
   .bank, .board{background:#0d1219; border:none; border-radius:16px}
-  .bank{background:var(--bg);
+  .bank{background:var(--bg); /* ✅ подложка как у страницы */
         padding:14px;display:flex;flex-wrap:wrap;gap:12px;min-height:92px}
   .board{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px;margin-top:16px}
   @media (max-width:720px){.board{grid-template-columns:1fr}}
@@ -152,26 +152,23 @@
   .nav-left{left:10px}
   .nav-right{right:10px}
 
-  /* ✅ Первый экран — СИЛЬНО укороченный, без блокировки скролла */
-  .track .slide:first-child{
-    /* локально уменьшаем размеры и отступы только для 1-го слайда */
-    --btn-h:44px; --btn-fs:15px;
-    min-height:auto;
-    padding:8px 12px 8px;
+  /* ➕ FIX: первая страница — меньше «дна» и кнопка Next не уходит выше центра */
+  .track .slide:first-child{ padding-bottom:16px; }
+  .track .slide:first-child .cta{
+    position:sticky;
+    top:calc(50dvh - var(--btn-h)/2);
+    z-index:1;
   }
-  .track .slide:first-child .wrap{max-width:680px}
-  .track .slide:first-child .eyebrow{margin-top:2px;font-size:12px}
-  .track .slide:first-child .title{font-size:22px;line-height:1.2;margin:4px auto 6px}
-  .track .slide:first-child .lead{font-size:14px;line-height:1.4;margin:0 auto 6px}
-  .track .slide:first-child .cta{margin:8px 0 0}
 </style>
 </head>
 <body>
   <header class="bar">
     <a href="index.html" class="back" aria-label="Back" onclick="pickleBack();return false;">←</a>
-    <img class="logo" src="assets/logo-changelly.png"
-         srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
-         alt="Changelly">
+    <img
+      class="logo"
+      src="assets/logo-changelly.png"
+      srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
+      alt="Changelly">
   </header>
 
   <div class="viewport" id="vp">
@@ -259,24 +256,10 @@
   </div>
 
 <script>
-  /* 👉 фикс 100vh в мобильном вебвью: реальная высота окна */
-  (function(){
-    const setVH = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', vh + 'px');
-    };
-    setVH();
-    window.addEventListener('resize', setVH);
-    window.addEventListener('orientationchange', setVH);
-  })();
-</script>
-
-<script>
   // --------- Слайдер ----------
   (function(){
     const track = document.getElementById('track');
-    theSlides = Array.from(track.children);
-    const slides = theSlides;
+    const slides = Array.from(track.children);
     const dotsBox = document.getElementById('dots');
     const btnL = document.getElementById('navLeft');
     const btnR = document.getElementById('navRight');
@@ -349,7 +332,7 @@
 
   // создать чипы (рандомный порядок в стартовом банке)
   (function(){
-    const arr = items.slice();
+    const arr = items.slice(); // копия
     for (let i = arr.length - 1; i > 0; i--) {
       const rand = (window.crypto && window.crypto.getRandomValues)
         ? window.crypto.getRandomValues(new Uint32Array(1))[0] / 0x100000000
@@ -394,7 +377,7 @@
     ph.style.height = r.height+'px';
     chip.parentElement.insertBefore(ph, chip);
 
-    chip.style.opacity = '.2';
+    chip.style.opacity = '.2'; // оставляем pressed-класс для понятности
 
     ghost = chip.cloneNode(true);
     ghost.removeAttribute('id');
@@ -439,7 +422,7 @@
     else if (ph && ph.parentNode){ ph.parentNode.insertBefore(chip, ph); }
 
     chip.style.opacity = '';
-    clearPressed();
+    clearPressed();               /* снять подсветку */
     curZone?.classList.remove('dropping');
     curZone=null;
 
@@ -488,7 +471,7 @@
       const c = e.target.closest('.chip'); if (!c) return;
       pointerId = e.pointerId;
       c.setPointerCapture?.(pointerId);
-      c.classList.add('pressed');
+      c.classList.add('pressed');         /* ✨ подсветка */
       chip = c; dragArmed=true; downX=e.clientX; downY=e.clientY;
       e.preventDefault();
     });
@@ -506,7 +489,7 @@
       const order=[bank,safe,risky];
       const parent = chip.parentElement; const idx = order.indexOf(parent);
       const next = order[(idx+1)%order.length]; next.appendChild(chip);
-      clearPressed();
+      clearPressed();                       /* снять после «тап-переноса» */
       chip=null; dragArmed=false; tidy();
     });
     document.addEventListener('pointercancel', ()=>{ if (chip) finishDrag(); });
@@ -514,7 +497,7 @@
     // Touch fallback
     document.addEventListener('touchstart', (e)=>{
       const c = e.target.closest('.chip'); if (!c) return;
-      const t = e.touches[0]; c.classList.add('pressed');
+      const t = e.touches[0]; c.classList.add('pressed'); /* ✨ */
       chip=c; dragArmed=true; downX=t.clientX; downY=t.clientY;
     }, {passive:true});
     document.addEventListener('touchmove', (e)=>{
@@ -625,12 +608,13 @@
 <!-- 🛡️ Guard от «стягивания» миниаппа свайпом вниз от верхней кромки -->
 <script>
 (function(){
-  const root = document.getElementById('vp');
+  const root = document.getElementById('vp'); // защищаем весь вьюпорт урока
   let guard = false, startY = 0;
 
   function onStart(e){
     const t = e.touches ? e.touches[0] : e;
     const atTop = (window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0) <= 0;
+    // Старт жеста у верхнего края (первые ~24px) при верхней прокрутке — перехватываем
     if (atTop && t.clientY <= 24){
       guard = true; startY = t.clientY;
       e.preventDefault();
@@ -641,6 +625,7 @@
   function onMove(e){
     if (!guard) return;
     const t = e.touches ? e.touches[0] : e;
+    // Блокируем только движение вниз (pull-down)
     if (t.clientY - startY > 0){
       e.preventDefault();
     } else {
