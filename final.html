@@ -69,6 +69,17 @@
   .cta{display:flex;justify-content:center;margin:18px 0 4px}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--btn-h);padding:0 28px;border:0;border-radius:999px;background:var(--brand);color:#07110c;font-size:var(--btn-fs);font-weight:800;line-height:1;box-shadow:0 6px 14px rgba(177,255,140,.25);cursor:pointer}
 </style>
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KVRG5B0DWZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-KVRG5B0DWZ');
+  function gaTrack(event, params){ try{ gtag('event', event, params || {}); }catch(_){ } }
+</script>
+<!-- /GA4 -->
 </head>
 <body>
   <header class="bar">
@@ -193,5 +204,29 @@
     if (!hasEmail) location.replace('index.html#join');
   })();
 </script>
+
+<!-- GA4 event bindings -->
+<script>
+  (function(){
+    // Back button
+    const back = document.querySelector('.back');
+    if (back) back.addEventListener('click', function(){
+      gaTrack('final_back_click');
+    });
+
+    // Download app button
+    const downloadBtn = document.querySelector('.dlCard .storeBig.ext');
+    if (downloadBtn) downloadBtn.addEventListener('click', function(){
+      gaTrack('final_download_app_click');
+    });
+
+    // Use $100 bonus button
+    const bonusBtn = document.querySelector('.cta .btn.ext');
+    if (bonusBtn) bonusBtn.addEventListener('click', function(){
+      gaTrack('final_use_bonus_click');
+    });
+  })();
+</script>
+<!-- /GA4 event bindings -->
 </body>
 </html>
