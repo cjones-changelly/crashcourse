@@ -131,12 +131,7 @@
   }
 
   /* Нав-точки */
-  .nav{
-    position:absolute;left:0;right:0;bottom:40px;
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    pointer-events:none;
-    z-index:5; /* ← добавлено, чтобы точки были видны на 1-м экране */
-  }
+  .nav{position:absolute;left:0;right:0;bottom:40px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
   .dot.active{background:var(--brand);opacity:1}
@@ -157,23 +152,19 @@
   .nav-left{left:10px}
   .nav-right{right:10px}
 
-  /* ✅ Первый экран — ровно в высоту вебвью без «дна» */
+  /* ✅ Первый экран — ограниченное «дно», прокрутка не блокируется */
   .track .slide:first-child{
-    height: calc(var(--vh, 1vh) * 100 - 72px);
-    min-height: auto;
-    padding-bottom: 0;
-    overflow: hidden;
+    min-height: calc(100dvh - 72px);
+    padding-bottom: 16px; /* было 64px, делаем «мелкое дно» */
   }
 </style>
 </head>
 <body>
   <header class="bar">
     <a href="index.html" class="back" aria-label="Back" onclick="pickleBack();return false;">←</a>
-    <img
-      class="logo"
-      src="assets/logo-changelly.png"
-      srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
-      alt="Changelly">
+    <img class="logo" src="assets/logo-changelly.png"
+         srcset="assets/logo-changelly.png 1x, assets/logo-changelly@2x.png 2x, assets/logo-changelly@3x.png 3x"
+         alt="Changelly">
   </header>
 
   <div class="viewport" id="vp">
@@ -294,19 +285,11 @@
       const el = document.scrollingElement || document.documentElement || document.body;
       el.scrollTop = 0;
     }
-
-    /* 🔒 Блокируем прокрутку документа на первом слайде */
-    function lockScroll(lock){
-      document.documentElement.style.overflowY = lock ? 'hidden' : '';
-      document.body.style.overflowY = lock ? 'hidden' : '';
-    }
-
     function update(){
       track.style.transform = `translateX(${-i*100}%)`;
       dots.forEach((d,idx)=>d.classList.toggle('active', idx===i));
       btnL.style.display = (i>0) ? 'grid' : 'none';
       btnR.style.display = (i<slides.length-1) ? 'grid' : 'none';
-      lockScroll(i===0);
       try{ window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); }catch(_){}
     }
     function go(n){
@@ -489,7 +472,7 @@
     rafId = requestAnimationFrame(autoScrollStep);
   }
   function stopAutoScroll(){
-    if (rafId){ cancelAnimationFrame(autoScrollStep); rafId=null; }
+    if (rafId){ cancelAnimationFrame(rafId); rafId=null; }
   }
 
   if (window.PointerEvent){
