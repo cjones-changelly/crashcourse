@@ -88,6 +88,17 @@
   .nav-left{left:10px}
   .nav-right{right:10px}
 </style>
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KVRG5B0DWZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-KVRG5B0DWZ');
+  function gaTrack(event, params){ try{ gtag('event', event, params || {}); }catch(_){ } }
+</script>
+<!-- /GA4 -->
 </head>
 <body>
   <header class="bar">
@@ -284,5 +295,45 @@
   }
 })();
 </script>
+
+<!-- GA4 event bindings -->
+<script>
+(function(){
+  // Back to index
+  const back = document.querySelector('.back');
+  if (back) back.addEventListener('click', function(){
+    gaTrack('lesson5_back_click', { lesson: 5 });
+  });
+
+  // Next buttons: slide 1 & 2
+  const nextBtns = Array.from(document.querySelectorAll('.go-next'));
+  if (nextBtns[0]) nextBtns[0].addEventListener('click', function(){
+    gaTrack('lesson5_next1_click', { lesson: 5, slide: 1 });
+  });
+  if (nextBtns[1]) nextBtns[1].addEventListener('click', function(){
+    gaTrack('lesson5_next2_click', { lesson: 5, slide: 2 });
+  });
+
+  // Card action buttons (BTC, ETH, ALT, USDT)
+  document.querySelectorAll('.cards .action-btn').forEach(function(a){
+    a.addEventListener('click', function(){
+      const label = (a.textContent || '').toLowerCase();
+      let ev = null, asset = null;
+      if (label.includes('btc')) { ev = 'lesson5_get_btc_click'; asset = 'BTC'; }
+      else if (label.includes('eth')) { ev = 'lesson5_get_eth_click'; asset = 'ETH'; }
+      else if (label.includes('alt')) { ev = 'lesson5_get_alt_click'; asset = 'ALT'; }
+      else if (label.includes('usdt')) { ev = 'lesson5_get_usdt_click'; asset = 'USDT'; }
+      if (ev) gaTrack(ev, { lesson: 5, asset: asset });
+    });
+  });
+
+  // Final task link
+  const finalLink = document.querySelector('a.btn[href="final.html"]');
+  if (finalLink) finalLink.addEventListener('click', function(){
+    gaTrack('lesson5_final_task_click', { lesson: 5 });
+  });
+})();
+</script>
+<!-- /GA4 event bindings -->
 </body>
 </html>
