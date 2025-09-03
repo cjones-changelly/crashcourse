@@ -131,7 +131,12 @@
   }
 
   /* Нав-точки */
-  .nav{position:absolute;left:0;right:0;bottom:40px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
+  .nav{
+    position:absolute;left:0;right:0;bottom:40px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    pointer-events:none;
+    z-index:5; /* ← добавлено, чтобы точки были видны на 1-м экране */
+  }
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
   .dot.active{background:var(--brand);opacity:1}
@@ -154,7 +159,6 @@
 
   /* ✅ Первый экран — ровно в высоту вебвью без «дна» */
   .track .slide:first-child{
-    /* используем реальную высоту webview через --vh */
     height: calc(var(--vh, 1vh) * 100 - 72px);
     min-height: auto;
     padding-bottom: 0;
@@ -291,8 +295,7 @@
       el.scrollTop = 0;
     }
 
-    /* 🔒 Блокируем прокрутку документа на первом слайде,
-       чтобы «дно» было ровно в один экран */
+    /* 🔒 Блокируем прокрутку документа на первом слайде */
     function lockScroll(lock){
       document.documentElement.style.overflowY = lock ? 'hidden' : '';
       document.body.style.overflowY = lock ? 'hidden' : '';
@@ -303,7 +306,7 @@
       dots.forEach((d,idx)=>d.classList.toggle('active', idx===i));
       btnL.style.display = (i>0) ? 'grid' : 'none';
       btnR.style.display = (i<slides.length-1) ? 'grid' : 'none';
-      lockScroll(i===0);           // ← важная строка
+      lockScroll(i===0);
       try{ window.Telegram?.WebApp?.HapticFeedback?.impactOccurred('light'); }catch(_){}
     }
     function go(n){
@@ -486,7 +489,7 @@
     rafId = requestAnimationFrame(autoScrollStep);
   }
   function stopAutoScroll(){
-    if (rafId){ cancelAnimationFrame(rafId); rafId=null; }
+    if (rafId){ cancelAnimationFrame(autoScrollStep); rafId=null; }
   }
 
   if (window.PointerEvent){
