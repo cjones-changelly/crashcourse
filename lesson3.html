@@ -152,11 +152,18 @@
   .nav-left{left:10px}
   .nav-right{right:10px}
 
-  /* ✅ Первый экран — ограниченное «дно», прокрутка не блокируется */
+  /* ✅ Первый экран — СИЛЬНО укороченный, без блокировки скролла */
   .track .slide:first-child{
-    min-height: calc(100dvh - 72px);
-    padding-bottom: 16px; /* было 64px, делаем «мелкое дно» */
+    /* локально уменьшаем размеры и отступы только для 1-го слайда */
+    --btn-h:44px; --btn-fs:15px;
+    min-height:auto;
+    padding:8px 12px 8px;
   }
+  .track .slide:first-child .wrap{max-width:680px}
+  .track .slide:first-child .eyebrow{margin-top:2px;font-size:12px}
+  .track .slide:first-child .title{font-size:22px;line-height:1.2;margin:4px auto 6px}
+  .track .slide:first-child .lead{font-size:14px;line-height:1.4;margin:0 auto 6px}
+  .track .slide:first-child .cta{margin:8px 0 0}
 </style>
 </head>
 <body>
@@ -268,7 +275,8 @@
   // --------- Слайдер ----------
   (function(){
     const track = document.getElementById('track');
-    const slides = Array.from(track.children);
+    theSlides = Array.from(track.children);
+    const slides = theSlides;
     const dotsBox = document.getElementById('dots');
     const btnL = document.getElementById('navLeft');
     const btnR = document.getElementById('navRight');
