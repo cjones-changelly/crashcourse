@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Lesson 3 — The wallet mistakes that could cost you everything</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KVRG5B0DWZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-KVRG5B0DWZ');
+  function gaTrack(event, params){ try{ gtag('event', event, params||{}); }catch(_){ } }
+</script>
+<!-- /GA4 -->
+
 <style>
   :root{
     --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
@@ -638,6 +650,28 @@
   root.addEventListener('touchmove', onMove,   {passive:false});
   root.addEventListener('touchend', onEnd,     {passive:true});
   root.addEventListener('touchcancel', onEnd,  {passive:true});
+})();
+</script>
+
+<!-- GA4 event bindings -->
+<script>
+(function(){
+  // back arrow
+  const back = document.querySelector('.back');
+  if (back) back.addEventListener('click', function(){ gaTrack('lesson3_back_click'); });
+
+  // two "Next" buttons (slide 1 and slide 2)
+  const nextBtns = document.querySelectorAll('.go-next');
+  if (nextBtns[0]) nextBtns[0].addEventListener('click', function(){ gaTrack('lesson3_next_1_click'); });
+  if (nextBtns[1]) nextBtns[1].addEventListener('click', function(){ gaTrack('lesson3_next_2_click'); });
+
+  // Check answers (slide 3)
+  const checkBtn = document.getElementById('check');
+  if (checkBtn) checkBtn.addEventListener('click', function(){ gaTrack('lesson3_check_answers_click'); });
+
+  // Crushed it! Let’s roll (slide 3 → lesson4)
+  const roll = document.getElementById('next');
+  if (roll) roll.addEventListener('click', function(){ gaTrack('lesson3_roll_click'); });
 })();
 </script>
 </body>
