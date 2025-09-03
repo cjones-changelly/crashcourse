@@ -152,6 +152,13 @@
   .nav-left{left:10px}
   .nav-right{right:10px}
 
+  /* ➕ FIX: первая страница — меньше «дна» и кнопка Next не уходит выше центра */
+  .track .slide:first-child{ padding-bottom:16px; }
+  .track .slide:first-child .cta{
+    position:sticky;
+    top:calc(50dvh - var(--btn-h)/2);
+    z-index:1;
+  }
 </style>
 </head>
 <body>
