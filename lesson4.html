@@ -109,6 +109,17 @@
     }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KVRG5B0DWZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-KVRG5B0DWZ');
+    function gaTrack(event, params){ try{ gtag('event', event, params||{}); }catch(_){ } }
+  </script>
+  <!-- /GA4 -->
 </head>
 <body>
   <header class="bar">
@@ -285,6 +296,38 @@
   btnFlip1.addEventListener('click', flip);
   btnFlip2.addEventListener('click', flip);
   deck.addEventListener('click', (e)=>{ if(e.target.closest('.flip-btn')) return; flip(); }, {passive:true});
+  </script>
+
+  <!-- GA4 event bindings -->
+  <script>
+    (function(){
+      // Back to index
+      const back = document.querySelector('.back');
+      if (back) back.addEventListener('click', function(){ gaTrack('lesson4_back_click'); });
+
+      // Flip (buttons or card tap)
+      const btnFlip1 = document.getElementById('btnFlip1');
+      const btnFlip2 = document.getElementById('btnFlip2');
+      const deck = document.getElementById('deck');
+
+      function reportFlip(){ gaTrack('lesson4_flip_click', { card_index: (typeof idx==='number' ? idx+1 : undefined) }); }
+      if (btnFlip1) btnFlip1.addEventListener('click', reportFlip);
+      if (btnFlip2) btnFlip2.addEventListener('click', reportFlip);
+      if (deck) deck.addEventListener('click', function(e){
+        if (e.target && e.target.closest('.flip-btn')) return; // чтобы не задвоить
+        reportFlip();
+      });
+
+      // Gallery navigation (prev/next)
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+      if (prevBtn) prevBtn.addEventListener('click', function(){ gaTrack('lesson4_nav_click', {dir:'prev'}); });
+      if (nextBtn) nextBtn.addEventListener('click', function(){ gaTrack('lesson4_nav_click', {dir:'next'}); });
+
+      // Level up → lesson5
+      const levelUp = document.querySelector('.cta a[href="lesson5.html"]');
+      if (levelUp) levelUp.addEventListener('click', function(){ gaTrack('lesson4_levelup_click'); });
+    })();
   </script>
 </body>
 </html>
