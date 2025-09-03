@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Lesson 2 — How to spot a gem before it 10x's</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KVRG5B0DWZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-KVRG5B0DWZ');
+  function gaTrack(event, params){ try{ gtag('event', event, params||{}); }catch(_){ } }
+</script>
+<!-- /GA4 -->
+
 <style>
   :root{
     --bg:#0f1115; --card:#171a21; --text:#e7eaf0; --muted:#9aa3b2;
@@ -444,6 +456,34 @@
     else location.href = 'index.html#breakdown';
   };
 })();
+</script>
+
+<!-- GA4 event bindings (added) -->
+<script>
+  (function(){
+    // Back arrow (header)
+    const back = document.querySelector('.back');
+    if (back){
+      back.addEventListener('click', function(){ gaTrack('lesson2_back_click'); }, { capture:false });
+    }
+
+    // Next buttons on slide 1 and slide 2
+    const nextBtns = document.querySelectorAll('.go-next');
+    if (nextBtns[0]) nextBtns[0].addEventListener('click', function(){ gaTrack('lesson2_next_1_click'); });
+    if (nextBtns[1]) nextBtns[1].addEventListener('click', function(){ gaTrack('lesson2_next_2_click'); });
+
+    // Got it! (slide 3)
+    const gotIt = document.querySelector('[data-goto="3"]');
+    if (gotIt) gotIt.addEventListener('click', function(){ gaTrack('lesson2_got_it_click'); });
+
+    // Download Changelly (slide 3)
+    const dl = document.getElementById('dlLink');
+    if (dl) dl.addEventListener('click', function(){ gaTrack('lesson2_download_click'); });
+
+    // Level up! (final slide)
+    const levelUp = document.getElementById('levelUp');
+    if (levelUp) levelUp.addEventListener('click', function(){ gaTrack('lesson2_level_up_click'); });
+  })();
 </script>
 </body>
 </html>
