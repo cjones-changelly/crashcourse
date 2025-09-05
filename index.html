@@ -314,10 +314,11 @@
 
     // ===== helpers =====
     function getLastLessonUrl(){
-      // если дошли до l5 или уже посещали финал — продолжаем на final.html
+      // На финал ведём ТОЛЬКО если он уже был открыт ранее
       const seenFinal = localStorage.getItem('pickle_final') === '1';
       const last = localStorage.getItem('pickle_progress') || 'l1';
-      if (seenFinal || last === 'l5') return 'final.html';
+
+      if (seenFinal) return 'final.html';
 
       const map = { l1:'lesson1.html', l2:'lesson2.html', l3:'lesson3.html', l4:'lesson4.html', l5:'lesson5.html' };
       return map[last] || 'lesson1.html';
