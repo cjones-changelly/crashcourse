@@ -201,7 +201,10 @@
       });
     });
     const hasEmail = !!localStorage.getItem('pickle_email');
-    if (!hasEmail) location.replace('index.html#join');
+    if (!hasEmail) { location.replace('index.html#join'); return; }
+
+    // помечаем, что финал действительно был открыт
+    localStorage.setItem('pickle_final','1');
   })();
 </script>
 
