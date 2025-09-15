@@ -31,18 +31,16 @@
   .lead{color:var(--muted);text-align:center;max-width:700px;margin:0 auto 12px}
   .center{display:flex;justify-content:center}
 
-  /* hero art + увеличенный нижний отступ — БЕЗ РАМКИ */
+
   .hero-art{
     border-radius:22px;overflow:hidden;background:var(--card);
     display:flex;justify-content:center;align-items:center;margin-bottom:14px;
-    /* border удалён */
   }
   .hero-art img{display:block;width:100%;height:auto}
 
-  /* Download card — БЕЗ РАМКИ */
   .dlCard{
     margin:14px 0;background:linear-gradient(135deg, rgba(105,183,255,.28), rgba(177,255,140,.18));
-    /* border удалён */ border-radius:20px; padding:16px; box-shadow:0 8px 30px rgba(0,0,0,.25)
+border-radius:20px; padding:16px; box-shadow:0 8px 30px rgba(0,0,0,.25)
   }
   .storeBig{
     display:flex;align-items:center;justify-content:center;height:var(--btn-h);padding:0 28px;border-radius:12px;
@@ -52,7 +50,7 @@
   .dlArt{display:flex;justify-content:center}
   .dlArt img{width:min(340px,90%);height:auto;display:block}
 
-  /* подзаголовок как в уроках */
+
   .h3{font-family:Georgia,serif;font-style:italic;font-size:22px;text-align:center;margin:8px 0}
 
   /* steps */
@@ -60,7 +58,7 @@
   .panel{background:#0d1219;border:1px solid var(--line);border-radius:16px;padding:12px}
   .shot{
     border-radius:14px;overflow:hidden;background:#0b0e11;margin-bottom:10px;
-    /* border вокруг изображения удалён */
+
   }
   .shot img{display:block;width:100%;height:auto;object-fit:cover}
   .panel h4{margin:4px 0 4px;text-align:center}
@@ -109,7 +107,7 @@
     <p class="lead">Go ahead, download the app, grab your bonus, and take it from here. We’re rooting for you. Catch you inside!</p>
 
     <section class="dlCard">
-      <!-- заголовок Download now! был убран ранее, оставляем только кнопку -->
+
       <a href="https://changelly.onelink.me/abGu/rsfr6wyx" class="storeBig ext" rel="noopener">Download Changelly</a>
       <div class="dlArt" aria-hidden="true">
         <img
@@ -119,7 +117,7 @@
       </div>
     </section>
 
-    <!-- подзаголовок между блоками -->
+
     <h3 class="h3">How to get your first cryptocurrency</h3>
 
     <div class="steps">
@@ -203,7 +201,7 @@
     const hasEmail = !!localStorage.getItem('pickle_email');
     if (!hasEmail) { location.replace('index.html#join'); return; }
 
-    // помечаем, что финал действительно был открыт
+
     localStorage.setItem('pickle_final','1');
   })();
 </script>
