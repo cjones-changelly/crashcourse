@@ -44,7 +44,7 @@
   .title{margin:6px auto 18px;text-align:center;max-width:720px;font-family:Georgia,serif;font-style:italic;font-size:26px;line-height:1.25;font-weight:600}
 
   .intro{display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:start}
-  /* убрал рамку/подложку вокруг заглавной картинки */
+
   .intro .art{background:transparent;border:0;border-radius:12px;overflow:hidden}
   .intro .art img{display:block;width:100%;height:auto}
   .intro p{margin:0 0 10px}
@@ -86,15 +86,15 @@
   }
   .pick:hover{transform:translateY(-1px)}
   .pick .ico-flag{width:28px;height:28px;display:block;flex:0 0 28px}
-  /* активный выбор больше не перекрашивает рамку */
+
   .pick.active{transform:translateY(-1px)}
-  /* ❌ неправильный — лёгкий фейд + блёр */
+
   .pick.wrong{
     opacity:.55;
     filter:blur(1px) saturate(.6);
     border-color:var(--line);
   }
-  /* ✅ правильный — белая рамка */
+
   .pick.correct{
     border-color:#fff;
     box-shadow:0 0 0 2px rgba(255,255,255,.12);
@@ -221,7 +221,7 @@
             <a id="dlLink" href="https://changelly.onelink.me/JSoG/y5wv8mav" class="storeBig" rel="noopener">Download Changelly</a>
 
             <div class="artStack" aria-hidden="true">
-              <!-- ЕДИНАЯ КОМПОЗИТНАЯ КАРТИНКА -->
+
               <img
                 class="phones"
                 src="assets/l2-composite.png"
