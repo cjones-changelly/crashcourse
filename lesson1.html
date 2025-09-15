@@ -18,7 +18,7 @@
     }
     a{color:inherit; text-decoration:none}
 
-    /* Header (как в lesson2) */
+
     .bar{
       position:sticky; top:0; z-index:10;
       display:flex; align-items:center; justify-content:space-between;
@@ -32,7 +32,7 @@
 
     .wrap{ max-width:780px; margin:0 auto; padding: 10px 16px 40px }
 
-    /* Eyebrow + Title (как в lesson2) */
+
     .eyebrow{ margin-top:8px; text-align:center; color:var(--muted); font-weight:600 }
     .title{
       margin:6px auto 18px; text-align:center; max-width:680px;
@@ -48,7 +48,7 @@
       border:1px solid var(--line);
       overflow:hidden;
     }
-    /* видео заполняет «окошко» */
+
     .player video{
       width:100%; height:100%;
       display:block; object-fit:cover;
@@ -58,7 +58,7 @@
       font-size:64px; line-height:1; color:var(--brand);
     }
 
-    /* CTA (точно как в lesson2) */
+
     .cta{ display:flex; justify-content:center; margin-top:4px }
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -94,7 +94,7 @@
     <h1 class="title">Why you're still early<br>(and what to do about it)</h1>
 
     <div class="player" role="region" aria-label="Lesson video">
-      <!-- ВИДЕО -->
+
       <video id="lesson1Video"
              controls
              playsinline
@@ -108,14 +108,14 @@
     </div>
   </main>
 
-  <!-- hls.js для Android/Chrome; dash.js как резерв для DASH -->
+
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
   <script>
     (function(){
       const v = document.getElementById('lesson1Video');
 
-      // Постер @2x/@3x по DPR
+
       (function setPosterByDPR(){
         const dpr = Math.min(3, Math.max(1, Math.round(window.devicePixelRatio || 1)));
         const base = 'assets/lesson1-poster';
@@ -126,31 +126,31 @@
       const SRC_HLS  = 'https://customer-xmva784s4fdt6l1s.cloudflarestream.com/680cdaa0a479c0162c213aa8c3bc4149/manifest/video.m3u8';
       const SRC_DASH = 'https://customer-xmva784s4fdt6l1s.cloudflarestream.com/680cdaa0a479c0162c213aa8c3bc4149/manifest/video.mpd';
 
-      // iOS/WKWebView — нативный HLS
+
       if (v.canPlayType('application/vnd.apple.mpegurl')) {
         v.src = SRC_HLS;
       }
-      // Android/Chrome — через hls.js
+
       else if (window.Hls && Hls.isSupported()) {
         const hls = new Hls({lowLatencyMode:true});
         hls.loadSource(SRC_HLS);
         hls.attachMedia(v);
       }
-      // Резерв — DASH через dash.js
+
       else if (window.dashjs) {
         const player = dashjs.MediaPlayer().create();
         player.initialize(v, SRC_DASH, false);
       } else {
-        // Последний резерв — всё равно попробуем HLS
+
         v.src = SRC_HLS;
       }
 
-      // событие на play
+
       v.addEventListener('play', ()=>track('lesson1_video_play'));
     })();
   </script>
 
-  <!-- прогресс/гейтинг -->
+
   <script>
   (function(){
     const LESSON_ID = 'l1';
@@ -162,15 +162,15 @@
     const lastId = localStorage.getItem('pickle_progress') || 'l1';
     const hasEmail = !!localStorage.getItem('pickle_email');
 
-    // без e-mail — на форму
+
     if (!hasEmail) { location.replace('index.html#join'); return; }
-    // нельзя входить дальше достигнутого
+
     if (idToIdx[LESSON_ID] > idToIdx[lastId]) {
       try{ tg?.HapticFeedback?.impactOccurred('light'); }catch(_){}
       location.replace(fileFor(lastId)); return;
     }
 
-    // кнопки
+
     window.pickleNext = function(){
       const curIdx = idToIdx[LESSON_ID];
       const savedIdx = idToIdx[localStorage.getItem('pickle_progress') || 'l1'];
