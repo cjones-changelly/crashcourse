@@ -28,7 +28,7 @@
   body{
     margin:0;background:var(--bg);color:var(--text);
     font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-    overscroll-behavior-y: none; /* было contain — полностью убираем вертикальный оверсролл */
+    overscroll-behavior-y: none; 
   }
   a{color:inherit;text-decoration:none}
 
@@ -68,26 +68,26 @@
   /* Divider */
   .rule{height:1px;background:var(--line);margin:12px auto;max-width:640px;opacity:.85}
 
-  /* Checklist (экран 2) */
+
   .subTitle{font-family:Georgia,serif;font-style:italic;font-size:22px;text-align:center;margin:8px 0}
   .subNote{margin:6px auto 6px;text-align:center;color:var(--muted);max-width:640px}
   .list{display:grid;gap:10px;margin-top:10px}
   .row{
-    display:grid;grid-template-columns:44px 1fr; /* было 34px — больше под увеличенную иконку */
+    display:grid;grid-template-columns:44px 1fr; 
     gap:10px;align-items:center;
     padding:10px 12px;background:#0d1219;border:1px solid var(--line);border-radius:12px
   }
   .tick{
     width:34px;height:34px;border-radius:7px;
-    background:transparent; /* убрана подложка */
-    border:none;            /* убрана обводка */
+    background:transparent; 
+    border:none;            
     display:grid;place-items:center;overflow:hidden;
   }
-  .tick-ico{width:28px;height:28px;display:block} /* было 18x18 — стала крупнее */
+  .tick-ico{width:28px;height:28px;display:block} 
 
-  /* --- Квиз (экран 3) --- */
+
   .bank, .board{background:#0d1219; border:none; border-radius:16px}
-  .bank{background:var(--bg); /* ✅ подложка как у страницы */
+  .bank{background:var(--bg); 
         padding:14px;display:flex;flex-wrap:wrap;gap:12px;min-height:92px}
   .board{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px;margin-top:16px}
   @media (max-width:720px){.board{grid-template-columns:1fr}}
@@ -108,7 +108,7 @@
   .chip.dragging{opacity:1; transform:scale(1.04)}
   .ph{display:inline-block; border-radius:12px; background:transparent}
 
-  /* ✨ Подсветка выбранного чипа */
+
   .chip.pressed{
     border-color: rgba(177,255,140,.85);
     background: rgba(177,255,140,.14);
@@ -130,7 +130,7 @@
   .banner{margin:14px auto 10px;max-width:860px;padding:12px 14px;border-radius:14px;border:1px solid #3a4457;background:#101722;color:#cfd7e3;text-align:center}
   .banner.ok{background:rgba(177,255,140,.12);border-color:rgba(177,255,140,.4);color:#eaffd9}
 
-  /* Подсветка результатов */
+
   .chip.correct{
     border-color:rgba(177,255,140,.85);
     background:rgba(177,255,140,.14);
@@ -142,13 +142,13 @@
     box-shadow:0 0 0 2px rgba(255,107,107,.28);
   }
 
-  /* Нав-точки */
+
   .nav{position:absolute;left:0;right:0;bottom:40px;display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:none}
   .dots{display:flex;gap:6px}
   .dot{width:6px;height:6px;border-radius:999px;background:#3a4457;opacity:.7}
   .dot.active{background:var(--brand);opacity:1}
 
-  /* Стрелки в углах */
+
   .nav-arrows{position:fixed;left:0;right:0;bottom:8px;z-index:5;pointer-events:none}
   .nav-btn{
     pointer-events:auto;
@@ -164,7 +164,7 @@
   .nav-left{left:10px}
   .nav-right{right:10px}
 
-  /* ➕ FIX: первая страница — меньше «дна» и кнопка Next не уходит выше центра */
+
   .track .slide:first-child{ padding-bottom:16px; }
   .track .slide:first-child .cta{
     position:sticky;
@@ -268,7 +268,7 @@
   </div>
 
 <script>
-  // --------- Слайдер ----------
+
   (function(){
     const track = document.getElementById('track');
     const slides = Array.from(track.children);
@@ -321,7 +321,7 @@
 </script>
 
 <script>
-/* ------------------ КВИЗ (экран 3): drag & drop + автоскролл ------------------ */
+
 (function(){
   const items = [
     { id:'i1', txt:'Use a hardware wallet', answer:'safe' },
@@ -342,7 +342,7 @@
   const nextBtn = document.getElementById('next');
   const tg = window.Telegram?.WebApp;
 
-  // создать чипы (рандомный порядок в стартовом банке)
+
   (function(){
     const arr = items.slice(); // копия
     for (let i = arr.length - 1; i > 0; i--) {
@@ -363,7 +363,7 @@
     }
   })();
 
-  // -------- Pointer/Touch DnD с призраком, плейсхолдером и автоскроллом --------
+
   let isDragging=false, chip=null, ph=null, ghost=null, curZone=null;
   let downX=0, downY=0, dragArmed=false, pointerId=null;
   let offX=0, offY=0, curX=0, curY=0;
@@ -389,7 +389,7 @@
     ph.style.height = r.height+'px';
     chip.parentElement.insertBefore(ph, chip);
 
-    chip.style.opacity = '.2'; // оставляем pressed-класс для понятности
+    chip.style.opacity = '.2'; 
 
     ghost = chip.cloneNode(true);
     ghost.removeAttribute('id');
@@ -434,7 +434,7 @@
     else if (ph && ph.parentNode){ ph.parentNode.insertBefore(chip, ph); }
 
     chip.style.opacity = '';
-    clearPressed();               /* снять подсветку */
+    clearPressed();             
     curZone?.classList.remove('dropping');
     curZone=null;
 
@@ -451,7 +451,7 @@
     tidy();
   }
 
-  // Автоскролл во время драга
+
   let rafId=null;
   function autoScrollStep(){
     if (!isDragging) return;
@@ -530,7 +530,7 @@
     document.addEventListener('touchcancel', ()=>{ if (chip) finishDrag(); });
   }
 
-  /* ---------- Служебное ---------- */
+
   function tidy(){
     banner.style.display='none';
     nextBtn.style.display='none';
@@ -539,7 +539,7 @@
   }
   function allPlaced(){ return bank.querySelectorAll('.chip').length===0; }
 
-  // Проверка
+
   function check(){
     if (!allPlaced()){
       banner.className='banner';
@@ -580,7 +580,7 @@
 })();
 </script>
 
-<!-- прогресс/гейтинг для урока 3 -->
+
 <script>
 (function(){
   const LESSON_ID = 'l3';
@@ -617,16 +617,16 @@
 })();
 </script>
 
-<!-- 🛡️ Guard от «стягивания» миниаппа свайпом вниз от верхней кромки -->
+
 <script>
 (function(){
-  const root = document.getElementById('vp'); // защищаем весь вьюпорт урока
+  const root = document.getElementById('vp'); 
   let guard = false, startY = 0;
 
   function onStart(e){
     const t = e.touches ? e.touches[0] : e;
     const atTop = (window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0) <= 0;
-    // Старт жеста у верхнего края (первые ~24px) при верхней прокрутке — перехватываем
+
     if (atTop && t.clientY <= 24){
       guard = true; startY = t.clientY;
       e.preventDefault();
@@ -637,7 +637,7 @@
   function onMove(e){
     if (!guard) return;
     const t = e.touches ? e.touches[0] : e;
-    // Блокируем только движение вниз (pull-down)
+
     if (t.clientY - startY > 0){
       e.preventDefault();
     } else {
